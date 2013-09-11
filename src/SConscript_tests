@@ -1,0 +1,39 @@
+import os, re, imp
+
+Import('env')
+
+base ='#/src'
+target = '#/bin/main'
+
+cppFiles      = Glob('*.cpp')     + Glob('*/*.cpp')     + Glob('*/*/*.cpp')
+cppFilesPrune = Glob('main.cpp') + Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glob('*/*/Test*.cpp')
+testFiles     = Glob('Test*.h')   + Glob('*/Test*.h')   + Glob('*/*/Test*.h')
+sourceFiles = list(set(cppFiles) - set(cppFilesPrune))
+
+
+pathCxxTest = os.environ['CXXTESTDIR'];
+pathCxxTestBuilder = pathCxxTest + '/build_tools/SCons/'
+env_test = env.Clone(tools=['default','cxxtest'],
+                     toolpath=['#/common', pathCxxTestBuilder])
+env_test.Replace(CXXTEST_INSTALL_DIR = pathCxxTest)
+env_test.Replace(CXXTEST_SUFFIX = '.h')
+env_test.Replace(CXXFLAGS = '-std=c++0x')
+env_test.Replace(CXXTEST_CPPPATH = ['#/src', pathCxxTest])
+env_test.Replace(CXXTEST_OPTS = '--have-eh')
+pathBoost = os.environ['BOOSTDIR'];
+pathSdl  = os.environ['SDL2DIR'];
+pathAngel  = os.environ["ANGELSCRIPTDIR"];
+sourcepaths = [pathBoost, pathSdl + '/include/', pathAngel + '/include']
+libs = ['main', 'angeladdon', 'SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
+        'angelscript', 'boost_thread',
+        'GL', 'GLU']
+libpaths = [pathBoost + '/lib', pathSdl + '/lib', pathAngel + '/lib', '#/lib']
+env_test.Replace(CPPPATH=sourcepaths)
+env_test.Replace(LIBS=libs)
+env_test.Replace(LIBPATH=libpaths)
+env_test.Replace(CXX=env['CXX'])
+for tf in testFiles:
+   test = env_test.CxxTest('#/bin/tests/Test' + re.search('.*Test(.+?)\.h',
+                                                          str(tf)).group(1), tf)
+   Clean(test, '#/build')
+   Default(test)
