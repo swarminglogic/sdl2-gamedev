@@ -2,10 +2,10 @@
 
 #include <cstdlib>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+#include <util/SDL.h>
+#include <util/SDL_image.h>
+#include <util/SDL_mixer.h>
+#include <util/SDL_ttf.h>
 
 #include <util/Exception.h>
 #include <util/Log.h>
@@ -26,10 +26,6 @@ MainManager::MainManager()
   initSDLimg();
   initSDLttf();
   initSDLmixer();
-
-  logger_->debug("Testing deletion of nullptr usin sdl destructors");
-  TTF_CloseFont(nullptr);
-  logger_->debug("it went ok");
 
   graphicsManager_.reset(new GraphicsManager);
 }
