@@ -14,6 +14,7 @@ pathBoost = os.environ["BOOSTDIR"];
 pathQt    = os.environ["QTDIR"];
 pathEigen = os.environ["EIGENDIR"];
 pathSdl  = os.environ["SDL2DIR"];
+pathGlm   = os.environ["GLMDIR"];
 pathAngel  = os.environ["ANGELSCRIPTDIR"];
 
 libs = ['SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
@@ -31,14 +32,22 @@ libpaths = [
 sourcepaths = [
     base,
     pathBoost,
+    pathGlm,
     pathAngel + '/include',
  #   os.environ["CXXTESTDIR"],
     #    pathQt + "/include",
     #    pathEigen
     pathSdl + "/include/"]
 
-cppflags = ['-O0', '-g', '-fno-strict-aliasing'] # '-fno-strict-aliasing' (angelscript might need this)
+
+cppflags = ['-O0', '-g', '-fno-strict-aliasing', '-D_REENTRANT']
 #cppflags = ['-O3', '-DGL_GLEXT_PROTOTYPES', '-D_REENTRANT']
+
+# Custom guards
+# --------------------
+# cppflags.append(['-DLOGGING_DISABLED'])    # Disables all logging
+# cppflags.append(['-DLOG2STREAM_DISABLED']) # Disables logging to stream
+# cppflags.append(['-DLOG2FILE_DISABLED'])   # Disables logging to file
 
 # Adding ignore paths for external libraries
 cppflags.append(['-isystem', pathBoost,
