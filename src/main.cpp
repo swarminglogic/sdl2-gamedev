@@ -1,16 +1,23 @@
+#include <cstdlib>
 #include <iostream>
 
 #include <core/ConfigManager.h>
+#include <core/MainManager.h>
+#include <util/Exception.h>
 #include <util/Log.h>
 
 
 int main(int argc, char *argv[])
 {
-  ConfigManager& manager = ConfigManager::instance();
-
   Log log("main");
-  log.debug("Hello world");
-  log.warning("You've been warned!");
+  try {
+    ConfigManager::instance();
+    MainManager::instance();
+  }
+  catch (Exception e) {
+    log.error(std::string("Terminating early due to exception: ") + e.what());
+    exit(EXIT_FAILURE);
+  }
 
-  return 0;
+  return EXIT_SUCCESS;
 }

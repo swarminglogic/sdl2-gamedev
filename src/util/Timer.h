@@ -7,7 +7,7 @@
 /**
  * Timer class for doing timing functions.
  *
- * Has wrap-around at approx 1193 hours.
+ * Has wrap-around at approx 1193 hours (49 days).
  *
  * @author Roald Fernandez
  */

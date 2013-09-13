@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 
+#include <util/Clock.h>
 #include <util/FileUtil.h>
 
 
@@ -38,11 +39,14 @@ void LogManager::log(LogLevel level,
       level < fileLogLevel_)
     return;
 
+  Clock clock;
   std::stringstream ss;
-  ss << logLevelAsString(level) << loggerName << " \t" << message << "\n";
+
+  ss << logLevelAsString(level) << clock.getTimeStamp() << ' '
+     << loggerName << " \t" << message << "\n";
   const std::string formatted(ss.str());
 
-  // TODO swarminglogic, 2013-09-12: Add timestamp
+  // TODO swarminglogic, 2013-09-13: Add short build checksum (through scons)
 
   if (level >= streamLogLevel_)
     log2Stream(formatted);
@@ -111,16 +115,16 @@ std::string LogManager::logLevelAsString(LogLevel level)
 {
   switch (level) {
   case LEVEL_DEBUG:
-    return std::string("[DEBUG]   ");
+    return std::string("DEBUG   ");
     break;
   case LEVEL_INFO:
-    return std::string("[INFO]    ");
+    return std::string("INFO    ");
     break;
   case LEVEL_WARNING:
-    return std::string("[WARNING] ");
+    return std::string("WARNING ");
     break;
   case LEVEL_ERROR:
-    return std::string("[ERROR]   ");
+    return std::string("ERROR   ");
     break;
   case LEVEL_NONE:
     assert(false && "Should never be queried");
