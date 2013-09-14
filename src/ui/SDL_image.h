@@ -1,5 +1,5 @@
-#ifndef UTIL_SDL_IMAGE_H
-#define UTIL_SDL_IMAGE_H
+#ifndef UI_SDL_IMAGE_H
+#define UI_SDL_IMAGE_H
 
 /**
  * SDL image header wrapper

@@ -1,5 +1,5 @@
-#ifndef UTIL_SDL_MIXER_H
-#define UTIL_SDL_MIXER_H
+#ifndef UI_SDL_MIXER_H
+#define UI_SDL_MIXER_H
 
 #include <SDL2/SDL_mixer.h>
 

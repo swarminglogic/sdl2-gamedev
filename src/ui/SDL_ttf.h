@@ -1,5 +1,5 @@
-#ifndef UTIL_SDL_TTF_H
-#define UTIL_SDL_TTF_H
+#ifndef UI_SDL_TTF_H
+#define UI_SDL_TTF_H
 
 #include <SDL2/SDL_ttf.h>
 
