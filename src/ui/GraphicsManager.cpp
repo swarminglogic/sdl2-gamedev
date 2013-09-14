@@ -19,6 +19,12 @@ GraphicsManager::~GraphicsManager()
 }
 
 
+void GraphicsManager::swapBuffers()
+{
+  SDL_GL_SwapWindow(window_.get());
+}
+
+
 void GraphicsManager::toggleFullScreen()
 {
   isFullScreen_ = !isFullScreen_;
@@ -60,10 +66,15 @@ void GraphicsManager::setIsVSync(bool isVSync)
 {
   isVSync_ = isVSync;
   if (isVSync_)
-    logger_.info("Enabling vertical sync");
+    logger_.info("Enabling vsync");
   else
-    logger_.info("Disabling vertical sync");
-  SDL_GL_SetSwapInterval(static_cast<int>(isVSync_));
+    logger_.info("Disabling vsync");
+
+  const int ret = SDL_GL_SetSwapInterval(static_cast<int>(isVSync_));
+  if (ret < 0) {
+    logger_.warning("Failed to change vsync mode.");
+    logger_.warning(SDL_GetError());
+  }
 }
 
 

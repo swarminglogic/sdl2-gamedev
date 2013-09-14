@@ -18,10 +18,17 @@ public:
   GraphicsManager();
   virtual ~GraphicsManager();
 
+  /**
+   * Swaps the OpenGL buffers.
+   */
+  void swapBuffers();
+
+  // FullScreen toggle
   void toggleFullScreen();
   void setFullScreen(bool isFullScreen);
   bool isFullScreen() const;
 
+  // VSync toggle
   void toggleVSync();
   bool isVSync() const;
   void setIsVSync(bool isVSync);
