@@ -2,10 +2,10 @@
 
 #include <cstdlib>
 
-#include <util/SDL.h>
-#include <util/SDL_image.h>
-#include <util/SDL_mixer.h>
-#include <util/SDL_ttf.h>
+#include <ui/SDL.h>
+#include <ui/SDL_image.h>
+#include <ui/SDL_mixer.h>
+#include <ui/SDL_ttf.h>
 
 #include <util/Exception.h>
 #include <util/Log.h>
