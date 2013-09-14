@@ -1,7 +1,8 @@
-#ifndef UTIL_SIZE_H
-#define UTIL_SIZE_H
+#ifndef MATH_SIZE_H
+#define MATH_SIZE_H
 
 #include <cmath>
+
 
 /**
  * Size class. Simple class representing an int-pair.

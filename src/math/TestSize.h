@@ -1,7 +1,7 @@
-#ifndef UTIL_TESTSIZE_H
-#define UTIL_TESTSIZE_H
+#ifndef MATH_TESTSIZE_H
+#define MATH_TESTSIZE_H
 
-#include <util/Size.h>
+#include <math/Size.h>
 
 #include <cxxtest/TestSuite.h>
 
