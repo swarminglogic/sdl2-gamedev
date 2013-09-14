@@ -1,6 +1,7 @@
 #include <util/Log.h>
 
 #include <config/ConfigManager.h>
+#include <util/Exception.h>
 #include <util/LogManager.h>
 
 
@@ -44,6 +45,19 @@ void Log::error(const std::string& message) const
                                                 message);
 #endif
 }
+
+Exception Log::exception(const std::string& error,
+                           FunctionPtr func) const
+{
+#ifndef LOGGING_DISABLED
+  this->error(error);
+  if (func)
+    this->error(func());
+#endif
+  return Exception(error);
+}
+
+
 
 Log::~Log()
 {

@@ -16,7 +16,7 @@ class Clock
 {
 public:
   /**
-   * Generates a timestamp with the following format "YYYY-MM-DD HH:MM'
+   * Generates a timestamp with the following format "YYYY-MM-DD HH:MM:SS'
    * using a 24 hour.
    */
   std::string getTimeStamp();

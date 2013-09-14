@@ -1,5 +1,8 @@
-#ifndef UTIL_SDLHELPER_H
-#define UTIL_SDLHELPER_H
+#ifndef UTIL_RAIIHELPER_H
+#define UTIL_RAIIHELPER_H
+
+#include <memory>
+
 
 /**
  * RAII helper macro wrappers using std::unique_pointer

@@ -35,8 +35,8 @@ private:
   MainManager(const MainManager& c);
   MainManager& operator=(const MainManager& c);
 
+  Log logger_;
   std::unique_ptr<GraphicsManager> graphicsManager_;
-  std::unique_ptr<Log> logger_;
 };
 
 #endif
