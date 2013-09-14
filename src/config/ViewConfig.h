@@ -35,10 +35,6 @@ private:
   Size screenSize_;
   std::string windowTitle_;
   bool isFullScreen_;
-
-  // NonCopyable
-  ViewConfig(const ViewConfig& c);
-  ViewConfig& operator=(const ViewConfig& c);
 };
 
 #endif

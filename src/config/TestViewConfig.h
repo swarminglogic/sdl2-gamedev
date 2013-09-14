@@ -27,6 +27,19 @@ public:
     TS_ASSERT_EQUALS(vc2.isFullScreen(), true);
   }
 
+  void testCopyable() {
+    ViewConfig vc(Size(412, 123), "Potatoes", false);
+    ViewConfig vc2(vc);
+    ViewConfig vc3 = vc;
+    TS_ASSERT_EQUALS(vc.getScreenSize(), vc2.getScreenSize());
+    TS_ASSERT_EQUALS(vc.getWindowTitle(), vc2.getWindowTitle());
+    TS_ASSERT_EQUALS(vc.isFullScreen(), vc2.isFullScreen());
+
+    TS_ASSERT_EQUALS(vc.getScreenSize(), vc3.getScreenSize());
+    TS_ASSERT_EQUALS(vc.getWindowTitle(), vc3.getWindowTitle());
+    TS_ASSERT_EQUALS(vc.isFullScreen(), vc3.isFullScreen());
+  }
+
   void testBasic()
   {
     ViewConfig vc;
