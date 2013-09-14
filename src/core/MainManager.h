@@ -14,7 +14,7 @@ class Log;
  *
  * Singleton class, as only one should ever be created.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class MainManager
 {

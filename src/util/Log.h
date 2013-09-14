@@ -10,7 +10,7 @@
  * Log class.
  * Used for writing log calls.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class Log
 {

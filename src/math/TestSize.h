@@ -9,7 +9,7 @@
 /**
  * Test for the Size class.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class TestSize : public CxxTest::TestSuite
 {

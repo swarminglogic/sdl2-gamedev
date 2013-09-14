@@ -9,7 +9,7 @@
  *   Creates a typedef of MyClassPtr, which is a unique_ptr<MyClass>,
  *   that class destructorFunction upon deletion.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 
 #define CREATE_RAII(OBJ, DEST)                           \

@@ -10,7 +10,7 @@
  *
  * Manages settings regarding log-levels, and log file name.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class LogManager
 {

@@ -10,7 +10,7 @@
  * This is a absolute timer, which measures the wall time.
  * Wrapper for some chrono.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class Clock
 {

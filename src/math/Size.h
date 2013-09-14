@@ -8,7 +8,7 @@
  * Size class. Simple class representing an int-pair.
  * Logically represents width and height.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class Size
 {

@@ -8,7 +8,7 @@
  * Point class. Simple class representing an int-pair.
  * Logically represents x and y.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class Point
 {

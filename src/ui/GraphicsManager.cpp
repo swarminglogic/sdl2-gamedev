@@ -3,16 +3,9 @@
 
 GraphicsManager::GraphicsManager()
 {
-  setupSDL();
 }
 
 
 GraphicsManager::~GraphicsManager()
 {
-}
-
-
-void GraphicsManager::setupSDL()
-{
-
 }

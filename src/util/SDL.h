@@ -8,7 +8,7 @@
 
 /**
  * SDL header wrapper
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 
 CREATE_RAII(SDL_Surface,  SDL_FreeSurface)     SurfacePtr;

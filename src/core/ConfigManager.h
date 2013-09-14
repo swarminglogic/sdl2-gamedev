@@ -13,7 +13,7 @@ class Timer;
  * Singleton class for managing global application settings.
  * Should be made thread safe.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class ConfigManager
 {

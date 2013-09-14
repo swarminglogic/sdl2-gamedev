@@ -14,7 +14,7 @@
 /**
  * Test for the Clock class.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class TestClock : public CxxTest::TestSuite
 {

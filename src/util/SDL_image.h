@@ -3,7 +3,7 @@
 
 /**
  * SDL image header wrapper
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 
 #include <SDL2/SDL_image.h>

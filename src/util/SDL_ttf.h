@@ -8,7 +8,7 @@
 
 /**
  * SDL ttf header wrapper
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 CREATE_RAII(TTF_Font,     TTF_CloseFont)       FontPtr;
 

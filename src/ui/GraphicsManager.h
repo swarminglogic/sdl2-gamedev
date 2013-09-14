@@ -4,7 +4,7 @@
 /**
  * GraphicsManager class.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class GraphicsManager
 {
@@ -13,7 +13,6 @@ public:
   virtual ~GraphicsManager();
 
 private:
-  void setupSDL();
 
   // NonCopyable
   GraphicsManager(const GraphicsManager& c);

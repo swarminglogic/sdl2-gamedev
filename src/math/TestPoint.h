@@ -9,7 +9,7 @@
 /**
  * Test for the Point class.
  *
- * @author SwarmingLogic
+ * @author SwarmingLogic (Roald Fernandez)
  */
 class TestPoint : public CxxTest::TestSuite
 {
