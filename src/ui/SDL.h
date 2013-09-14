@@ -16,4 +16,6 @@ CREATE_RAII(SDL_Texture,  SDL_DestroyTexture)  TexturePtr;
 CREATE_RAII(SDL_Renderer, SDL_DestroyRenderer) RendererPtr;
 CREATE_RAII(SDL_Window,   SDL_DestroyWindow)   WindowPtr;
 
+CREATE_RAII2(SDL_GLContext,   SDL_GL_DeleteContext)   GLContextPtr;
+
 #endif

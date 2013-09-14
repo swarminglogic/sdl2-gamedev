@@ -8,17 +8,35 @@
  * RAII helper macro wrappers using std::unique_pointer
  *
  * example:
- *   CREATE_RAII(MyClass, destructorFunction) MyClassPtr
+ *   CREATE_RAII(MyClass*, destructorFunction) MyClassPtr
  *   Creates a typedef of MyClassPtr, which is a unique_ptr<MyClass>,
  *   that class destructorFunction upon deletion.
  *
  * @author SwarmingLogic (Roald Fernandez)
  */
-
 #define CREATE_RAII(OBJ, DEST)                           \
   struct OBJ ## Deleter {                                \
     void operator()( OBJ* ptr ) { if (ptr) DEST( ptr );} \
   };                                                     \
+  typedef std::unique_ptr<OBJ, OBJ ## Deleter>
+
+
+/**
+ * RAII helper macro wrappers using std::unique_pointer
+ *
+ * For destructors that take reference, rather than pointer.
+ *
+ * example:
+ *   CREATE_RAII(MyClass*, destructorFunction) MyClassPtr
+ *   Creates a typedef of MyClassPtr, which is a unique_ptr<MyClass>,
+ *   that class destructorFunction upon deletion.
+ *
+ * @author SwarmingLogic (Roald Fernandez)
+ */
+#define CREATE_RAII2(OBJ, DEST)                           \
+  struct OBJ ## Deleter {                                 \
+    void operator()( OBJ* ptr ) { if (ptr) DEST( *ptr );} \
+  };                                                      \
   typedef std::unique_ptr<OBJ, OBJ ## Deleter>
 
 
