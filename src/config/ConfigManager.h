@@ -23,6 +23,7 @@ public:
   virtual ~ConfigManager();
 
   const LogManager& getLogManager() const;
+  const ViewConfig& getViewConfig() const;
 
 private:
   // Singleton

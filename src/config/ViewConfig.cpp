@@ -9,11 +9,11 @@ ViewConfig::ViewConfig()
 }
 
 ViewConfig::ViewConfig(Size screenSize,
-                       const std::string& windowTitle,
-                       bool isFullScreen)
+                       const std::string& windowTitle)
   : screenSize_(screenSize),
     windowTitle_(windowTitle),
-    isFullScreen_(isFullScreen)
+    isFullScreen_(false),
+    isResizeable_(false)
 {
 }
 
@@ -62,3 +62,12 @@ void ViewConfig::setIsFullScreen(bool isFullScreenSet)
   isFullScreen_ = isFullScreenSet;
 }
 
+bool ViewConfig::isResizeable() const
+ {
+   return isResizeable_;
+ }
+
+void ViewConfig::setIsResizeable(bool isResizeable)
+{
+  isResizeable_ = isResizeable;
+}

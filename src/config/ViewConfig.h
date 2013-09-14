@@ -5,7 +5,6 @@
 
 #include <math/Size.h>
 
-
 /**
  * ViewConfig class. Represents view-specific settings.
  *
@@ -16,8 +15,8 @@ class ViewConfig
 public:
   ViewConfig();
   ViewConfig(Size screenSize,
-             const std::string& windowTitle,
-             bool isFullScreen);
+             const std::string& windowTitle);
+
   virtual ~ViewConfig();
 
   const Size& getScreenSize() const;
@@ -31,10 +30,14 @@ public:
   bool isFullScreen() const;
   void setIsFullScreen(bool isFullScreenSet);
 
+  bool isResizeable() const;
+  void setIsResizeable(bool isResizeable);
+
 private:
   Size screenSize_;
   std::string windowTitle_;
   bool isFullScreen_;
+  bool isResizeable_;
 };
 
 #endif

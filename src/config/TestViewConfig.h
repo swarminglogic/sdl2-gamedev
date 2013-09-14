@@ -16,19 +16,21 @@ class TestViewConfig : public CxxTest::TestSuite
 public:
   void testConstructor()
   {
-    ViewConfig vc(Size(412, 123), "Potatoes", false);
+    ViewConfig vc(Size(412, 123), "Potatoes");
     TS_ASSERT_EQUALS(vc.getScreenSize(), Size(412, 123));
     TS_ASSERT_EQUALS(vc.getWindowTitle(), "Potatoes");
     TS_ASSERT_EQUALS(vc.isFullScreen(), false);
 
-    ViewConfig vc2(Size(14, 33), "Asparges", true);
+    ViewConfig vc2(Size(14, 33), "Asparges");
+    vc2.setIsFullScreen(true);
     TS_ASSERT_EQUALS(vc2.getScreenSize(), Size(14, 33));
     TS_ASSERT_EQUALS(vc2.getWindowTitle(), "Asparges");
     TS_ASSERT_EQUALS(vc2.isFullScreen(), true);
   }
 
   void testCopyable() {
-    ViewConfig vc(Size(412, 123), "Potatoes", false);
+    ViewConfig vc(Size(412, 123), "Potatoes");
+    vc.setIsFullScreen(false);
     ViewConfig vc2(vc);
     ViewConfig vc3 = vc;
     TS_ASSERT_EQUALS(vc.getScreenSize(), vc2.getScreenSize());
@@ -54,6 +56,11 @@ public:
     TS_ASSERT(!vc.isFullScreen());
     vc.setIsFullScreen(true);
     TS_ASSERT(vc.isFullScreen());
+
+    vc.setIsResizeable(true);
+    TS_ASSERT(vc.isResizeable());
+    vc.setIsResizeable(false);
+    TS_ASSERT(!vc.isResizeable());
   }
 private:
 };

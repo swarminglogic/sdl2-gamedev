@@ -21,6 +21,11 @@ const LogManager& ConfigManager::getLogManager() const
   return *logManager_;
 }
 
+const ViewConfig& ConfigManager::getViewConfig() const
+{
+  return *viewConfig_;
+}
+
 
 ConfigManager::ConfigManager()
   : logManager_(nullptr)
@@ -30,8 +35,9 @@ ConfigManager::ConfigManager()
 
   // View config
   viewConfig_.reset(new ViewConfig(Size(800, 600),
-                                   "SDL Game",
-                                   false));
+                                   "SDL Game"));
+  viewConfig_->setIsFullScreen(false);
+  viewConfig_->setIsResizeable(false);
 
   // Logging
   logManager_.reset(new LogManager(LogManager::LEVEL_DEBUG,
