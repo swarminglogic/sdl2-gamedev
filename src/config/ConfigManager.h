@@ -1,11 +1,12 @@
-#ifndef CORE_CONFIGMANAGER_H
-#define CORE_CONFIGMANAGER_H
+#ifndef CONFIG_CONFIGMANAGER_H
+#define CONFIG_CONFIGMANAGER_H
 
 #include <memory>
 
 
 class LogManager;
 class Timer;
+class ViewConfig;
 
 /**
  * ConfigManager class.
@@ -27,6 +28,7 @@ private:
   // Singleton
   ConfigManager();
 
+  std::unique_ptr<ViewConfig> viewConfig_;
   std::unique_ptr<LogManager> logManager_;
   std::unique_ptr<Timer> runtime_;
 

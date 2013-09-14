@@ -1,6 +1,6 @@
 #include <util/Log.h>
 
-#include <core/ConfigManager.h>
+#include <config/ConfigManager.h>
 #include <util/LogManager.h>
 
 

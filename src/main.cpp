@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <core/ConfigManager.h>
+#include <config/ConfigManager.h>
 #include <core/MainManager.h>
 #include <util/Exception.h>
 #include <util/Log.h>
