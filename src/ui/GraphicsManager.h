@@ -18,6 +18,14 @@ public:
   GraphicsManager();
   virtual ~GraphicsManager();
 
+  void toggleFullScreen();
+  void setFullScreen(bool isFullScreen);
+  bool isFullScreen() const;
+
+  void toggleVSync();
+  bool isVSync() const;
+  void setIsVSync(bool isVSync);
+
 
 private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
@@ -25,6 +33,8 @@ private:
   Log logger_;
   WindowPtr window_;
   GLContextPtr context_;
+  bool isFullScreen_;
+  bool isVSync_;
 
   // NonCopyable
   GraphicsManager(const GraphicsManager& c);

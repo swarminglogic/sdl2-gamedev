@@ -8,12 +8,62 @@
 GraphicsManager::GraphicsManager()
   : logger_("GraphicsManager")
 {
-  initalizeOpenGL(ConfigManager::instance().getViewConfig());
+  const ViewConfig& viewConfig = ConfigManager::instance().getViewConfig();
+  isFullScreen_ = viewConfig.isFullScreen();
+  initalizeOpenGL(viewConfig);
 }
 
 
 GraphicsManager::~GraphicsManager()
 {
+}
+
+
+void GraphicsManager::toggleFullScreen()
+{
+  isFullScreen_ = !isFullScreen_;
+  setFullScreen(isFullScreen_);
+}
+
+void GraphicsManager::setFullScreen(bool isFullScreen)
+{
+  if (isFullScreen) {
+    logger_.info("Enabling fullscreen");
+    SDL_SetWindowFullscreen(window_.get(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+  }
+  else {
+    logger_.info("Disabling fullscreen");
+    SDL_SetWindowFullscreen(window_.get(), 0);
+  }
+}
+
+bool GraphicsManager::isFullScreen() const
+{
+  return isFullScreen_;
+}
+
+
+void GraphicsManager::toggleVSync()
+{
+  isVSync_ = !isVSync_;
+  setIsVSync(isVSync_);
+}
+
+
+bool GraphicsManager::isVSync() const
+{
+  return isVSync_;
+}
+
+
+void GraphicsManager::setIsVSync(bool isVSync)
+{
+  isVSync_ = isVSync;
+  if (isVSync_)
+    logger_.info("Enabling vertical sync");
+  else
+    logger_.info("Disabling vertical sync");
+  SDL_GL_SetSwapInterval(static_cast<int>(isVSync_));
 }
 
 
@@ -53,4 +103,7 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   context_.reset(new SDL_GLContext(SDL_GL_CreateContext(window_.get())));
   if (!context_)
     throw logger_.exception("Failed to create OpenGL Context", SDL_GetError);
+
+  // Make it the current context
+  SDL_GL_MakeCurrent(window_.get(), *context_);
 }
