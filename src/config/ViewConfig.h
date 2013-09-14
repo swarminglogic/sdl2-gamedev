@@ -33,11 +33,15 @@ public:
   bool isResizeable() const;
   void setIsResizeable(bool isResizeable);
 
+  bool isVSync() const;
+  void setIsVSync(bool isVSync);
+
 private:
   Size screenSize_;
   std::string windowTitle_;
   bool isFullScreen_;
   bool isResizeable_;
+  bool isVSync_;
 };
 
 #endif

@@ -61,6 +61,11 @@ public:
     TS_ASSERT(vc.isResizeable());
     vc.setIsResizeable(false);
     TS_ASSERT(!vc.isResizeable());
+
+    vc.setIsVSync(true);
+    TS_ASSERT(vc.isVSync());
+    vc.setIsVSync(false);
+    TS_ASSERT(!vc.isVSync());
   }
 private:
 };

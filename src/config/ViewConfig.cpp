@@ -4,7 +4,8 @@
 ViewConfig::ViewConfig()
   : screenSize_(800, 600),
     windowTitle_(""),
-    isFullScreen_(false)
+    isFullScreen_(false),
+    isVSync_(true)
 {
 }
 
@@ -71,3 +72,14 @@ void ViewConfig::setIsResizeable(bool isResizeable)
 {
   isResizeable_ = isResizeable;
 }
+
+bool ViewConfig::isVSync() const
+{
+  return isVSync_;
+}
+
+void ViewConfig::setIsVSync(bool isVSync)
+{
+  isVSync_ = isVSync;
+}
+

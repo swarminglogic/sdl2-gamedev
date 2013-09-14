@@ -38,6 +38,7 @@ ConfigManager::ConfigManager()
                                    "SDL Game"));
   viewConfig_->setIsFullScreen(false);
   viewConfig_->setIsResizeable(false);
+  viewConfig_->setIsVSync(true);
 
   // Logging
   logManager_.reset(new LogManager(LogManager::LEVEL_DEBUG,
