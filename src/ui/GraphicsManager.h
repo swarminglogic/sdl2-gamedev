@@ -33,6 +33,10 @@ public:
   bool isVSync() const;
   void setIsVSync(bool isVSync);
 
+  // Debug function for logging graphics driver information
+  void logGraphicsDriverInfo() const;
+  void logOpenGLContextInfo() const;
+  void logStaticOpenGLInfo() const;
 
 private:
   void initalizeOpenGL(const ViewConfig& viewConfig);

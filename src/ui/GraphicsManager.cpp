@@ -1,7 +1,12 @@
 #include <ui/GraphicsManager.h>
 
+#include <cassert>
+#include <iomanip>
+#include <sstream>
+
 #include <config/ConfigManager.h>
 #include <config/ViewConfig.h>
+#include <ui/SDL_opengl.h>
 #include <util/Exception.h>
 
 
@@ -81,7 +86,7 @@ void GraphicsManager::setIsVSync(bool isVSync)
 void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 {
   logger_.debug("Initalizing OpenGL");
-  int sdlWindowFlags = SDL_WINDOW_OPENGL;
+  int sdlWindowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
   if (viewConfig.isFullScreen())
     sdlWindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
   if (viewConfig.isResizeable())
@@ -117,4 +122,92 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 
   // Make it the current context
   SDL_GL_MakeCurrent(window_.get(), *context_);
+
+  logStaticOpenGLInfo();
+  logGraphicsDriverInfo();
+  logOpenGLContextInfo();
+}
+
+
+void GraphicsManager::logStaticOpenGLInfo() const
+{
+  std::stringstream ss;
+  ss << "OpenGL GLEXT version: " << GL_GLEXT_VERSION;
+  logger_.debug(ss.str()); ss.str("");
+}
+
+
+void GraphicsManager::logOpenGLContextInfo() const
+{
+  assert(context_ && "Missing OpenGL Context");
+  std::stringstream ss;
+  ss << std::setw(20) << std::left << "OpenGL Version: "
+     << glGetString(GL_VERSION);
+  logger_.debug(ss.str()); ss.str("");
+  ss << std::setw(20) << std::left << "OpenGL GLSL: "
+     << glGetString(GL_SHADING_LANGUAGE_VERSION);
+  logger_.debug(ss.str()); ss.str("");
+  ss << std::setw(20) << std::left << "OpenGL Renderer: "
+     << glGetString(GL_RENDERER);
+  logger_.debug(ss.str()); ss.str("");
+  ss << std::setw(20) << std::left << "OpenGL Vendor: "
+     << glGetString(GL_VENDOR);
+  logger_.debug(ss.str()); ss.str("");
+
+  // supported extensions:
+  GLint nExtensions;
+  glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensions);
+  ss << std::setw(20) << std::left << "OpenGL #EXT: "
+     << nExtensions;
+  logger_.debug(ss.str()); ss.str("");
+
+  #ifdef DEBUG_OPENGL_EXT
+  for (GLint i = 0 ; i < nExtensions ; ++i) {
+    ss << glGetStringi(GL_EXTENSIONS, i);
+    logger_.debug(ss.str()); ss.str("");
+  }
+  #endif
+}
+
+
+void GraphicsManager::logGraphicsDriverInfo() const
+{
+  assert(context_ && "Missing OpenGL Context");
+
+  const int nVideoDrivers = SDL_GetNumVideoDrivers();
+  std::stringstream ss;
+  ss << "Found " << nVideoDrivers << " video drivers";
+  logger_.debug(ss.str()); ss.str("");
+
+  const std::string currentVideoDriver(SDL_GetCurrentVideoDriver());
+  for (int i = 0; i < nVideoDrivers; i++) {
+    const std::string videoDriver(SDL_GetVideoDriver(i));
+    ss << "Video Driver #" << i << ": " << videoDriver;
+    if (currentVideoDriver == videoDriver)
+      ss << " (Current)";
+    logger_.debug(ss.str()); ss.str("");
+  }
+
+  const int nRenderDrivers = SDL_GetNumRenderDrivers();
+  ss << "Found " << nRenderDrivers << " render drivers";
+  logger_.debug(ss.str()); ss.str("");
+
+  SDL_RendererInfo info;
+  for (int i = 0 ; i < nRenderDrivers ; ++i) {
+    SDL_GetRenderDriverInfo(i, &info);
+    ss << "Render Driver #" << i << ": " << info.name;
+
+    bool isSoftware      = info.flags & SDL_RENDERER_SOFTWARE;
+    bool isHardware      = info.flags & SDL_RENDERER_ACCELERATED;
+    bool isVSync         = info.flags & SDL_RENDERER_PRESENTVSYNC;
+    bool isTargetTexture = info.flags & SDL_RENDERER_TARGETTEXTURE;
+
+    ss << "\t [";
+    if (isSoftware) ss << "SW";
+    if (isHardware) ss << "HW";
+    if (isVSync) ss << ", VSync";
+    if (isTargetTexture) ss << ", TT";
+    ss << "]";
+    logger_.debug(ss.str()); ss.str("");
+  }
 }
