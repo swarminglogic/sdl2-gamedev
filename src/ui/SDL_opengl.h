@@ -1,6 +1,11 @@
 #ifndef UI_SDL_OPENGL_H
 #define UI_SDL_OPENGL_H
 
+/**
+ * SDL_opengl wrapper
+ * @author SwarmingLogic (Roald Fernandez)
+ */
+
 // Required definition call for OpenGL 3.0+ functions
 #define GL_GLEXT_PROTOTYPES 1
 
