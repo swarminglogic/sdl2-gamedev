@@ -5,7 +5,6 @@
 
 
 class LogManager;
-class Timer;
 class ViewConfig;
 
 /**
@@ -31,7 +30,6 @@ private:
 
   std::unique_ptr<ViewConfig> viewConfig_;
   std::unique_ptr<LogManager> logManager_;
-  std::unique_ptr<Timer> runtime_;
 
   // NonCopyable
   ConfigManager(const ConfigManager& c);

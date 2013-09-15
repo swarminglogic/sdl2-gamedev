@@ -2,12 +2,16 @@
 
 #include <cstdlib>
 
+#include <ui/BasicRender.h>
 #include <ui/SDL.h>
 #include <ui/SDL_image.h>
 #include <ui/SDL_mixer.h>
+#include <ui/SDL_opengl.h>
 #include <ui/SDL_ttf.h>
+#include <ui/ShaderUtil.h>
 #include <util/Exception.h>
 #include <util/Log.h>
+#include <util/Timer.h>
 
 
 MainManager& MainManager::instance()
@@ -25,11 +29,64 @@ MainManager::MainManager()
   initSDLttf();
   initSDLmixer();
 
-  graphicsManager_.reset(new GraphicsManager);
+  graphics_.reset(new GraphicsManager);
+  runtime_.reset(new Timer);
+  runtime_->start();
+
+  // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
+  // class, which manages the renderer?
+  basicRender_.reset(0);
 }
+
 
 MainManager::~MainManager()
 {
+}
+
+void MainManager::initialize()
+{
+  logger_.info("Inititalizing resources.");
+  if (basicRender_)
+    basicRender_->initialize();
+}
+
+void MainManager::finalize()
+{
+  logger_.info("Cleaning up resources.");
+  if (basicRender_)
+    basicRender_->finalize();
+}
+
+void MainManager::run() {
+  SDL_Event event;
+  bool isRunning = true;
+  while (isRunning) {
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+      case SDL_MOUSEBUTTONDOWN:
+        break;
+      case SDL_KEYDOWN:
+        switch (event.key.keysym.sym) {
+        case SDLK_q: case SDLK_ESCAPE: isRunning = false; break;
+        case SDLK_f: graphics_->toggleFullScreen(); break;
+        case SDLK_v: graphics_->toggleVSync(); break;
+        default:
+          break;
+        }
+        break;
+      case SDL_QUIT:
+        isRunning = false;
+        break;
+      default:
+        break;
+      }
+    }
+
+    SDL_Delay(50);
+    if (basicRender_)
+      basicRender_->render(runtime_->getSeconds());
+    graphics_->swapBuffers();
+  }
 }
 
 void MainManager::initSDL()

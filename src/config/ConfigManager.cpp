@@ -6,7 +6,6 @@
 #include <math/Size.h>
 #include <ui/GraphicsManager.h>
 #include <util/LogManager.h>
-#include <util/Timer.h>
 
 
 ConfigManager& ConfigManager::instance()
@@ -26,7 +25,6 @@ const ViewConfig& ConfigManager::getViewConfig() const
   return *viewConfig_;
 }
 
-
 ConfigManager::ConfigManager()
   : logManager_(nullptr)
 {
@@ -44,9 +42,6 @@ ConfigManager::ConfigManager()
   logManager_.reset(new LogManager(LogManager::LEVEL_DEBUG,
                                    LogManager::LEVEL_DEBUG));
   logManager_->setLogfilePath("./log.txt");
-
-  // Timer
-  runtime_.reset(new Timer);
 }
 
 

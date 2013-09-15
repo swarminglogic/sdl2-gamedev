@@ -4,8 +4,12 @@
 #include <memory>
 
 #include <ui/GraphicsManager.h>
+#include <ui/SDL_opengl.h>
 
+
+class BasicRender;
 class Log;
+class Timer;
 
 /**
  * MainManager class for managing application internals
@@ -23,6 +27,21 @@ public:
 
   virtual ~MainManager();
 
+  /**
+   * Program main loop
+   */
+  void run();
+
+  /**
+   * Called prior to run()
+   */
+  void initialize();
+
+  /**
+   * Called after finalizing run() (exiting main loop)
+   */
+  void finalize();
+
 private:
   MainManager();
 
@@ -36,7 +55,9 @@ private:
   MainManager& operator=(const MainManager& c);
 
   Log logger_;
-  std::unique_ptr<GraphicsManager> graphicsManager_;
+  std::unique_ptr<GraphicsManager> graphics_;
+  std::unique_ptr<Timer> runtime_;
+  std::unique_ptr<BasicRender> basicRender_;
 };
 
 #endif

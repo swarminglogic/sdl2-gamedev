@@ -12,12 +12,16 @@ int main(int argc, char *argv[])
   Log log("main");
   try {
     ConfigManager::instance();
-    MainManager::instance();
+    MainManager& mainManager = MainManager::instance();
+    mainManager.initialize();
+    mainManager.run();
   }
   catch (Exception e) {
     log.error(std::string("Terminating early due to exception: ") + e.what());
     exit(EXIT_FAILURE);
   }
 
+  MainManager::instance().finalize();
+  log.info("Terminating successfully");
   return EXIT_SUCCESS;
 }
