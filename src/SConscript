@@ -21,6 +21,7 @@ libs = ['SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
         'angelscript',
         'pthread', 'GL', 'GLU', 'm', 'dl', 'rt']
 
+
 angelAddons = ['scriptbuilder', 'scriptstdstring']
 
 libpaths = [
@@ -40,7 +41,8 @@ sourcepaths = [
     pathSdl + "/include/"]
 
 
-cppflags = ['-O0', '-g', '-fno-strict-aliasing', '-D_REENTRANT']
+cppflags = ['-O0', '-g', '-fno-strict-aliasing',
+            '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED']
 #cppflags = ['-O3', '-DGL_GLEXT_PROTOTYPES', '-D_REENTRANT']
 
 # Custom guards
@@ -58,8 +60,7 @@ for addon in angelAddons:
    cppflags.append(['-isystem', pathAngel + '/addon/' + addon])
 
 
-
-if env['CXX'] == 'g++':
+if env['CXX'] == 'g++-latest':
    cppflags.append(['-std=c++0x'])
 #'-Waggregate-return', # Problem with iterators in stl containers.
    cppflags.append([

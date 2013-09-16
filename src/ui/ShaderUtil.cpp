@@ -1,5 +1,6 @@
 #include <ui/ShaderUtil.h>
 
+#include <array>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -62,10 +63,11 @@ std::string ShaderUtil::checkShaderInfo(GLuint shaderId,
     GLint loglen;
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &loglen);
     if (loglen > 0) {
-      char log[loglen];
+      char* log = new char[loglen];
       GLsizei written;
       glGetShaderInfoLog(shaderId, loglen, &written, log);
       ss << log << std::endl;
+      delete[] log;
     }
     return ss.str();
   }
@@ -85,10 +87,11 @@ std::string ShaderUtil::checkProgramInfo(GLuint programId,
     GLint loglen;
     glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &loglen);
     if (loglen > 0) {
-      char log[loglen];
+      char* log = new char[loglen];
       GLsizei written;
       glGetProgramInfoLog(programId, loglen, &written, log);
       ss << log << std::endl;
+      delete[] log;
     }
     return ss.str();
   }

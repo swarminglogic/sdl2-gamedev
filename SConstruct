@@ -16,8 +16,8 @@ Type: 'scons'             -> build program
 env = Environment(ENV = {'PATH' : os.environ['PATH'],
                          'HOME' : os.environ['HOME'],
                          'TERM' : 'xterm'},
-                  CXX='clang',
-                  # CXX='g++',
+                  # CXX='clang',
+                  CXX='g++-latest',
                   tools=['default'], toolpath=[''])
 
 VariantDir('build', 'src')

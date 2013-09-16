@@ -4,7 +4,7 @@
 #include <chrono>
 #include <string>
 
-#include <boost/thread/thread.hpp>
+#include <boost/thread.hpp>
 
 #include <util/Clock.h>
 
