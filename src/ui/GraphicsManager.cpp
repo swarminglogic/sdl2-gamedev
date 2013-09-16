@@ -36,9 +36,9 @@ void GraphicsManager::toggleFullScreen()
   setFullScreen(isFullScreen_);
 }
 
-void GraphicsManager::setFullScreen(bool isFullScreen)
+void GraphicsManager::setFullScreen(bool isFullScreenEnabled)
 {
-  if (isFullScreen) {
+  if (isFullScreenEnabled) {
     logger_.info("Enabling fullscreen");
     SDL_SetWindowFullscreen(window_.get(), SDL_WINDOW_FULLSCREEN_DESKTOP);
   }
@@ -67,9 +67,9 @@ bool GraphicsManager::isVSync() const
 }
 
 
-void GraphicsManager::setIsVSync(bool isVSync)
+void GraphicsManager::setIsVSync(bool isVSyncEnabled)
 {
-  isVSync_ = isVSync;
+  isVSync_ = isVSyncEnabled;
   if (isVSync_)
     logger_.info("Enabling vsync");
   else
@@ -131,9 +131,7 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 
 void GraphicsManager::logStaticOpenGLInfo() const
 {
-  std::stringstream ss;
-  ss << "OpenGL GLEXT version: " << GL_GLEXT_VERSION;
-  logger_.debug(ss.str()); ss.str("");
+  logger_.d() << "OpenGL GLEXT version: " << GL_GLEXT_VERSION << Log::end;
 }
 
 
@@ -175,39 +173,35 @@ void GraphicsManager::logGraphicsDriverInfo() const
   assert(context_ && "Missing OpenGL Context");
 
   const int nVideoDrivers = SDL_GetNumVideoDrivers();
-  std::stringstream ss;
-  ss << "Found " << nVideoDrivers << " video drivers";
-  logger_.debug(ss.str()); ss.str("");
+  logger_.d() << "Found " << nVideoDrivers << " video drivers" << Log::end;
 
   const std::string currentVideoDriver(SDL_GetCurrentVideoDriver());
   for (int i = 0; i < nVideoDrivers; i++) {
     const std::string videoDriver(SDL_GetVideoDriver(i));
-    ss << "Video Driver #" << i << ": " << videoDriver;
+    logger_.d() << "Video Driver #" << i << ": " << videoDriver;
     if (currentVideoDriver == videoDriver)
-      ss << " (Current)";
-    logger_.debug(ss.str()); ss.str("");
+      logger_ << " (Current)";
+    logger_ << Log::end;
   }
 
   const int nRenderDrivers = SDL_GetNumRenderDrivers();
-  ss << "Found " << nRenderDrivers << " render drivers";
-  logger_.debug(ss.str()); ss.str("");
+  logger_.d() << "Found " << nRenderDrivers << " render drivers" << Log::end;
 
   SDL_RendererInfo info;
   for (int i = 0 ; i < nRenderDrivers ; ++i) {
     SDL_GetRenderDriverInfo(i, &info);
-    ss << "Render Driver #" << i << ": " << info.name;
+    logger_.d() << "Render Driver #" << i << ": " << info.name;
 
     bool isSoftware      = info.flags & SDL_RENDERER_SOFTWARE;
     bool isHardware      = info.flags & SDL_RENDERER_ACCELERATED;
     bool isVSync         = info.flags & SDL_RENDERER_PRESENTVSYNC;
     bool isTargetTexture = info.flags & SDL_RENDERER_TARGETTEXTURE;
 
-    ss << "\t [";
-    if (isSoftware) ss << "SW";
-    if (isHardware) ss << "HW";
-    if (isVSync) ss << ", VSync";
-    if (isTargetTexture) ss << ", TT";
-    ss << "]";
-    logger_.debug(ss.str()); ss.str("");
+    logger_ << "\t [";
+    if (isSoftware) logger_ << "SW";
+    if (isHardware) logger_ << "HW";
+    if (isVSync) logger_ << ", VSync";
+    if (isTargetTexture) logger_ << ", TT";
+    logger_ << "]" << Log::end;
   }
 }

@@ -25,13 +25,13 @@ public:
 
   // FullScreen toggle
   void toggleFullScreen();
-  void setFullScreen(bool isFullScreen);
+  void setFullScreen(bool isFullScreenEnabled);
   bool isFullScreen() const;
 
   // VSync toggle
   void toggleVSync();
   bool isVSync() const;
-  void setIsVSync(bool isVSync);
+  void setIsVSync(bool isVSyncEnabled);
 
   // Debug function for logging graphics driver information
   void logGraphicsDriverInfo() const;
