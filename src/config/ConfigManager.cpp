@@ -16,14 +16,16 @@ ConfigManager& ConfigManager::instance()
 
 
 const LogManager& ConfigManager::getLogManager() const
-{
-  return *logManager_;
-}
+{ return *logManager_; }
+LogManager& ConfigManager::getLogManager()
+{ return *logManager_; }
 
 const ViewConfig& ConfigManager::getViewConfig() const
-{
-  return *viewConfig_;
-}
+{ return *viewConfig_; }
+ViewConfig& ConfigManager::getViewConfig()
+{ return *viewConfig_; }
+
+
 
 ConfigManager::ConfigManager()
   : logManager_(nullptr)

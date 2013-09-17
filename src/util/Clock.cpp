@@ -17,9 +17,15 @@ Clock::~Clock()
 
 void Clock::update()
 {
+  const std::time_t tnow = now();
+  time_ = *std::localtime(&tnow);
+}
+
+std::time_t Clock::now()
+{
   const std::chrono::system_clock::time_point now{std::chrono::system_clock::now()};
   const std::time_t tnow = std::chrono::system_clock::to_time_t(now);
-  time_ = *std::localtime(&tnow);
+  return tnow;
 }
 
 

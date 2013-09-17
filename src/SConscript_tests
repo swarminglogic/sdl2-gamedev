@@ -25,7 +25,7 @@ pathSdl  = os.environ['SDL2DIR'];
 pathAngel  = os.environ["ANGELSCRIPTDIR"];
 sourcepaths = [pathBoost + "/include/", pathSdl + '/include/', pathAngel + '/include']
 libs = ['main', 'angeladdon', 'SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
-        'angelscript', 'boost_thread', 'boost_system',
+        'angelscript', 'boost_system', 'boost_filesystem',
         'GL', 'GLU']
 libpaths = [pathBoost + '/lib', pathSdl + '/lib', pathAngel + '/lib', '#/lib']
 env_test.Replace(CPPPATH=sourcepaths)

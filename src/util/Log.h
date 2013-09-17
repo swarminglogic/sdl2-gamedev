@@ -56,12 +56,13 @@ public:
   const Log& e() const;
 
   static void end(){}
-  friend Log& operator<<(const Log& lhs,
-                         void(*pf)() ) {
+  friend const Log& operator<<(const Log& lhs,
+                               void(*pf)() ) {
     if (pf == end) {
       lhs.log(lhs.streamLogLevel_, lhs.streamLog_.str());
       lhs.streamLog_.str(std::string());
     }
+    return lhs;
   }
 
   friend const Log& operator<<(const Log& lhs, const char* c)
@@ -70,6 +71,8 @@ public:
   { lhs.streamLog_ << str; return lhs; }
   friend const Log& operator<<(const Log& lhs, const int i)
   { lhs.streamLog_ << i; return lhs; }
+  friend const Log& operator<<(const Log& lhs, const std::size_t ui)
+  { lhs.streamLog_ << ui; return lhs; }
   friend const Log& operator<<(const Log& lhs, const float f)
   { lhs.streamLog_ << f; return lhs; }
   friend const Log& operator<<(const Log& lhs, const double d)

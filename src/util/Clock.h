@@ -33,6 +33,8 @@ public:
   int getMinutes() const;
   int getSeconds() const;
 
+  static std::time_t now();
+
   Clock();
   virtual ~Clock();
 

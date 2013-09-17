@@ -18,8 +18,8 @@ pathGlm   = os.environ["GLMDIR"];
 pathAngel  = os.environ["ANGELSCRIPTDIR"];
 
 libs = ['SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
-        'angelscript',
-        'pthread', 'GL', 'GLU', 'm', 'dl', 'rt']
+        'angelscript', 'boost_system', 'boost_filesystem',
+        'GL', 'GLU', 'm', 'dl', 'rt']
 
 
 angelAddons = ['scriptbuilder', 'scriptstdstring']
@@ -32,7 +32,7 @@ libpaths = [
 
 sourcepaths = [
     base,
-    pathBoost,
+    pathBoost + '/include',
     pathGlm,
     pathAngel + '/include',
  #   os.environ["CXXTESTDIR"],
@@ -52,7 +52,7 @@ cppflags = ['-O0', '-g', '-fno-strict-aliasing',
 # cppflags.append(['-DLOG2FILE_DISABLED'])   # Disables logging to file
 
 # Adding ignore paths for external libraries
-cppflags.append(['-isystem', pathBoost,
+cppflags.append(['-isystem', pathBoost + '/include',
                  '-isystem', pathSdl + '/include/',
                  '-isystem', pathAngel + '/include',
                  '-isystem', pathAngel + '/include/angelscript'])

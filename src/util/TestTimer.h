@@ -1,7 +1,8 @@
 #ifndef UTIL_TESTTIMER_H
 #define UTIL_TESTTIMER_H
 
-#include <boost/thread/thread.hpp>
+#include <chrono>
+#include <thread>
 
 #include <util/Timer.h>
 
@@ -10,11 +11,12 @@
 
 class TestTimer : public CxxTest::TestSuite
 {
-public:
+private:
   void msleep(unsigned milliseconds) {
-    boost::this_thread::sleep( boost::posix_time::milliseconds(milliseconds));
+    std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
   }
 
+public:
 
   void testTimerInit()
   {

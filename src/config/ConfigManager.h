@@ -22,7 +22,9 @@ public:
   virtual ~ConfigManager();
 
   const LogManager& getLogManager() const;
+  LogManager& getLogManager();
   const ViewConfig& getViewConfig() const;
+  ViewConfig& getViewConfig();
 
 private:
   // Singleton
