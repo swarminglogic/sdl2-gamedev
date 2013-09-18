@@ -10,6 +10,16 @@ cppFilesPrune = Glob('main.cpp') + Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glo
 testFiles     = Glob('Test*.h')   + Glob('*/Test*.h')   + Glob('*/*/Test*.h')
 sourceFiles = list(set(cppFiles) - set(cppFilesPrune))
 
+# # Macros definitions
+cppflags = ['-O0', '-g', '-std=c++11', '-fno-strict-aliasing',
+            '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED']
+
+macroDefinitions = [
+#   'SLOW_TESTS',  # ENABLES SLOW TESTS
+]
+for macro in macroDefinitions:
+   cppflags.append('-D' + macro)
+
 
 pathCxxTest = os.environ['CXXTESTDIR'];
 pathCxxTestBuilder = pathCxxTest + '/build_tools/SCons/'
@@ -17,7 +27,7 @@ env_test = env.Clone(tools=['default','cxxtest'],
                      toolpath=['#/common', pathCxxTestBuilder])
 env_test.Replace(CXXTEST_INSTALL_DIR = pathCxxTest)
 env_test.Replace(CXXTEST_SUFFIX = '.h')
-env_test.Replace(CXXFLAGS = '-std=c++0x')
+env_test.Replace(CXXFLAGS = ' '.join(cppflags))
 env_test.Replace(CXXTEST_CPPPATH = ['#/src', pathCxxTest])
 env_test.Replace(CXXTEST_OPTS = '--have-eh')
 pathBoost = os.environ['BOOSTDIR'];

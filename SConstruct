@@ -17,7 +17,7 @@ env = Environment(ENV = {'PATH' : os.environ['PATH'],
                          'HOME' : os.environ['HOME'],
                          'TERM' : 'xterm'},
                   # CXX='clang',
-                  CXX='g++-latest',
+                  CXX='g++-4.8',
                   tools=['default'], toolpath=[''])
 
 VariantDir('build', 'src')
