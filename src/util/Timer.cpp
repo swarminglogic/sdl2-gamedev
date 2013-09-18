@@ -1,18 +1,44 @@
-#include <util/Timer.h>
+#include "Timer.h"
 
-#include <cassert>
+// USE SDL TIMING FUNCTIONS
+#if defined USING_SDL
+#include <SDL2/SDL.h>
+struct Timer::Timer_impl
+{ unsigned int getTicksSinceStart() const { return SDL_GetTicks(); }};
+#else
+
+//USE C++11 CHRONO FALLBACK
+#include <chrono>
+class Timer::Timer_impl
+{
+public:
+  Timer_impl() : start_(std::chrono::high_resolution_clock::now()) {}
+  unsigned int getTicksSinceStart() const {
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+
+    const auto now = high_resolution_clock::now();
+    const unsigned int elapsedtics =
+      duration_cast<std::chrono::milliseconds>(now - start_).count();
+    return elapsedtics;
+  }
+private:
+  std::chrono::time_point<std::chrono::high_resolution_clock> start_;
+};
+#endif
 
 
 Timer::Timer()
-  : state_(STOPPED),
+  : impl_(new Timer_impl()),
+    state_(STOPPED),
     ticksWhenStarted_(0),
     ticksAccum_(0)
 {
 }
 
-
 Timer::~Timer()
 {
+  delete impl_;
 }
 
 
@@ -28,7 +54,7 @@ void Timer::eventTriggered(Event event)
   switch(state_) {
   case STOPPED:
     if (event == STARTING) {
-      ticksWhenStarted_ = SDL_GetTicks();
+      ticksWhenStarted_ = impl_->getTicksSinceStart();
       ticksAccum_ = 0;
       state_ = RUNNING;
     }
@@ -38,7 +64,7 @@ void Timer::eventTriggered(Event event)
       state_ = STOPPED;
     }
     else if (event == PAUSING) {
-      ticksAccum_ += (SDL_GetTicks() - ticksWhenStarted_);
+      ticksAccum_ += (impl_->getTicksSinceStart() - ticksWhenStarted_);
       state_ = PAUSED;
     }
     break;
@@ -46,7 +72,7 @@ void Timer::eventTriggered(Event event)
     if (event == STOPPING)
       state_ = STOPPED;
     else if (event == RESUMING) {
-      ticksWhenStarted_ = SDL_GetTicks();
+      ticksWhenStarted_ = impl_->getTicksSinceStart();
       state_ = RUNNING;
     }
     break;
@@ -77,9 +103,9 @@ void Timer::resume()
 }
 
 
-Uint32 Timer::reset()
+unsigned int Timer::reset()
 {
-  const int ticks = getTicks();
+  const unsigned int ticks = getTicks();
   eventTriggered(RESTARTING);
   return ticks;
 }
@@ -105,14 +131,15 @@ void Timer::toggleStopStart()
 }
 
 
-Uint32 Timer::getTicks() const
+
+unsigned int Timer::getTicks() const
 {
   if (isState(STOPPED))
     return 0;
   else if (isState(PAUSED))
     return ticksAccum_;
   else if (isState(RUNNING))
-    return ticksAccum_ + (SDL_GetTicks() - ticksWhenStarted_);
+    return ticksAccum_ + (impl_->getTicksSinceStart() - ticksWhenStarted_);
 
   return 0;
 }

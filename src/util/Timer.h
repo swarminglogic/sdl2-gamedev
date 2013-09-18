@@ -1,15 +1,16 @@
 #ifndef UTIL_TIMER_H
 #define UTIL_TIMER_H
 
-#include <SDL2/SDL.h>
-
-
 /**
  * Timer class for doing timing functions.
  *
  * Has wrap-around at approx 1193 hours (49 days).
  *
- * @author Roald Fernandez
+ * Nomenclature: tic = millisecond.
+ *
+ * @author  Roald Fernandez (roaldfernandez@gmail.com)
+ * @date    2013-06-26
+ * @license CC-BY
  */
 class Timer
 {
@@ -22,11 +23,11 @@ public:
   void stop();
   void pause();
   void resume();
-  Uint32 reset();
+  unsigned int reset();
   void togglePauseResume();
   void toggleStopStart();
 
-  Uint32 getTicks() const;
+  unsigned int getTicks() const;
   float getSeconds() const;
   bool isPaused() const;
   bool isStopped() const;
@@ -50,9 +51,13 @@ private:
   bool isState(State state) const;
   void eventTriggered(Event event);
 
+  // Hiding external library dependant timing code (pimpl pattern)
+  class Timer_impl;
+  Timer_impl* impl_;
+
   State state_;
-  Uint32 ticksWhenStarted_;
-  Uint32 ticksAccum_;
+  unsigned int ticksWhenStarted_;
+  unsigned int ticksAccum_;
 };
 
 #endif
