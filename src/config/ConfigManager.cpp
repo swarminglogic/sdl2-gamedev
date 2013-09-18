@@ -44,6 +44,9 @@ ConfigManager::ConfigManager()
   logManager_.reset(new LogManager(LogManager::LEVEL_DEBUG,
                                    LogManager::LEVEL_DEBUG));
   logManager_->setLogfilePath("./log.txt");
+
+  // Bash shell streaming
+  logManager_->setStreamColorMode(LogManager::COLORMODE_BASH);
 }
 
 

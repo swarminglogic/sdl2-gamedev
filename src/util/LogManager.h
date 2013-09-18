@@ -23,6 +23,11 @@ public:
     LEVEL_NONE
   };
 
+  enum ColorMode {
+    COLORMODE_NONE = 0,
+    COLORMODE_BASH
+  };
+
   LogManager();
 
   LogManager(LogLevel fileLogLevel,
@@ -41,6 +46,8 @@ public:
   const std::string& getLogfilePath() const;
   void setLogfilePath(std::string logfilePath);
 
+  LogManager::ColorMode getStreamColorMode() const;
+  void setStreamColorMode(LogManager::ColorMode streamColorMode);
 
 private:
   void log2Stream(const std::string& formatted) const;
@@ -50,8 +57,10 @@ private:
 
   LogLevel fileLogLevel_;
   LogLevel streamLogLevel_;
+  ColorMode streamColorMode_;
 
   std::string logfilePath_;
+
 
   // NonCopyable
   LogManager(const LogManager& c);

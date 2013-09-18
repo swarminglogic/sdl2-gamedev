@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 
+#include <io/BashColor.h>
 #include <util/Clock.h>
 #include <util/FileUtil.h>
 
@@ -42,16 +43,25 @@ void LogManager::log(LogLevel level,
   Clock clock;
   std::stringstream ss;
 
+  // TODO swarminglogic, 2013-09-13: Add short build checksum (through scons)
+
   ss << logLevelAsString(level) << clock.getTimeStamp() << ' '
      << loggerName << " \t" << message << "\n";
   const std::string formatted(ss.str());
 
-  // TODO swarminglogic, 2013-09-13: Add short build checksum (through scons)
-
-  if (level >= streamLogLevel_)
-    log2Stream(formatted);
   if (level >= fileLogLevel_)
     log2File(formatted);
+
+  if (level >= streamLogLevel_) {
+    if (streamColorMode_ == COLORMODE_BASH ) {
+      const std::string bashFormatted =
+        BashColor::setColor(formatted, BashColor::getLogLevelColor(level));
+      log2Stream(bashFormatted);
+    }
+    else
+      log2Stream(formatted);
+  }
+
 #endif
 }
 
@@ -108,6 +118,18 @@ void LogManager::setLogfilePath(std::string logfilePath)
 {
   FileUtil::write(logfilePath, "");
   logfilePath_ = logfilePath;
+}
+
+
+LogManager::ColorMode LogManager::getStreamColorMode() const
+{
+  return streamColorMode_;
+}
+
+
+void LogManager::setStreamColorMode(LogManager::ColorMode streamColorMode)
+{
+  streamColorMode_ = streamColorMode;
 }
 
 
