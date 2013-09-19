@@ -8,27 +8,10 @@
 #include <util/LogManager.h>
 
 
-ConfigManager& ConfigManager::instance()
-{
-  static ConfigManager instance;
-  return instance;
-}
-
-
-const LogManager& ConfigManager::getLogManager() const
-{ return *logManager_; }
-LogManager& ConfigManager::getLogManager()
-{ return *logManager_; }
-
-const ViewConfig& ConfigManager::getViewConfig() const
-{ return *viewConfig_; }
-ViewConfig& ConfigManager::getViewConfig()
-{ return *viewConfig_; }
-
-
 
 ConfigManager::ConfigManager()
-  : logManager_(nullptr)
+  : viewConfig_(nullptr),
+    logManager_(nullptr)
 {
   // TODO swarminglogic, 2013-09-14: Load configuration from file, and set
   // values accordingly. Separate function so that reused for updating.
@@ -53,3 +36,23 @@ ConfigManager::ConfigManager()
 ConfigManager::~ConfigManager()
 {
 }
+
+
+ConfigManager& ConfigManager::instance()
+{
+  static ConfigManager instance;
+  return instance;
+}
+
+
+const LogManager& ConfigManager::getLogManager() const
+{ return *logManager_; }
+LogManager& ConfigManager::getLogManager()
+{ return *logManager_; }
+
+
+const ViewConfig& ConfigManager::getViewConfig() const
+{ return *viewConfig_; }
+ViewConfig& ConfigManager::getViewConfig()
+{ return *viewConfig_; }
+

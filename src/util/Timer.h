@@ -58,6 +58,10 @@ private:
   State state_;
   unsigned int ticksWhenStarted_;
   unsigned int ticksAccum_;
+
+  // Disabled copy, implement and test when needed.
+  Timer(const Timer& c);
+  Timer& operator=(const Timer& c);
 };
 
 #endif

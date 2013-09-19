@@ -10,8 +10,11 @@
 File::File(const std::string& filename,
            bool keepLocalCopy)
   : filename_(filename),
+    timeLastRead_(),
     isLocalCopyEnabled_(keepLocalCopy),
-    contentReadHash_(0)
+    localCopy_(""),
+    contentReadHash_(0),
+    localCopyHash_(0)
 {
 }
 

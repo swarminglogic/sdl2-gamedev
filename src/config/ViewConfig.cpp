@@ -1,10 +1,12 @@
 #include <config/ViewConfig.h>
 
 
+
 ViewConfig::ViewConfig()
   : screenSize_(800, 600),
     windowTitle_(""),
     isFullScreen_(false),
+    isResizeable_(false),
     isVSync_(true)
 {
 }
@@ -14,7 +16,8 @@ ViewConfig::ViewConfig(Size screenSize,
   : screenSize_(screenSize),
     windowTitle_(windowTitle),
     isFullScreen_(false),
-    isResizeable_(false)
+    isResizeable_(false),
+    isVSync_(true)
 {
 }
 
@@ -39,7 +42,7 @@ int ViewConfig::getScreenWidth() const
 
 int ViewConfig::getScreenHeight() const
 {
-  return screenSize_.width();
+  return screenSize_.height();
 }
 
 
@@ -68,9 +71,9 @@ bool ViewConfig::isResizeable() const
    return isResizeable_;
  }
 
-void ViewConfig::setIsResizeable(bool isResizeable)
+void ViewConfig::setIsResizeable(bool isResizeableEnabled)
 {
-  isResizeable_ = isResizeable;
+  isResizeable_ = isResizeableEnabled;
 }
 
 bool ViewConfig::isVSync() const
@@ -78,8 +81,8 @@ bool ViewConfig::isVSync() const
   return isVSync_;
 }
 
-void ViewConfig::setIsVSync(bool isVSync)
+void ViewConfig::setIsVSync(bool isVSyncEnabled)
 {
-  isVSync_ = isVSync;
+  isVSync_ = isVSyncEnabled;
 }
 

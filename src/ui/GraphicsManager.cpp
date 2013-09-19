@@ -11,7 +11,11 @@
 
 
 GraphicsManager::GraphicsManager()
-  : logger_("GraphicsManager")
+  : logger_("GraphicsManager"),
+    window_(nullptr),
+    context_(nullptr),
+    isFullScreen_(false),
+    isVSync_(true)
 {
   const ViewConfig& viewConfig = ConfigManager::instance().getViewConfig();
   isFullScreen_ = viewConfig.isFullScreen();
@@ -194,13 +198,13 @@ void GraphicsManager::logGraphicsDriverInfo() const
 
     bool isSoftware      = info.flags & SDL_RENDERER_SOFTWARE;
     bool isHardware      = info.flags & SDL_RENDERER_ACCELERATED;
-    bool isVSync         = info.flags & SDL_RENDERER_PRESENTVSYNC;
+    bool isVSyncEnabled  = info.flags & SDL_RENDERER_PRESENTVSYNC;
     bool isTargetTexture = info.flags & SDL_RENDERER_TARGETTEXTURE;
 
     logger_ << "\t [";
     if (isSoftware) logger_ << "SW";
     if (isHardware) logger_ << "HW";
-    if (isVSync) logger_ << ", VSync";
+    if (isVSyncEnabled) logger_ << ", VSync";
     if (isTargetTexture) logger_ << ", TT";
     logger_ << "]" << Log::end;
   }

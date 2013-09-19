@@ -22,7 +22,8 @@ libs = ['SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
         'GL', 'GLU', 'm', 'dl', 'rt']
 
 
-angelAddons = ['scriptbuilder', 'scriptstdstring']
+#angelAddons = ['scriptbuilder', 'scriptstdstring']
+angelAddons = []
 
 libpaths = [
    pathBoost + "/lib",
@@ -80,7 +81,7 @@ if env['CXX'] == 'g++-4.8':
          '-Wunsafe-loop-optimizations', '-Wunused',
          '-Wvariadic-macros', '-Wwrite-strings', '-pedantic',
          '-pedantic-errors', '-Woverloaded-virtual',
-         '-Wswitch-enum'])
+         '-Wswitch-enum', '-Werror'])
 
 elif env['CXX'] == 'clang':
    cppflags.append(['-std=c++11'])

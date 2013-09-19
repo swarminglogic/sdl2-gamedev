@@ -8,7 +8,9 @@
 
 
 Log::Log(const std::string& loggerName)
-  : loggerName_(loggerName)
+  : loggerName_(loggerName),
+    streamLogLevel_(LogManager::LEVEL_DEBUG),
+    streamLog_()
 {
 }
 
@@ -57,15 +59,15 @@ const Log& Log::e() const {
 }
 
 
-Exception Log::exception(const std::string& error,
-                           FunctionPtr func) const
+Exception Log::exception(const std::string& message,
+                         FunctionPtr func) const
 {
 #ifndef LOGGING_DISABLED
-  this->error(error);
+  this->error(message);
   if (func)
     this->error(func());
 #endif
-  return Exception(error);
+  return Exception(message);
 }
 
 

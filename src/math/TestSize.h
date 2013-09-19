@@ -18,19 +18,30 @@ public:
   void testBasic()
   {
     Size size;
-    TS_ASSERT_EQUALS(size.width(),  -1);
-    TS_ASSERT_EQUALS(size.height(), -1);
+    TS_ASSERT_EQUALS(size.getWidth(),  -1);
+    TS_ASSERT_EQUALS(size.getHeight(), -1);
+    TS_ASSERT_EQUALS(size.width(),    -1);
+    TS_ASSERT_EQUALS(size.height(),    -1);
 
     Size size2(5,123);
+    TS_ASSERT_EQUALS(size2.getWidth(),  5);
+    TS_ASSERT_EQUALS(size2.getHeight(), 123);
     TS_ASSERT_EQUALS(size2.width(),  5);
     TS_ASSERT_EQUALS(size2.height(), 123);
 
     Size size3;
     size3.setHeight(12);
+    TS_ASSERT_EQUALS(size3.getHeight(), 12);
+    TS_ASSERT_EQUALS(size3.getWidth(), -1);
     TS_ASSERT_EQUALS(size3.height(), 12);
     TS_ASSERT_EQUALS(size3.width(), -1);
     size3.setWidth(42);
+    TS_ASSERT_EQUALS(size3.getWidth(), 42);
     TS_ASSERT_EQUALS(size3.width(), 42);
+    size3.width(51);
+    TS_ASSERT_EQUALS(size3.width(), 51);
+    size3.height(3);
+    TS_ASSERT_EQUALS(size3.height(), 3);
 
     // Copy constructor
     Size A(41, 23);

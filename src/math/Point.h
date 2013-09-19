@@ -4,6 +4,7 @@
 #include <cmath>
 
 
+
 /**
  * Point class. Simple class representing an int-pair.
  * Logically represents x and y.
@@ -20,14 +21,23 @@ public:
   /**
    * @return y
    */
-  int y() const;
+  int getY() const;
   void setY(int y);
+
+  // Short hand get/set
+  int y() const;
+  void y(int y);
+
 
   /**
    * @return x
    */
-  int x() const;
+  int getX() const;
   void setX(int x);
+
+  // Short hand get/set
+  int x() const;
+  void x(int x);
 
   /**
    * Swaps x and y
@@ -52,29 +62,32 @@ public:
 
 
 private:
-  int x_;
-  int y_;
+  int xv_;
+  int yv_;
 };
 
 inline const Point operator+(const Point& lhs, const Point& rhs)
-{return Point(lhs.x_ + rhs.x_, lhs.y_ + rhs.y_);}
+{return Point(lhs.xv_ + rhs.xv_, lhs.yv_ + rhs.yv_);}
 
 inline const Point operator-(const Point& lhs, const Point& rhs)
-{return Point(lhs.x_ - rhs.x_, lhs.y_ - rhs.y_);}
+{return Point(lhs.xv_ - rhs.xv_, lhs.yv_ - rhs.yv_);}
 
 inline const Point operator*(const Point& lhs, double rhs)
-{return Point(std::round(lhs.x_ * rhs), std::round(lhs.y_ * rhs));}
+{return Point(static_cast<int>(std::round(lhs.xv_ * rhs)),
+              static_cast<int>(std::round(lhs.yv_ * rhs)));}
 
 inline const Point operator*(double lhs, const Point &rhs)
-{return Point(std::round(lhs * rhs.x_), std::round(lhs * rhs.y_));}
+{return Point(static_cast<int>(std::round(lhs * rhs.xv_)),
+              static_cast<int>(std::round(lhs * rhs.yv_)));}
 
 inline const Point operator/(const Point& lhs, double rhs)
-{return Point(std::round(lhs.x_ / rhs), std::round(lhs.y_ / rhs));}
+{return Point(static_cast<int>(std::round(lhs.xv_ / rhs)),
+              static_cast<int>(std::round(lhs.yv_ / rhs)));}
 
 inline bool operator==(const Point& lhs, const Point& rhs)
-{return (lhs.x_ == rhs.x_) && (lhs.y_ == rhs.y_);}
+{return (lhs.xv_ == rhs.xv_) && (lhs.yv_ == rhs.yv_);}
 
 inline bool operator!=(const Point& lhs, const Point& rhs)
-{return (lhs.x_ != rhs.x_) || (lhs.y_ != rhs.y_);}
+{return (lhs.xv_ != rhs.xv_) || (lhs.yv_ != rhs.yv_);}
 
 #endif

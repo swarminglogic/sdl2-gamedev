@@ -1,5 +1,6 @@
 #include <core/MainManager.h>
 
+#include <cassert>
 #include <cstdlib>
 
 #include <ui/BasicRender.h>
@@ -14,15 +15,12 @@
 #include <util/Timer.h>
 
 
-MainManager& MainManager::instance()
-{
-  static MainManager instance;
-  return instance;
-}
-
-
 MainManager::MainManager()
-  : logger_("MainManager")
+  : logger_("MainManager"),
+    graphics_(nullptr),
+    runtime_(nullptr),
+    basicRender_(nullptr),
+    isRunning_(true)
 {
   initSDL();
   initSDLimg();
@@ -35,13 +33,20 @@ MainManager::MainManager()
 
   // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
   // class, which manages the renderer?
-  basicRender_.reset(0);
+  basicRender_.reset(nullptr);
 }
-
 
 MainManager::~MainManager()
 {
 }
+
+
+MainManager& MainManager::instance()
+{
+  static MainManager instance;
+  return instance;
+}
+
 
 void MainManager::initialize()
 {
@@ -49,6 +54,7 @@ void MainManager::initialize()
   if (basicRender_)
     basicRender_->initialize();
 }
+
 
 void MainManager::finalize()
 {
@@ -58,36 +64,44 @@ void MainManager::finalize()
 }
 
 void MainManager::run() {
+  assert(basicRender_ && "You need a renderer, fool!");
+
   SDL_Event event;
-  bool isRunning = true;
-  while (isRunning) {
+  while (isRunning_) {
     while (SDL_PollEvent(&event)) {
-      switch (event.type) {
-      case SDL_MOUSEBUTTONDOWN:
-        break;
-      case SDL_KEYDOWN:
-        switch (event.key.keysym.sym) {
-        case SDLK_q: case SDLK_ESCAPE: isRunning = false; break;
-        case SDLK_f: graphics_->toggleFullScreen(); break;
-        case SDLK_v: graphics_->toggleVSync(); break;
-        default:
-          break;
-        }
-        break;
-      case SDL_QUIT:
-        isRunning = false;
-        break;
-      default:
-        break;
-      }
+      handleEvent(event);
+      basicRender_->handleEvent(event);
     }
 
     SDL_Delay(50);
-    if (basicRender_)
-      basicRender_->render(runtime_->getSeconds());
+    basicRender_->render(runtime_->getSeconds());
     graphics_->swapBuffers();
   }
 }
+
+
+void MainManager::handleEvent(const SDL_Event& event)
+{
+  switch (event.type) {
+  case SDL_MOUSEBUTTONDOWN:
+    break;
+  case SDL_KEYDOWN:
+    switch (event.key.keysym.sym) {
+    case SDLK_q: case SDLK_ESCAPE: isRunning_ = false; break;
+    case SDLK_f: graphics_->toggleFullScreen(); break;
+    case SDLK_v: graphics_->toggleVSync(); break;
+    default:
+      break;
+    }
+    break;
+  case SDL_QUIT:
+    isRunning_ = false;
+    break;
+  default:
+    break;
+  }
+}
+
 
 void MainManager::initSDL()
 {

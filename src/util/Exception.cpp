@@ -19,7 +19,7 @@ const std::string& Exception::toString() const
   return msg_;
 }
 
-
+[[ noreturn ]]
 void Exception::raise() const
 {
   throw *this;

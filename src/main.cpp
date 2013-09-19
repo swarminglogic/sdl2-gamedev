@@ -9,7 +9,10 @@
 
 int main(int argc, char *argv[])
 {
+  (void)argc; (void)argv;
+
   Log log("main");
+
   try {
     ConfigManager::instance();
     MainManager& mainManager = MainManager::instance();

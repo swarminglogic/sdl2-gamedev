@@ -44,6 +44,7 @@ public:
 
 private:
   MainManager();
+  void handleEvent(const SDL_Event& event);
 
   void initSDL();
   void initSDLimg();
@@ -58,6 +59,7 @@ private:
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;
+  bool isRunning_;
 };
 
 #endif

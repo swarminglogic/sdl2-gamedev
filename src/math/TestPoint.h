@@ -17,19 +17,30 @@ public:
   void testBasic()
   {
     Point point;
-    TS_ASSERT_EQUALS(point.x(),  -1);
-    TS_ASSERT_EQUALS(point.y(), -1);
+    TS_ASSERT_EQUALS(point.getX(), -1);
+    TS_ASSERT_EQUALS(point.getY(), -1);
+    TS_ASSERT_EQUALS(point.x(),    -1);
+    TS_ASSERT_EQUALS(point.y(),    -1);
 
     Point point2(5,123);
+    TS_ASSERT_EQUALS(point2.getX(),  5);
+    TS_ASSERT_EQUALS(point2.getY(), 123);
     TS_ASSERT_EQUALS(point2.x(),  5);
     TS_ASSERT_EQUALS(point2.y(), 123);
 
     Point point3;
     point3.setY(12);
+    TS_ASSERT_EQUALS(point3.getY(), 12);
+    TS_ASSERT_EQUALS(point3.getX(), -1);
     TS_ASSERT_EQUALS(point3.y(), 12);
     TS_ASSERT_EQUALS(point3.x(), -1);
     point3.setX(42);
+    TS_ASSERT_EQUALS(point3.getX(), 42);
     TS_ASSERT_EQUALS(point3.x(), 42);
+    point3.x(51);
+    TS_ASSERT_EQUALS(point3.x(), 51);
+    point3.y(3);
+    TS_ASSERT_EQUALS(point3.y(), 3);
 
     // Copy constructor
     Point A(41, 23);

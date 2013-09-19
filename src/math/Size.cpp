@@ -4,39 +4,41 @@
 Size::Size()
   : width_(-1),
     height_(-1)
-{
-}
+{}
+
+
+Size::Size(int widthv, int heightv)
+  : width_(widthv),
+    height_(heightv)
+{}
 
 
 Size::~Size()
-{
-}
+{}
 
-Size::Size(int width, int height)
-  : width_(width),
-    height_(height)
-{
-}
+
+int Size::getHeight() const
+{ return height_; }
+void Size::setHeight(int heightv)
+{ height_ = heightv; }
 
 int Size::height() const
-{
-  return height_;
-}
+{ return height_; }
+void Size::height(int heightv)
+{ height_ = heightv; }
 
-void Size::setHeight(int height)
-{
-  height_ = height;
-}
+
+int Size::getWidth() const
+{ return width_; }
+void Size::setWidth(int widthv)
+{ width_ = widthv; }
+
 
 int Size::width() const
-{
-  return width_;
-}
+{ return width_; }
+void Size::width(int widthv)
+{ width_ = widthv; }
 
-void Size::setWidth(int width)
-{
-  width_ = width;
-}
 
 void Size::transpose()
 {
@@ -61,14 +63,15 @@ Size& Size::operator-=(const Size& rhs)
 
 Size& Size::operator*=(double rhs)
 {
-  height_ *= rhs;
-  width_ *= rhs;
+  height_ = static_cast<int>(height_ * rhs);
+  width_  = static_cast<int>(width_ * rhs);
   return *this;
 }
 
 Size& Size::operator/=(double rhs)
 {
-  height_ /= rhs;
-  width_ /= rhs;
+  height_ = static_cast<int>(height_ / rhs);
+  width_  = static_cast<int>(width_ / rhs);
   return *this;
 }
+

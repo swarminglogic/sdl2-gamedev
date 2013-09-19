@@ -43,10 +43,10 @@ public:
    * It optionally calls and logs result of a function.
    * Typically, it does not itself throw exception.
    *
-   * @param error   Error message to log.
-   * @param func    optional function pointer call and log.
+   * @param message   Error message to log.
+   * @param func      optional function pointer call and log.
    */
-  Exception exception(const std::string& error,
+  Exception exception(const std::string& message,
                       FunctionPtr func = nullptr) const;
 
 
@@ -91,7 +91,6 @@ private:
 
   mutable LogManager::LogLevel streamLogLevel_;
   mutable std::stringstream streamLog_;
-  mutable bool isStreamSet_;
 
   // NonCopyable
   Log(const Log& c);

@@ -36,6 +36,7 @@ Timer::Timer()
 {
 }
 
+
 Timer::~Timer()
 {
   delete impl_;

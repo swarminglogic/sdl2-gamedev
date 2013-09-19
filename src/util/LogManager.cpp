@@ -13,14 +13,17 @@
 LogManager::LogManager()
   : fileLogLevel_(LEVEL_NONE),
     streamLogLevel_(LEVEL_NONE),
+    streamColorMode_(COLORMODE_NONE),
     logfilePath_("")
 {
 }
+
 
 LogManager::LogManager(LogLevel fileLogLevel,
                        LogLevel streamLogLevel)
   : fileLogLevel_(fileLogLevel),
     streamLogLevel_(streamLogLevel),
+    streamColorMode_(COLORMODE_NONE),
     logfilePath_("")
 {
 }
@@ -152,5 +155,7 @@ std::string LogManager::logLevelAsString(LogLevel level)
     assert(false && "Should never be queried");
     return "";
     break;
+  default:
+    return "";
   }
 }

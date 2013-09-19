@@ -5,7 +5,10 @@
 #include <sstream>
 
 
+using namespace std::chrono;
+
 Clock::Clock()
+  : time_()
 {
   update();
 }
@@ -23,8 +26,8 @@ void Clock::update()
 
 std::time_t Clock::now()
 {
-  const std::chrono::system_clock::time_point now{std::chrono::system_clock::now()};
-  const std::time_t tnow = std::chrono::system_clock::to_time_t(now);
+  const system_clock::time_point now{system_clock::now()};
+  const std::time_t tnow = system_clock::to_time_t(now);
   return tnow;
 }
 

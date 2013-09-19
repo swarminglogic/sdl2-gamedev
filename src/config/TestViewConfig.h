@@ -51,6 +51,8 @@ public:
     vc.setWindowTitle(title);
 
     TS_ASSERT_EQUALS(vc.getScreenSize(), screenSize);
+    TS_ASSERT_EQUALS(vc.getScreenWidth(), 213);
+    TS_ASSERT_EQUALS(vc.getScreenHeight(), 843);
     TS_ASSERT_EQUALS(vc.getWindowTitle(), title);
 
     TS_ASSERT(!vc.isFullScreen());
