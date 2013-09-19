@@ -2,8 +2,8 @@
 
 
 Size::Size()
-  : width_(-1),
-    height_(-1)
+  : width_(0),
+    height_(0)
 {}
 
 

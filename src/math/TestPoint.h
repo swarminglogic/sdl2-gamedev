@@ -17,10 +17,10 @@ public:
   void testBasic()
   {
     Point point;
-    TS_ASSERT_EQUALS(point.getX(), -1);
-    TS_ASSERT_EQUALS(point.getY(), -1);
-    TS_ASSERT_EQUALS(point.x(),    -1);
-    TS_ASSERT_EQUALS(point.y(),    -1);
+    TS_ASSERT_EQUALS(point.getX(), 0);
+    TS_ASSERT_EQUALS(point.getY(), 0);
+    TS_ASSERT_EQUALS(point.x(),    0);
+    TS_ASSERT_EQUALS(point.y(),    0);
 
     Point point2(5,123);
     TS_ASSERT_EQUALS(point2.getX(),  5);
@@ -31,9 +31,9 @@ public:
     Point point3;
     point3.setY(12);
     TS_ASSERT_EQUALS(point3.getY(), 12);
-    TS_ASSERT_EQUALS(point3.getX(), -1);
+    TS_ASSERT_EQUALS(point3.getX(), 0);
     TS_ASSERT_EQUALS(point3.y(), 12);
-    TS_ASSERT_EQUALS(point3.x(), -1);
+    TS_ASSERT_EQUALS(point3.x(), 0);
     point3.setX(42);
     TS_ASSERT_EQUALS(point3.getX(), 42);
     TS_ASSERT_EQUALS(point3.x(), 42);
