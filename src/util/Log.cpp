@@ -14,22 +14,22 @@ Log::Log(const std::string& loggerName)
 {
 }
 
-void Log::debug(const std::string& message) const
+void Log::d(const std::string& message) const
 {
   log(LogManager::LEVEL_DEBUG, message);
 }
 
-void Log::info(const std::string& message) const
+void Log::i(const std::string& message) const
 {
   log(LogManager::LEVEL_INFO, message);
 }
 
-void Log::warning(const std::string& message) const
+void Log::w(const std::string& message) const
 {
   log(LogManager::LEVEL_WARNING, message);
 }
 
-void Log::error(const std::string& message) const
+void Log::e(const std::string& message) const
 {
   log(LogManager::LEVEL_ERROR, message);
 }
@@ -63,9 +63,9 @@ Exception Log::exception(const std::string& message,
                          FunctionPtr func) const
 {
 #ifndef LOGGING_DISABLED
-  this->error(message);
+  this->e(message);
   if (func)
-    this->error(func());
+    this->e(func());
 #endif
   return Exception(message);
 }

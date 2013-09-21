@@ -20,11 +20,11 @@ int main(int argc, char *argv[])
     mainManager.run();
   }
   catch (Exception e) {
-    log.error(std::string("Terminating early due to exception: ") + e.what());
+    log.e(std::string("Terminating early due to exception: ") + e.what());
     exit(EXIT_FAILURE);
   }
 
   MainManager::instance().finalize();
-  log.info("Terminating successfully");
+  log.i("Terminating successfully");
   return EXIT_SUCCESS;
 }

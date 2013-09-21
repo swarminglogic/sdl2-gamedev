@@ -88,7 +88,7 @@ private:
   inline int deltaX() const;
   inline int deltaY() const;
 
-  Log logger_;
+  Log log_;
   Point initial_;
   Point current_;
   bool isDragging_;

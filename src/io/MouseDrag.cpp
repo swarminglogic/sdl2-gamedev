@@ -4,7 +4,7 @@
 
 
 MouseDrag::MouseDrag()
-  : logger_("MouseDrag"),
+  : log_("MouseDrag"),
     initial_(0, 0),
     current_(0, 0),
     isDragging_(false)

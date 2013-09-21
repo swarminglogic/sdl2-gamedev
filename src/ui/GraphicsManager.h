@@ -41,7 +41,7 @@ public:
 private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
 
-  Log logger_;
+  Log log_;
   WindowPtr window_;
   GLContextPtr context_;
   bool isFullScreen_;

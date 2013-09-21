@@ -55,7 +55,7 @@ private:
   MainManager(const MainManager& c);
   MainManager& operator=(const MainManager& c);
 
-  Log logger_;
+  Log log_;
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;

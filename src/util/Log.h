@@ -15,7 +15,7 @@
  * Used for writing log calls.
  *
  * Allows streaming logging. For example:
- * logger_.i() << "Log this numer: " << 42 << Log::end;
+ * log_.i() << "Log this numer: " << 42 << Log::end;
  *
  * Change stream log level using d(), i(), w(), e() for
  * the respective debug, info, warning, error levels.
@@ -31,10 +31,10 @@ public:
   Log(const std::string& loggerName);
 
   // Log functions for the various log levels
-  void debug(const std::string& message) const;
-  void info(const std::string& message) const;
-  void warning(const std::string& message) const;
-  void error(const std::string& message) const;
+  void d(const std::string& message) const;
+  void i(const std::string& message) const;
+  void w(const std::string& message) const;
+  void e(const std::string& message) const;
 
   typedef const char*(*FunctionPtr)();
 
