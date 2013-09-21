@@ -7,16 +7,19 @@
 #include <util/FileUtil.h>
 
 
-File::File(const std::string& filename,
-           bool keepLocalCopy)
+File::File(const std::string& filename)
   : filename_(filename),
     timeLastRead_(),
-    isLocalCopyEnabled_(keepLocalCopy),
     localCopy_(""),
     contentReadHash_(0),
     localCopyHash_(0)
 {
 }
+
+File::File() : File("")
+{
+}
+
 
 
 File::~File()
@@ -39,26 +42,25 @@ std::string File::read()
   std::size_t contentHash = std::hash<std::string>()(content);
   const bool isHashModified = contentHash != contentReadHash_;
 
-  if (isHashModified && isLocalCopyEnabled_)
+  if (isHashModified)
     localCopy_ = content;
   contentReadHash_ = contentHash;
   return content;
 }
 
 
-std::string File::read() const
+void File::readToLocal()
 {
-  timeLastRead_ = Clock::now();
-  return FileUtil::read(filename_);
+  isModified();
 }
 
 
 const std::string& File::readCopy()
 {
-  assert(isLocalCopyEnabled_ && "Bad programmer, bad!");
   contentReadHash_ = localCopyHash_;
   return localCopy_;
 }
+
 
 bool File::isModified()
 {
@@ -69,9 +71,8 @@ bool File::isModified()
   std::size_t contentHash = std::hash<std::string>()(content);
   const bool isHashModified = contentHash != contentReadHash_;
 
-  if (isHashModified && isLocalCopyEnabled_) {
-    const bool actualStoredContentDiffers =
-      contentHash != localCopyHash_;
+  if (isHashModified) {
+    const bool actualStoredContentDiffers = (contentHash != localCopyHash_);
     if (actualStoredContentDiffers)
       localCopy_ = content;
   }
@@ -100,13 +101,20 @@ std::time_t File::getLastReadTime() const
 }
 
 
-bool File::isLocalCopyEnabled() const
-{
-  return isLocalCopyEnabled_;
-}
-
-
 const std::string& File::File::getFilename() const
 {
   return filename_;
 }
+
+
+void File::setFilename(const std::string& filename)
+{
+  if (filename_ == filename) return;
+
+  filename_        = filename;
+  timeLastRead_    = 0;
+  localCopy_       = "";
+  contentReadHash_ = 0;
+  localCopyHash_   = 0;
+}
+

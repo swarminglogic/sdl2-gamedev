@@ -29,10 +29,10 @@ public:
     const std::string filename("./certainlythisdoesnotexist.txt");
     File file(filename);
     TS_ASSERT_EQUALS(filename, file.getFilename());
-    TS_ASSERT(file.isLocalCopyEnabled());
 
-    File file2(filename, false);
-    TS_ASSERT(!file2.isLocalCopyEnabled());
+    // Default constructor
+    File file3;
+    TS_ASSERT(!file3.exists());
   }
 
 
@@ -42,7 +42,12 @@ public:
     TS_ASSERT(!FileUtil::exists(filename));
     File file(filename);
     TS_ASSERT(!file.exists());
-    TS_ASSERT(!file.exists()); // Twice to make sure it doesn't create a file.
+    TS_ASSERT(!file.exists());
+
+    const std::string content { "This is the content." };
+    FileUtil::write(filename, content);
+    TS_ASSERT(FileUtil::exists(filename));
+    TS_ASSERT(FileUtil::remove(filename.c_str()));
   }
 
 
@@ -93,43 +98,44 @@ public:
     TS_ASSERT(FileUtil::remove(filename.c_str()));
   }
 
-
-  void testReadConst()
+  void testReadToLocal()
   {
     const std::string filename("./certainlythisdoesnotexist.txt");
     TS_ASSERT(!FileUtil::exists(filename));
 
-    const File file(filename);
-
-    // Write some content, check if file exists now
+    File file(filename);
     const std::string content { "This is the content." };
     FileUtil::write(filename, content);
-    TS_ASSERT(FileUtil::exists(filename));
-
-    // Read the file, check if it has updated since last read.
-    const std::string& loaded = file.read();
-    TS_ASSERT_EQUALS(loaded, content);
-    TS_ASSERT(!file.isUpdated());
-
-#ifdef SLOW_TESTS
-    msleep(1200);
-    FileUtil::write(filename, "changed");
-    TS_ASSERT(file.isUpdated());
-#endif
-
+    file.readToLocal();
+    TS_ASSERT_EQUALS(file.readCopy(), content);
     TS_ASSERT(FileUtil::remove(filename.c_str()));
-
   }
 
-
-  void testIsUpdated() {
+  void testCopy()
+  {
     const std::string filename("./certainlythisdoesnotexist.txt");
-    // TS_ASSERT(!FileUtil::exists(filename));
-    // File file(filename);
-    // const std::string content { "This is the content." };
-    // file.write(content);
+    TS_ASSERT(!FileUtil::exists(filename));
 
-    // TS_ASSERT(FileUtil::remove(filename.c_str()));
+    // Basic
+    File file(filename);
+    File filecp = file;
+    File fileas(file);
+    TS_ASSERT_EQUALS(file.getFilename(), filecp.getFilename());
+    TS_ASSERT_EQUALS(file.getFilename(), fileas.getFilename());
+
+    // After copy
+    const std::string text1 {"Text1"};
+    FileUtil::write(filename, text1);
+    TS_ASSERT(file.isModified());
+    File file3(file);
+    File file4 = file;
+    TS_ASSERT(file3.isModified());
+    TS_ASSERT(file4.isModified());
+    TS_ASSERT_EQUALS(file3.read(), text1);
+    TS_ASSERT(!file3.isModified());
+    TS_ASSERT(file4.isModified());
+
+    TS_ASSERT(FileUtil::remove(filename.c_str()));
   }
 };
 

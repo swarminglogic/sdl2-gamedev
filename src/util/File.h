@@ -24,8 +24,9 @@
 class File
 {
 public:
-  File(const std::string& filename,
-       bool keepLocalCopy = true);
+  File(const std::string& filename);
+
+  File();
 
   virtual ~File();
 
@@ -44,10 +45,9 @@ public:
   std::string read();
 
   /**
-   * Reads the whole content of file, returned as string.
-   * Does not update keep local hash or copy (if enabled).
-   */
-  std::string read() const;
+   * Reads the whole content of file, and stores it locally.
+   **/
+  void readToLocal();
 
   /**
    * @return Local copy.
@@ -79,32 +79,22 @@ public:
   bool isModified();
 
   /**
-   * @return If local copy is kept (not whether it actually has one)
-   */
-  bool isLocalCopyEnabled() const;
-
-  /**
    * @note filename_ is const and cannot change -> return by const reference.
    * @return filename.
    */
   const std::string& getFilename() const;
+  void setFilename(const std::string& filename);
 
 private:
   std::time_t getLastReadTime() const;
   std::time_t getLastModifiedTime() const;
 
-  const std::string filename_;
-  mutable std::time_t timeLastRead_;
-  bool isLocalCopyEnabled_;
+  std::string filename_;
+  std::time_t timeLastRead_;
+
   std::string localCopy_;
   std::size_t contentReadHash_;
   std::size_t localCopyHash_;
-
-  // Hide default constructor.
-  File();
-  // NonCopyable
-  File(const File& c);
-  File& operator=(const File& c);
 };
 
 #endif
