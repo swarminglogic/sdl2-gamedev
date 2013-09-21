@@ -68,14 +68,16 @@ void MainManager::run() {
 
   SDL_Event event;
   bool isDirty = true;
+  uint frameNumber = 0;
   while (isRunning_) {
     while (SDL_PollEvent(&event)) {
       handleEvent(event);
       isDirty |= basicRender_->handleEvent(event);
     }
 
+    ++frameNumber;
     SDL_Delay(20);
-    if (isDirty) {
+    if (isDirty | (frameNumber % 20 == 0)) {
       basicRender_->render(runtime_->getSeconds());
     }
     graphics_->swapBuffers();

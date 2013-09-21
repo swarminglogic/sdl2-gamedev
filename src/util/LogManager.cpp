@@ -1,6 +1,7 @@
 #include <util/LogManager.h>
 
 #include <cassert>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -48,8 +49,10 @@ void LogManager::log(LogLevel level,
 
   // TODO swarminglogic, 2013-09-13: Add short build checksum (through scons)
 
-  ss << logLevelAsString(level) << clock.getTimeStamp() << ' '
-     << loggerName << " \t" << message << "\n";
+  ss << "  "
+     << logLevelAsString(level) << clock.getTimeStamp() << "  "
+     << std::left << std::setw(18)
+     << loggerName  << "  " << message << "\n";
   const std::string formatted(ss.str());
 
   if (level >= fileLogLevel_)
