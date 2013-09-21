@@ -32,16 +32,6 @@ public:
    */
   static GLuint createShaderProgram(const std::vector<ShaderInfo>& shaders);
 
-private:
-  /**
-   * Creates a OpenGL shader of specified type, with provided source file.
-   *
-   * @param type         OpenGL shader type enum, e.g GL_VERTEX_SHADER
-   * @param sourceFile   Full path to shader source file
-   * @return             Id of created shader.
-   */
-  static GLuint prepareShader(GLenum type, const std::string& sourceFile);
-
   /**
    * Utility for checking OpenGL Shader information.
    *
@@ -61,6 +51,16 @@ private:
    */
   static std::string checkProgramInfo(GLuint programId,
                                       GLenum statusType = GL_LINK_STATUS);
+
+private:
+  /**
+   * Creates a OpenGL shader of specified type, with provided source file.
+   *
+   * @param type         OpenGL shader type enum, e.g GL_VERTEX_SHADER
+   * @param sourceFile   Full path to shader source file
+   * @return             Id of created shader.
+   */
+  static GLuint prepareShader(GLenum type, const std::string& sourceFile);
 
   // Pure static class, private constructor
   ShaderUtil();

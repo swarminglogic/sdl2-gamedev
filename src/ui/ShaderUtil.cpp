@@ -33,23 +33,6 @@ GLuint ShaderUtil::createShaderProgram(
 }
 
 
-GLuint ShaderUtil::prepareShader(GLenum type, const std::string& sourceFile)
-{
-  std::string source = FileUtil::read(sourceFile);
-  const GLchar* shader_source = source.c_str();
-
-  GLuint shaderId = glCreateShader(type);
-  glShaderSource(shaderId, 1, &shader_source, NULL);
-  glCompileShader(shaderId);
-
-  // check for errors, and throw exception if not ok.
-  std::string compileInfo = checkShaderInfo(shaderId, GL_COMPILE_STATUS);
-  if (!compileInfo.empty())
-    std::cerr << compileInfo << std::cerr;
-  return shaderId;
-}
-
-
 std::string ShaderUtil::checkShaderInfo(GLuint shaderId,
                                         GLenum statusType)
 {
@@ -95,4 +78,22 @@ std::string ShaderUtil::checkProgramInfo(GLuint programId,
     }
     return ss.str();
   }
+}
+
+
+
+GLuint ShaderUtil::prepareShader(GLenum type, const std::string& sourceFile)
+{
+  std::string source = FileUtil::read(sourceFile);
+  const GLchar* shader_source = source.c_str();
+
+  GLuint shaderId = glCreateShader(type);
+  glShaderSource(shaderId, 1, &shader_source, NULL);
+  glCompileShader(shaderId);
+
+  // check for errors, and throw exception if not ok.
+  std::string compileInfo = checkShaderInfo(shaderId, GL_COMPILE_STATUS);
+  if (!compileInfo.empty())
+    std::cerr << compileInfo << std::cerr;
+  return shaderId;
 }
