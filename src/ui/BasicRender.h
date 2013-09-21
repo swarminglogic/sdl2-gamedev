@@ -19,7 +19,7 @@ public:
   virtual void render(float currentTime) = 0;
   virtual void finalize() = 0;
 
-  virtual void handleEvent(const SDL_Event&) {}
+  virtual bool handleEvent(const SDL_Event&) { return false; }
 
 private:
   // NonCopyable

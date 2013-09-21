@@ -67,15 +67,19 @@ void MainManager::run() {
   assert(basicRender_ && "You need a renderer, fool!");
 
   SDL_Event event;
+  bool isDirty = true;
   while (isRunning_) {
     while (SDL_PollEvent(&event)) {
       handleEvent(event);
-      basicRender_->handleEvent(event);
+      isDirty |= basicRender_->handleEvent(event);
     }
 
-    SDL_Delay(50);
-    basicRender_->render(runtime_->getSeconds());
+    SDL_Delay(20);
+    if (isDirty) {
+      basicRender_->render(runtime_->getSeconds());
+    }
     graphics_->swapBuffers();
+    isDirty = false;
   }
 }
 

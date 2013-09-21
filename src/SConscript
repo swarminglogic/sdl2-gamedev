@@ -60,6 +60,7 @@ for macro in macroDefinitions:
 # Adding ignore paths for external libraries
 cppflags.extend(['-isystem', pathBoost + '/include',
                  '-isystem', pathSdl + '/include/',
+                 '-isystem', pathGlm,
                  '-isystem', pathAngel + '/include',
                  '-isystem', pathAngel + '/include/angelscript'])
 for addon in angelAddons:

@@ -99,8 +99,8 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   // Create window
   logger_.info("Creating window ()");
   window_.reset(SDL_CreateWindow(viewConfig.getWindowTitle().c_str(),
-                                 SDL_WINDOWPOS_UNDEFINED,
-                                 SDL_WINDOWPOS_UNDEFINED,
+                                 500,
+                                 200,
                                  viewConfig.getScreenWidth(),
                                  viewConfig.getScreenHeight(),
                                  sdlWindowFlags));
