@@ -10,6 +10,7 @@
 #include <ui/SDL_opengl.h>
 #include <ui/SDL_ttf.h>
 #include <ui/ShaderUtil.h>
+#include <ui/VoidRenderer.h>
 #include <util/Exception.h>
 #include <util/Log.h>
 #include <util/Timer.h>
@@ -33,7 +34,7 @@ MainManager::MainManager()
 
   // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
   // class, which manages the renderer?
-  basicRender_.reset(nullptr);
+  basicRender_.reset(new VoidRenderer);
 }
 
 MainManager::~MainManager()
@@ -79,8 +80,8 @@ void MainManager::run() {
     SDL_Delay(20);
     if (isDirty | (frameNumber % 20 == 0)) {
       basicRender_->render(runtime_->getSeconds());
+      graphics_->swapBuffers();
     }
-    graphics_->swapBuffers();
     isDirty = false;
   }
 }
@@ -111,7 +112,7 @@ void MainManager::handleEvent(const SDL_Event& event)
 
 void MainManager::initSDL()
 {
-  log_.d("Initializing SDL");
+  log_.i("Initializing SDL");
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
     throw log_.exception("Failed to initialize SDL", SDL_GetError);
   atexit(SDL_Quit);

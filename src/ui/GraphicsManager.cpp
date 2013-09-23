@@ -15,7 +15,8 @@ GraphicsManager::GraphicsManager()
     window_(nullptr),
     context_(nullptr),
     isFullScreen_(false),
-    isVSync_(true)
+    isVSync_(true),
+    isOpenGlDebugEnabled_(true)
 {
   const ViewConfig& viewConfig = ConfigManager::instance().getViewConfig();
   isFullScreen_ = viewConfig.isFullScreen();
@@ -44,7 +45,7 @@ void GraphicsManager::setFullScreen(bool isFullScreenEnabled)
 {
   if (isFullScreenEnabled) {
     log_.i("Enabling fullscreen");
-    SDL_SetWindowFullscreen(window_.get(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_SetWindowFullscreen(window_.get(), SDL_WINDOW_FULLSCREEN);
   }
   else {
     log_.i("Disabling fullscreen");
@@ -73,34 +74,52 @@ bool GraphicsManager::isVSync() const
 
 void GraphicsManager::setIsVSync(bool isVSyncEnabled)
 {
-  isVSync_ = isVSyncEnabled;
-  if (isVSync_)
-    log_.i("Enabling vsync");
-  else
-    log_.i("Disabling vsync");
+  log_.i() << (isVSync_ ? "Enabling" : "Disabling") << " vsync" << Log::end;
 
   const int ret = SDL_GL_SetSwapInterval(static_cast<int>(isVSync_));
-  if (ret < 0) {
-    log_.w("Failed to change vsync mode.");
-    log_.w(SDL_GetError());
-  }
+  if (ret >= 0)
+    isVSync_ = isVSyncEnabled;
+  else
+    log_.w() << "Failed to change vsync mode: " << SDL_GetError() << Log::end;
 }
 
 
 void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 {
-  log_.d("Initalizing OpenGL");
+  log_.i("Initalizing OpenGL");
+
+  // TODO swarminglogic, 2013-09-23: Improve cross system compatibility!
+  SDL_GL_SetAttribute(SDL_GL_RED_SIZE,           8);
+  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,         8);
+  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,          8);
+  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,         8);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,       1);
+  SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,        24);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,         24);
+  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,       8);
+  SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,     8);
+  SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,   8);
+  SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,    8);
+  SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,   8);
+  SDL_GL_SetAttribute(SDL_GL_STEREO,             0);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 32);
+  // SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Causes error, SDL bug?
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  if (isOpenGlDebugEnabled_)
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+
   int sdlWindowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
   if (viewConfig.isFullScreen())
-    sdlWindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
   if (viewConfig.isResizeable())
     sdlWindowFlags |= SDL_WINDOW_RESIZABLE;
 
-  // Create window
-  log_.i("Creating window ()");
+  // Create SDL Window
   window_.reset(SDL_CreateWindow(viewConfig.getWindowTitle().c_str(),
-                                 500,
-                                 200,
+                                 500, 200,
                                  viewConfig.getScreenWidth(),
                                  viewConfig.getScreenHeight(),
                                  sdlWindowFlags));
@@ -108,23 +127,20 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
     throw log_.exception("Failed to initialize OpenGL", SDL_GetError);
 
   // Create OpenGL Context
-  // TODO swarminglogic, 2013-09-14: Have fallback methods when creating
-  // the OpenGL context.
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,4);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-  log_.d("Creating OpenGL Context");
+  log_.i("Creating OpenGL Context");
   context_.reset(new SDL_GLContext(SDL_GL_CreateContext(window_.get())));
   if (!context_)
     throw log_.exception("Failed to create OpenGL Context", SDL_GetError);
 
-  // Make it the current context
+  // Set VSync
+  if(SDL_GL_SetSwapInterval(static_cast<int>(viewConfig.isVSync())) < 0)
+    log_.w() << "Failed to change vsync mode: " << SDL_GetError() << Log::end;
+
+
+  // TODO swarminglogic, 2013-09-14: Have fallback methods when creating
+  // the OpenGL context.
+
+  // // Make it the current context
   SDL_GL_MakeCurrent(window_.get(), *context_);
 
   logStaticOpenGLInfo();
@@ -145,16 +161,16 @@ void GraphicsManager::logOpenGLContextInfo() const
   std::stringstream ss;
   ss << std::setw(20) << std::left << "OpenGL Version: "
      << glGetString(GL_VERSION);
-  log_.d(ss.str()); ss.str("");
+  log_.i(ss.str()); ss.str("");
   ss << std::setw(20) << std::left << "OpenGL GLSL: "
      << glGetString(GL_SHADING_LANGUAGE_VERSION);
-  log_.d(ss.str()); ss.str("");
+  log_.i(ss.str()); ss.str("");
   ss << std::setw(20) << std::left << "OpenGL Renderer: "
      << glGetString(GL_RENDERER);
-  log_.d(ss.str()); ss.str("");
+  log_.i(ss.str()); ss.str("");
   ss << std::setw(20) << std::left << "OpenGL Vendor: "
      << glGetString(GL_VENDOR);
-  log_.d(ss.str()); ss.str("");
+  log_.i(ss.str()); ss.str("");
 
   // supported extensions:
   GLint nExtensions;

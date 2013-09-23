@@ -4,7 +4,6 @@
 #include <ui/SDL.h>
 #include <util/Log.h>
 
-
 class ViewConfig;
 
 /**
@@ -46,6 +45,7 @@ private:
   GLContextPtr context_;
   bool isFullScreen_;
   bool isVSync_;
+  bool isOpenGlDebugEnabled_;
 
   // NonCopyable
   GraphicsManager(const GraphicsManager& c);
