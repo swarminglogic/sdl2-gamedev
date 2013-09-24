@@ -86,7 +86,7 @@ void MainManager::run() {
 
 
     fpsCounter_.tic();
-    if (isDirty | (frameNumber % 30 == 0)) {
+    if (isDirty | (frameNumber % 100 == 0)) {
       log_.d() << "Fps: " << fpsCounter_.getFps() << Log::end;
     }
   }
@@ -96,6 +96,12 @@ void MainManager::run() {
 void MainManager::handleEvent(const SDL_Event& event)
 {
   switch (event.type) {
+  case SDL_WINDOWEVENT:
+    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+      log_.d() << "Window resized to "
+               << event.window.data1 << " x " << event.window.data2 << Log::end;
+      basicRender_->handleResize(event.window.data1, event.window.data2);
+    }
   case SDL_MOUSEBUTTONDOWN:
     break;
   case SDL_KEYDOWN:
@@ -103,6 +109,7 @@ void MainManager::handleEvent(const SDL_Event& event)
     case SDLK_q: case SDLK_ESCAPE: isRunning_ = false; break;
     case SDLK_f: graphics_->toggleFullScreen(); break;
     case SDLK_v: graphics_->toggleVSync(); break;
+    case SDLK_m: graphics_->toggleMouseGrab(); break;
     default:
       break;
     }

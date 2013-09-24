@@ -1,6 +1,7 @@
-#ifndef WIP_BASICRENDER_H
-#define WIP_BASICRENDER_H
+#ifndef UI_BASICRENDER_H
+#define UI_BASICRENDER_H
 
+#include <ui/SDL_opengl.h>
 #include <util/SDL_Event_fwd.h>
 
 
@@ -20,6 +21,9 @@ public:
   virtual void finalize() = 0;
 
   virtual bool handleEvent(const SDL_Event&) { return false; }
+  virtual void handleResize(int width, int height) {
+    glViewport( 0.f, 0.f, width, height );
+  }
 
 private:
   // NonCopyable
