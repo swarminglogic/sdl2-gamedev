@@ -37,6 +37,10 @@ public:
   void logOpenGLContextInfo() const;
   void logStaticOpenGLInfo() const;
 
+  bool isMouseGrab() const;
+  void setIsMouseGrab(bool isMouseGrabEnabled);
+  void toggleMouseGrab();
+
 private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
 
@@ -46,6 +50,7 @@ private:
   bool isFullScreen_;
   bool isVSync_;
   bool isOpenGlDebugEnabled_;
+  bool isMouseGrab_;
 
   // NonCopyable
   GraphicsManager(const GraphicsManager& c);

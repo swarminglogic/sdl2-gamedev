@@ -16,7 +16,8 @@ GraphicsManager::GraphicsManager()
     context_(nullptr),
     isFullScreen_(false),
     isVSync_(true),
-    isOpenGlDebugEnabled_(true)
+    isOpenGlDebugEnabled_(true),
+    isMouseGrab_(true)
 {
   const ViewConfig& viewConfig = ConfigManager::instance().getViewConfig();
   isFullScreen_ = viewConfig.isFullScreen();
@@ -37,8 +38,7 @@ void GraphicsManager::swapBuffers()
 
 void GraphicsManager::toggleFullScreen()
 {
-  isFullScreen_ = !isFullScreen_;
-  setFullScreen(isFullScreen_);
+  setFullScreen(!isFullScreen_);
 }
 
 void GraphicsManager::setFullScreen(bool isFullScreenEnabled)
@@ -51,6 +51,7 @@ void GraphicsManager::setFullScreen(bool isFullScreenEnabled)
     log_.i("Disabling fullscreen");
     SDL_SetWindowFullscreen(window_.get(), 0);
   }
+  isFullScreen_ = isFullScreenEnabled;
 }
 
 bool GraphicsManager::isFullScreen() const
@@ -61,8 +62,7 @@ bool GraphicsManager::isFullScreen() const
 
 void GraphicsManager::toggleVSync()
 {
-  isVSync_ = !isVSync_;
-  setIsVSync(isVSync_);
+  setIsVSync(!isVSync_);
 }
 
 
@@ -74,9 +74,9 @@ bool GraphicsManager::isVSync() const
 
 void GraphicsManager::setIsVSync(bool isVSyncEnabled)
 {
-  log_.i() << (isVSync_ ? "Enabling" : "Disabling") << " vsync" << Log::end;
+  log_.i() << (isVSyncEnabled ? "Enabling" : "Disabling") << " vsync" << Log::end;
 
-  const int ret = SDL_GL_SetSwapInterval(static_cast<int>(isVSync_));
+  const int ret = SDL_GL_SetSwapInterval(static_cast<int>(isVSyncEnabled));
   if (ret >= 0)
     isVSync_ = isVSyncEnabled;
   else
@@ -142,6 +142,9 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 
   // // Make it the current context
   SDL_GL_MakeCurrent(window_.get(), *context_);
+
+  // Set mouse grab
+  setIsMouseGrab(isMouseGrab_);
 
   logStaticOpenGLInfo();
   logGraphicsDriverInfo();
@@ -225,3 +228,38 @@ void GraphicsManager::logGraphicsDriverInfo() const
     log_ << "]" << Log::end;
   }
 }
+
+bool GraphicsManager::isMouseGrab() const
+{
+  return isMouseGrab_;
+}
+
+
+void GraphicsManager::setIsMouseGrab(bool isMouseGrabEnabled)
+{
+  log_.i() << (isMouseGrabEnabled ? "Enabling" : "Disabling")
+           << " mouse grab" << Log::end;
+
+
+  int ret = -1;
+  if (isMouseGrabEnabled) {
+    ret = SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_SetWindowGrab(window_.get(), SDL_TRUE);
+  }
+  else {
+    ret = SDL_SetRelativeMouseMode(SDL_FALSE);
+    SDL_SetWindowGrab(window_.get(), SDL_FALSE);
+  }
+
+  if (ret == 0)
+    isMouseGrab_ = isMouseGrabEnabled;
+  else
+    log_.w() << "Failed to change mouse grab mode: " << SDL_GetError() << Log::end;
+}
+
+
+void GraphicsManager::toggleMouseGrab()
+{
+  setIsMouseGrab(!isMouseGrab_);
+}
+

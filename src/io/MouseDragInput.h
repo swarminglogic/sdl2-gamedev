@@ -56,9 +56,12 @@ public:
   float getScale() const;
   void setScale(float scale);
 
+  // bool isRelativeInput() const;
+  // void setIsRelativeInput(bool isRelativeInput);
+
 private:
-  MouseButton getButton(unsigned int sdlButton) const;
-  MouseButton getMotionButton(unsigned int sdlMotionState) const;
+  MouseButton getButton(unsigned int sdlButtonState) const;
+  MouseButton getMotionButton(unsigned int sdlButtonState) const;
 
   Log log_;
   MouseButton button_;
@@ -66,6 +69,7 @@ private:
   bool isEnabled_;
   MouseDrag mouseDrag_;
   float scale_;
+  bool isRelativeInput_;
 
   // NonCopyable
   MouseDragInput(const MouseDragInput& c);

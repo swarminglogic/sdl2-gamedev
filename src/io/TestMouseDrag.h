@@ -62,6 +62,47 @@ public:
     TS_ASSERT_EQUALS(md.get(), Point(0, 0));
   }
 
+  void testRelativeMovement()
+  {
+    const float delta = 0.00001f;
+    MouseDrag md;
+    md.setIsRelative(true);
+
+    // Inital point data is ignored.
+    md.down(Point(40, 20));
+    TS_ASSERT_EQUALS(md.get(), Point(0, 0));
+    TS_ASSERT_EQUALS(md.getX(), 0);
+    TS_ASSERT_EQUALS(md.getY(), 0);
+
+    // Moving relative +5, +8
+    md.move(Point(5, 8));
+    TS_ASSERT_EQUALS(md.get(), Point(5, 8));
+    TS_ASSERT_EQUALS(md.getX(), 5);
+    TS_ASSERT_EQUALS(md.getY(), 8);
+
+    // Moving relative -1, +10
+    md.move(Point(-1, 10));
+    TS_ASSERT_EQUALS(md.get(), Point(4, 18));
+    TS_ASSERT_EQUALS(md.getX(), 4);
+    TS_ASSERT_EQUALS(md.getY(), 18);
+
+    // Releasing mouse coordinate is ignored
+    md.up(Point(20, 40));
+    TS_ASSERT_EQUALS(md.get(), Point(4, 18));
+    TS_ASSERT_EQUALS(md.getX(), 4);
+    TS_ASSERT_EQUALS(md.getY(), 18);
+
+    md.down(Point(5, 5));
+    TS_ASSERT_EQUALS(md.get(), Point(4, 18));
+    TS_ASSERT_EQUALS(md.getX(), 4);
+    TS_ASSERT_EQUALS(md.getY(), 18);
+
+    md.move(Point(-3, -17));
+    TS_ASSERT_EQUALS(md.get(), Point(1, 1));
+    TS_ASSERT_EQUALS(md.getX(), 1);
+    TS_ASSERT_EQUALS(md.getY(), 1);
+  }
+
 private:
 };
 

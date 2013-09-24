@@ -1,28 +1,25 @@
 #include <io/MouseDragInput.h>
 
+#include <cassert>
+
 #include <ui/SDL.h>
 
 
 MouseDragInput::MouseDragInput(MouseButton button)
-  :   log_("MouseDragInput"),
-      button_(button),
-      accum_(0, 0),
-      isEnabled_(true),
-      mouseDrag_(),
-      scale_(1.0f)
+  :   MouseDragInput(button, 1.0f, Pointf(0.0f, 0.0f))
 {
 }
 
 MouseDragInput::MouseDragInput(MouseButton button, float scale, Pointf offset)
   :   log_("MouseDragInput"),
       button_(button),
-      accum_(0, 0),
+      accum_(static_cast<int>(offset.x() / scale),
+             static_cast<int>(offset.y() / scale)),
       isEnabled_(true),
       mouseDrag_(),
-      scale_(scale)
+      scale_(scale),
+      isRelativeInput_(false)
 {
-  accum_ = Point(static_cast<int>(offset.x() / scale_),
-                 static_cast<int>(offset.y() / scale_));
 }
 
 MouseDragInput::~MouseDragInput()
@@ -36,6 +33,8 @@ bool MouseDragInput::handleEvent(const SDL_Event& event)
 
   // Initial values
   MouseButton pushedButton;
+  bool isRelativeInput = SDL_GetRelativeMouseMode();
+  mouseDrag_.setIsRelative(isRelativeInput);
 
   // Acquire from SDL_event
   switch (event.type) {
@@ -58,8 +57,12 @@ bool MouseDragInput::handleEvent(const SDL_Event& event)
 
   case SDL_MOUSEMOTION:
     pushedButton = getMotionButton(event.motion.state);
-    if (pushedButton == button_)
-      return mouseDrag_.move(Point(event.motion.x, event.motion.y));
+    if (pushedButton == button_) {
+      if (isRelativeInput)
+        return mouseDrag_.move(Point(event.motion.xrel, event.motion.yrel));
+      else
+        return mouseDrag_.move(Point(event.motion.x, event.motion.y));
+    }
     break;
 
   default: break;
@@ -69,13 +72,13 @@ bool MouseDragInput::handleEvent(const SDL_Event& event)
 
 
 MouseDragInput::MouseButton MouseDragInput::getButton(
-  Uint32 sdlButton) const
+  Uint32 sdlButtonState) const
 {
-  if (sdlButton == SDL_BUTTON_LEFT )
+  if (sdlButtonState == SDL_BUTTON_LEFT )
     return MB_LEFT;
-  if (sdlButton == SDL_BUTTON_RIGHT )
+  if (sdlButtonState == SDL_BUTTON_RIGHT )
     return MB_RIGHT;
-  if (sdlButton == SDL_BUTTON_MIDDLE )
+  if (sdlButtonState == SDL_BUTTON_MIDDLE )
     return MB_MIDDLE;
 
   return MB_NONE;
@@ -83,13 +86,13 @@ MouseDragInput::MouseButton MouseDragInput::getButton(
 
 
 MouseDragInput::MouseButton MouseDragInput::getMotionButton(
-    unsigned int sdlMotionState) const
+    unsigned int sdlButtonState) const
 {
-  if (sdlMotionState & SDL_BUTTON_LMASK)
+  if (sdlButtonState & SDL_BUTTON_LMASK)
     return MB_LEFT;
-  if (sdlMotionState & SDL_BUTTON_MMASK)
+  if (sdlButtonState & SDL_BUTTON_MMASK)
     return MB_MIDDLE;
-  if (sdlMotionState & SDL_BUTTON_RMASK)
+  if (sdlButtonState & SDL_BUTTON_RMASK)
     return MB_RIGHT;
 
   return MB_NONE;
@@ -133,3 +136,4 @@ float MouseDragInput::getScale() const
 {return scale_;}
 void MouseDragInput::setScale(float scale)
 {scale_ = scale;}
+

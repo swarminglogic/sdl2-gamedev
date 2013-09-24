@@ -7,7 +7,8 @@ MouseDrag::MouseDrag()
   : log_("MouseDrag"),
     initial_(0, 0),
     current_(0, 0),
-    isDragging_(false)
+    isDragging_(false),
+    isRelative_(false)
 {
 }
 
@@ -21,8 +22,12 @@ void MouseDrag::down(Point point)
 {
   assert(!isDragging_);
 
-  initial_ = point;
-  current_ = point;
+  if (isRelative_) {
+    initial_ = Point(0, 0);
+  } else {
+    initial_ = point;
+    current_ = point;
+  }
   isDragging_ = true;
 }
 
@@ -32,14 +37,18 @@ bool MouseDrag::move(Point point)
 {
   if (!isDragging_)
     return false;
-  current_ = point;
+  if (isRelative_)
+    current_ += point;
+  else
+    current_ = point;
   return true;
 }
 
 
 Point MouseDrag::up(Point point)
 {
-  current_ = point;
+  if (!isRelative_)
+    current_ = point;
   isDragging_ = false;
   return get();
 }
@@ -86,3 +95,9 @@ int MouseDrag::deltaY() const
 {
   return current_.y() - initial_.y();
 }
+
+
+bool MouseDrag::isRelative() const
+{return isRelative_;}
+void MouseDrag::setIsRelative(bool isRelativeEnabled)
+{isRelative_ = isRelativeEnabled;}

@@ -84,6 +84,15 @@ public:
   int getX() const;
   int getY() const;
 
+
+  /**
+   * Get/setter for isRelative property.
+   * If set to true, move() accepts relative coordinates.
+   * coordinates set to down(), and up() are ignored.
+   */
+  bool isRelative() const;
+  void setIsRelative(bool isRelative);
+
 private:
   inline int deltaX() const;
   inline int deltaY() const;
@@ -92,6 +101,7 @@ private:
   Point initial_;
   Point current_;
   bool isDragging_;
+  bool isRelative_;
 
   // NonCopyable
   MouseDrag(const MouseDrag& c);
