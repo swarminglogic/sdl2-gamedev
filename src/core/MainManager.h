@@ -5,6 +5,7 @@
 
 #include <ui/GraphicsManager.h>
 #include <ui/SDL_opengl.h>
+#include <util/FpsCounter.h>
 
 
 class BasicRender;
@@ -60,6 +61,7 @@ private:
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;
   bool isRunning_;
+  FpsCounter fpsCounter_;
 };
 
 #endif

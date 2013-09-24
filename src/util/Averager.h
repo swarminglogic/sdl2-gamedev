@@ -71,7 +71,7 @@ public:
   double getAverage() const
   {
     assert(N_ != 0);
-    return MX_n_ / N_;
+    return MX_n_ / static_cast<double>(N_);
   }
 
 

@@ -1,7 +1,6 @@
 #include <core/MainManager.h>
 
 #include <cassert>
-#include <cstdlib>
 
 #include <ui/BasicRender.h>
 #include <ui/SDL.h>
@@ -21,7 +20,8 @@ MainManager::MainManager()
     graphics_(nullptr),
     runtime_(nullptr),
     basicRender_(nullptr),
-    isRunning_(true)
+    isRunning_(true),
+    fpsCounter_(15)
 {
   initSDL();
   initSDLimg();
@@ -76,13 +76,19 @@ void MainManager::run() {
       isDirty |= basicRender_->handleEvent(event);
     }
 
+    isDirty = true;
     ++frameNumber;
-    SDL_Delay(20);
     if (isDirty | (frameNumber % 20 == 0)) {
       basicRender_->render(runtime_->getSeconds());
       graphics_->swapBuffers();
     }
     isDirty = false;
+
+
+    fpsCounter_.tic();
+    if (isDirty | (frameNumber % 30 == 0)) {
+      log_.d() << "Fps: " << fpsCounter_.getFps() << Log::end;
+    }
   }
 }
 
