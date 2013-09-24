@@ -17,25 +17,20 @@ public:
   Size(int width, int height);
   virtual ~Size();
 
-  /**
-   * @return height
-   */
+  // Many overloads, because I'm lazy.
   int getHeight() const;
   void setHeight(int height);
-
-  // Shorthand get/set
   int height() const;
   void height(int height);
+  int h() const;
+  void h(int height);
 
-  /**
-   * @return width
-   */
   int getWidth() const;
   void setWidth(int width);
-
-  // Shorthand get/set
   int width() const;
   void width(int width);
+  int w() const;
+  void w(int width);
 
 
   /**

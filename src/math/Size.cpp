@@ -21,23 +21,28 @@ int Size::getHeight() const
 { return height_; }
 void Size::setHeight(int heightv)
 { height_ = heightv; }
-
 int Size::height() const
-{ return height_; }
+{ return getHeight(); }
 void Size::height(int heightv)
-{ height_ = heightv; }
+{ setHeight(heightv); }
+int Size::h() const
+{ return getHeight(); }
+void Size::h(int heightv)
+{ setHeight(heightv); }
 
 
 int Size::getWidth() const
 { return width_; }
 void Size::setWidth(int widthv)
 { width_ = widthv; }
-
-
 int Size::width() const
-{ return width_; }
+{ return getWidth(); }
 void Size::width(int widthv)
-{ width_ = widthv; }
+{ setWidth(widthv); }
+int Size::w() const
+{ return getWidth(); }
+void Size::w(int widthv)
+{ setWidth(widthv); }
 
 
 void Size::transpose()
