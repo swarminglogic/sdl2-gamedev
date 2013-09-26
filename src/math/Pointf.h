@@ -9,6 +9,8 @@
  * Pointf class. Simple class representing an float-pair.
  * Logically represents x and y.
  *
+ * @note No virtual functions to avoid extra pointer to vftable.
+ *       Don't inherit from this class.
  * @author SwarmingLogic (Roald Fernandez)
  */
 class Pointf
@@ -16,7 +18,7 @@ class Pointf
 public:
   Pointf();
   Pointf(float x, float y);
-  virtual ~Pointf();
+  ~Pointf();
 
   /**
    * @return y

@@ -8,6 +8,8 @@
  * Size class. Simple class representing an int-pair.
  * Logically represents width and height.
  *
+ * @note No virtual functions to avoid extra pointer to vftable.
+ *       Don't inherit from this class.
  * @author SwarmingLogic (Roald Fernandez)
  */
 class Size
@@ -15,7 +17,7 @@ class Size
 public:
   Size();
   Size(int width, int height);
-  virtual ~Size();
+  ~Size();
 
   // Many overloads, because I'm lazy.
   int getHeight() const;

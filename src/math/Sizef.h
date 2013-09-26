@@ -9,6 +9,8 @@
  * Sizef class. Simple class representing an float-pair.
  * Logically represents width and height.
  *
+ * @note No virtual functions to avoid extra pointer to vftable.
+ *       Don't inherit from this class.
  * @author SwarmingLogic (Roald Fernandez)
  */
 class Sizef
@@ -16,7 +18,7 @@ class Sizef
 public:
   Sizef();
   Sizef(float width, float height);
-  virtual ~Sizef();
+  ~Sizef();
 
   /**
    * @return height

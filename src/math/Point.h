@@ -9,6 +9,8 @@
  * Point class. Simple class representing an int-pair.
  * Logically represents x and y.
  *
+ * @note No virtual functions to avoid extra pointer to vftable.
+ *       Don't inherit from this class.
  * @author SwarmingLogic (Roald Fernandez)
  */
 class Point
@@ -16,7 +18,7 @@ class Point
 public:
   Point();
   Point(int x, int y);
-  virtual ~Point();
+  ~Point();
 
   /**
    * @return y

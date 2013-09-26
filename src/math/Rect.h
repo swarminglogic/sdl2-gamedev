@@ -9,6 +9,8 @@ struct SDL_Rect;
 /**
  * Rect class, represents a rectangle, position and dimension.
  *
+ * @note No virtual functions to avoid extra pointer to vftable.
+ *       Don't inherit from this class.
  * @author SwarmingLogic (Roald Fernandez)
  */
 class Rect
@@ -18,7 +20,7 @@ public:
   Rect(const Size& size);
   Rect(const SDL_Rect& rect);
   Rect(int x, int y, int w, int h);
-  virtual ~Rect();
+  ~Rect();
 
   int x() const;
   void x(int x);
