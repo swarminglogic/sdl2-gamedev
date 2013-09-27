@@ -16,6 +16,7 @@ class TestMathUtil : public CxxTest::TestSuite
 public:
   void testNextPow2A()
   {
+    TS_ASSERT_EQUALS(MathUtil::nextPow2(0), 0); // Invalid use in many cases.
     TS_ASSERT_EQUALS(MathUtil::nextPow2(1), 1);
     TS_ASSERT_EQUALS(MathUtil::nextPow2(2), 2);
     TS_ASSERT_EQUALS(MathUtil::nextPow2(3), 4);
