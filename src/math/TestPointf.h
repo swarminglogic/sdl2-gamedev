@@ -130,6 +130,20 @@ public:
     TS_ASSERT_EQUALS(opA, Pointf(3.0f, 2.0f));
   }
 
+  void testGetData() {
+    const float delta = 0.00001;
+    const Pointf cpoint(2.0f, 3.0f);
+    TS_ASSERT_DELTA(cpoint.getData()[0], cpoint.x(), delta);
+    TS_ASSERT_DELTA(cpoint.getData()[1], cpoint.y(), delta);
+    Pointf point(5.0f, 6.0f);
+    TS_ASSERT_DELTA(point.getData()[0], point.x(), delta);
+    TS_ASSERT_DELTA(point.getData()[1], point.y(), delta);
+    point.getData()[0] = 12.0f;
+    point.getData()[1] = 42.0f;
+    TS_ASSERT_DELTA(point.x(), 12.0f, delta);
+    TS_ASSERT_DELTA(point.y(), 42.0f, delta);
+  }
+
 private:
 };
 

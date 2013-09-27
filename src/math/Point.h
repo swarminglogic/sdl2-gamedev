@@ -20,29 +20,18 @@ public:
   Point(int x, int y);
   ~Point();
 
-  /**
-   * @return y
-   */
   int getY() const;
   void setY(int y);
-
-  // Short hand get/set
   int y() const;
   void y(int y);
 
-
-  /**
-   * @return x
-   */
   int getX() const;
   void setX(int x);
-
-  // Short hand get/set
   int x() const;
   void x(int x);
 
   /**
-   * Swaps x and y
+   * Swaps x <-> y
    */
   void transpose();
 
@@ -63,33 +52,41 @@ public:
   friend inline bool operator!=(const Point& lhs, const Point& rhs);
 
 
+  /**
+   * Returns pointer to data, which is a 2-sized int array.
+   * This is for used for giving direct access to members (e.g. for use
+   * w/OpenGL).
+   **/
+  const int* getData() const;
+  int* getData();
+
+
 private:
-  int xv_;
-  int yv_;
+  int d_[2];
 };
 
 inline const Point operator+(const Point& lhs, const Point& rhs)
-{return Point(lhs.xv_ + rhs.xv_, lhs.yv_ + rhs.yv_);}
+{return Point(lhs.d_[0] + rhs.d_[0], lhs.d_[1] + rhs.d_[1]);}
 
 inline const Point operator-(const Point& lhs, const Point& rhs)
-{return Point(lhs.xv_ - rhs.xv_, lhs.yv_ - rhs.yv_);}
+{return Point(lhs.d_[0] - rhs.d_[0], lhs.d_[1] - rhs.d_[1]);}
 
 inline const Point operator*(const Point& lhs, double rhs)
-{return Point(static_cast<int>(std::round(lhs.xv_ * rhs)),
-              static_cast<int>(std::round(lhs.yv_ * rhs)));}
+{return Point(static_cast<int>(std::round(lhs.d_[0] * rhs)),
+              static_cast<int>(std::round(lhs.d_[1] * rhs)));}
 
 inline const Point operator*(double lhs, const Point &rhs)
-{return Point(static_cast<int>(std::round(lhs * rhs.xv_)),
-              static_cast<int>(std::round(lhs * rhs.yv_)));}
+{return Point(static_cast<int>(std::round(lhs * rhs.d_[0])),
+              static_cast<int>(std::round(lhs * rhs.d_[1])));}
 
 inline const Point operator/(const Point& lhs, double rhs)
-{return Point(static_cast<int>(std::round(lhs.xv_ / rhs)),
-              static_cast<int>(std::round(lhs.yv_ / rhs)));}
+{return Point(static_cast<int>(std::round(lhs.d_[0] / rhs)),
+              static_cast<int>(std::round(lhs.d_[1] / rhs)));}
 
 inline bool operator==(const Point& lhs, const Point& rhs)
-{return (lhs.xv_ == rhs.xv_) && (lhs.yv_ == rhs.yv_);}
+{return (lhs.d_[0] == rhs.d_[0]) && (lhs.d_[1] == rhs.d_[1]);}
 
 inline bool operator!=(const Point& lhs, const Point& rhs)
-{return (lhs.xv_ != rhs.xv_) || (lhs.yv_ != rhs.yv_);}
+{return (lhs.d_[0] != rhs.d_[0]) || (lhs.d_[1] != rhs.d_[1]);}
 
 #endif

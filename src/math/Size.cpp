@@ -2,14 +2,12 @@
 
 
 Size::Size()
-  : width_(0),
-    height_(0)
+  : d_{0, 0}
 {}
 
 
 Size::Size(int widthv, int heightv)
-  : width_(widthv),
-    height_(heightv)
+  : d_{widthv, heightv}
 {}
 
 
@@ -18,9 +16,9 @@ Size::~Size()
 
 
 int Size::getHeight() const
-{ return height_; }
+{ return d_[1]; }
 void Size::setHeight(int heightv)
-{ height_ = heightv; }
+{ d_[1] = heightv; }
 int Size::height() const
 { return getHeight(); }
 void Size::height(int heightv)
@@ -32,9 +30,9 @@ void Size::h(int heightv)
 
 
 int Size::getWidth() const
-{ return width_; }
+{ return d_[0]; }
 void Size::setWidth(int widthv)
-{ width_ = widthv; }
+{ d_[0] = widthv; }
 int Size::width() const
 { return getWidth(); }
 void Size::width(int widthv)
@@ -47,36 +45,41 @@ void Size::w(int widthv)
 
 void Size::transpose()
 {
-  const int temp = width_;
-  width_ = height_;
-  height_ = temp;
+  const int temp = d_[0];
+  d_[0] = d_[1];
+  d_[1] = temp;
 }
 
 Size& Size::operator+=(const Size& rhs)
 {
-  height_ += rhs.height_;
-  width_ += rhs.width_;
+  d_[1] += rhs.d_[1];
+  d_[0] += rhs.d_[0];
   return *this;
 }
 
 Size& Size::operator-=(const Size& rhs)
 {
-  height_ -= rhs.height_;
-  width_ -= rhs.width_;
+  d_[1] -= rhs.d_[1];
+  d_[0] -= rhs.d_[0];
   return *this;
 }
 
 Size& Size::operator*=(double rhs)
 {
-  height_ = static_cast<int>(height_ * rhs);
-  width_  = static_cast<int>(width_ * rhs);
+  d_[1] = static_cast<int>(d_[1] * rhs);
+  d_[0]  = static_cast<int>(d_[0] * rhs);
   return *this;
 }
 
 Size& Size::operator/=(double rhs)
 {
-  height_ = static_cast<int>(height_ / rhs);
-  width_  = static_cast<int>(width_ / rhs);
+  d_[1] = static_cast<int>(d_[1] / rhs);
+  d_[0]  = static_cast<int>(d_[0] / rhs);
   return *this;
 }
+
+const int* Size::getData() const
+{return d_;}
+int* Size::getData()
+{return d_;}
 

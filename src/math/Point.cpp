@@ -2,14 +2,12 @@
 
 
 Point::Point()
-  : xv_(0),
-    yv_(0)
+  : d_{0, 0}
 {}
 
 
 Point::Point(int xv, int yv)
-  : xv_(xv),
-    yv_(yv)
+  : d_{xv, yv}
 {}
 
 
@@ -18,60 +16,65 @@ Point::~Point()
 
 
 int Point::getY() const
-{ return yv_; }
+{ return d_[1]; }
 void Point::setY(int yv)
-{ yv_ = yv; }
+{ d_[1] = yv; }
 
 int Point::y() const
-{ return yv_; }
+{ return d_[1]; }
 void Point::y(int yv)
-{ yv_ = yv; }
+{ d_[1] = yv; }
 
 
 int Point::getX() const
-{ return xv_; }
+{ return d_[0]; }
 void Point::setX(int xv)
-{ xv_ = xv; }
+{ d_[0] = xv; }
 
 
 int Point::x() const
-{ return xv_; }
+{ return d_[0]; }
 void Point::x(int xv)
-{ xv_ = xv; }
+{ d_[0] = xv; }
 
 
 void Point::transpose()
 {
-  const int temp = xv_;
-  xv_ = yv_;
-  yv_ = temp;
+  const int temp = d_[0];
+  d_[0] = d_[1];
+  d_[1] = temp;
 }
 
 Point& Point::operator+=(const Point& rhs)
 {
-  yv_ += rhs.yv_;
-  xv_ += rhs.xv_;
+  d_[1] += rhs.d_[1];
+  d_[0] += rhs.d_[0];
   return *this;
 }
 
 Point& Point::operator-=(const Point& rhs)
 {
-  yv_ -= rhs.yv_;
-  xv_ -= rhs.xv_;
+  d_[1] -= rhs.d_[1];
+  d_[0] -= rhs.d_[0];
   return *this;
 }
 
 Point& Point::operator*=(double rhs)
 {
-  yv_ = static_cast<int>(yv_ * rhs);
-  xv_  = static_cast<int>(xv_ * rhs);
+  d_[1] = static_cast<int>(d_[1] * rhs);
+  d_[0]  = static_cast<int>(d_[0] * rhs);
   return *this;
 }
 
 Point& Point::operator/=(double rhs)
 {
-  yv_ = static_cast<int>(yv_ / rhs);
-  xv_  = static_cast<int>(xv_ / rhs);
+  d_[1] = static_cast<int>(d_[1] / rhs);
+  d_[0]  = static_cast<int>(d_[0] / rhs);
   return *this;
 }
 
+
+const int* Point::getData() const
+{return d_;}
+int* Point::getData()
+{return d_;}

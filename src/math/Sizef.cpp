@@ -2,14 +2,12 @@
 
 
 Sizef::Sizef()
-  : widthv_(0.0f),
-    heightv_(0.0f)
+  : d_{0.0f, 0.0f}
 {}
 
 
 Sizef::Sizef(float widthv, float heightv)
-  : widthv_(widthv),
-    heightv_(heightv)
+  : d_{widthv, heightv}
 {}
 
 
@@ -18,60 +16,70 @@ Sizef::~Sizef()
 
 
 float Sizef::getHeight() const
-{ return heightv_; }
+{ return d_[1]; }
 void Sizef::setHeight(float heightv)
-{ heightv_ = heightv; }
-
+{ d_[1] = heightv; }
 float Sizef::height() const
-{ return heightv_; }
+{ return getHeight(); }
 void Sizef::height(float heightv)
-{ heightv_ = heightv; }
+{ setHeight(heightv); }
+float Sizef::h() const
+{ return getHeight(); }
+void Sizef::h(float heightv)
+{ setHeight(heightv); }
 
 
 float Sizef::getWidth() const
-{ return widthv_; }
+{ return d_[0]; }
 void Sizef::setWidth(float widthv)
-{ widthv_ = widthv; }
-
-
+{ d_[0] = widthv; }
 float Sizef::width() const
-{ return widthv_; }
+{ return getWidth(); }
 void Sizef::width(float widthv)
-{ widthv_ = widthv; }
+{ setWidth(widthv); }
+float Sizef::w() const
+{ return getWidth(); }
+void Sizef::w(float widthv)
+{ setWidth(widthv); }
 
 
 void Sizef::transpose()
 {
-  const float temp = widthv_;
-  widthv_ = heightv_;
-  heightv_ = temp;
+  const float temp = d_[0];
+  d_[0] = d_[1];
+  d_[1] = temp;
 }
 
 Sizef& Sizef::operator+=(const Sizef& rhs)
 {
-  heightv_ += rhs.heightv_;
-  widthv_ += rhs.widthv_;
+  d_[1] += rhs.d_[1];
+  d_[0] += rhs.d_[0];
   return *this;
 }
 
 Sizef& Sizef::operator-=(const Sizef& rhs)
 {
-  heightv_ -= rhs.heightv_;
-  widthv_ -= rhs.widthv_;
+  d_[1] -= rhs.d_[1];
+  d_[0] -= rhs.d_[0];
   return *this;
 }
 
 Sizef& Sizef::operator*=(float rhs)
 {
-  heightv_ *= rhs;
-  widthv_ *= rhs;
+  d_[1] *= rhs;
+  d_[0] *= rhs;
   return *this;
 }
 
 Sizef& Sizef::operator/=(float rhs)
 {
-  heightv_ /= heightv_ / rhs;
-  widthv_ /= widthv_ / rhs;
+  d_[1] /= d_[1] / rhs;
+  d_[0] /= d_[0] / rhs;
   return *this;
 }
 
+
+const float* Sizef::getData() const
+{return d_;}
+float* Sizef::getData()
+{return d_;}

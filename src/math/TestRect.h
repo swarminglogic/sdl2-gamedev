@@ -67,6 +67,29 @@ public:
     TS_ASSERT_EQUALS(s2.w, 101);
     TS_ASSERT_EQUALS(s2.h, 12);
   }
+
+
+  void testGetData() {
+    const Rect crect(2, 5, 7, 11);
+    TS_ASSERT_EQUALS(crect.getData()[0], crect.x());
+    TS_ASSERT_EQUALS(crect.getData()[1], crect.y());
+    TS_ASSERT_EQUALS(crect.getData()[2], crect.w());
+    TS_ASSERT_EQUALS(crect.getData()[3], crect.h());
+    Rect rect(4, 12, 42, 55);
+    TS_ASSERT_EQUALS(crect.getData()[0], crect.x());
+    TS_ASSERT_EQUALS(crect.getData()[1], crect.y());
+    TS_ASSERT_EQUALS(crect.getData()[2], crect.w());
+    TS_ASSERT_EQUALS(crect.getData()[3], crect.h());
+    rect.getData()[0] = 101;
+    rect.getData()[1] = 102;
+    rect.getData()[2] = 103;
+    rect.getData()[3] = 104;
+    TS_ASSERT_EQUALS(rect.x(), 101);
+    TS_ASSERT_EQUALS(rect.y(), 102);
+    TS_ASSERT_EQUALS(rect.w(), 103);
+    TS_ASSERT_EQUALS(rect.h(), 104);
+  }
+
 private:
 };
 

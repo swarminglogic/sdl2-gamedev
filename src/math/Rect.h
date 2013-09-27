@@ -40,6 +40,17 @@ public:
 
   friend inline bool operator==(const Rect& lhs, const Rect& rhs);
   friend inline bool operator!=(const Rect& lhs, const Rect& rhs);
+
+  /**
+   * Returns pointer to data, which is a 4-sized int array, corresponding to
+   * pos-x pos-y size-w size-h
+   *
+   * This is for used for giving direct access to members (e.g. for use
+   * w/OpenGL).
+   **/
+  const int* getData() const;
+  int* getData();
+
 private:
   Point pos_;
   Size size_;

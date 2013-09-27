@@ -130,6 +130,20 @@ public:
     TS_ASSERT_EQUALS(opA, Sizef(3.0f, 2.0f));
   }
 
+  void testGetData() {
+    const float delta = 0.00001;
+    const Sizef csize(2.0f, 3.0f);
+    TS_ASSERT_DELTA(csize.getData()[0], csize.w(), delta);
+    TS_ASSERT_DELTA(csize.getData()[1], csize.h(), delta);
+    Sizef size(5.0f, 6.0f);
+    TS_ASSERT_DELTA(size.getData()[0], size.w(), delta);
+    TS_ASSERT_DELTA(size.getData()[1], size.h(), delta);
+    size.getData()[0] = 12.0f;
+    size.getData()[1] = 42.0f;
+    TS_ASSERT_DELTA(size.w(), 12.0f, delta);
+    TS_ASSERT_DELTA(size.h(), 42.0f, delta);
+  }
+
 private:
 };
 

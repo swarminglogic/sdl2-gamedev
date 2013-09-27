@@ -20,29 +20,22 @@ public:
   Sizef(float width, float height);
   ~Sizef();
 
-  /**
-   * @return height
-   */
   float getHeight() const;
   void setHeight(float height);
-
-  // Short hand get/set
   float height() const;
   void height(float height);
+  float h() const;
+  void h(float height);
 
-
-  /**
-   * @return width
-   */
   float getWidth() const;
   void setWidth(float width);
-
-  // Short hand get/set
   float width() const;
   void width(float width);
+  float w() const;
+  void w(float width);
 
   /**
-   * Swaps width and height
+   * Swaps width <-> height
    */
   void transpose();
 
@@ -62,32 +55,39 @@ public:
   friend inline bool operator==(const Sizef& lhs, const Sizef& rhs);
   friend inline bool operator!=(const Sizef& lhs, const Sizef& rhs);
 
+  /**
+   * Returns pointer to data, which is a 2-sized float array.
+   * This is for used for giving direct access to members (e.g. for use
+   * w/OpenGL).
+   **/
+  const float* getData() const;
+  float* getData();
+
 
 private:
-  float widthv_;
-  float heightv_;
+  float d_[2];
 };
 
 inline const Sizef operator+(const Sizef& lhs, const Sizef& rhs)
-{return Sizef(lhs.widthv_ + rhs.widthv_, lhs.heightv_ + rhs.heightv_);}
+{return Sizef(lhs.d_[0] + rhs.d_[0], lhs.d_[1] + rhs.d_[1]);}
 
 inline const Sizef operator-(const Sizef& lhs, const Sizef& rhs)
-{return Sizef(lhs.widthv_ - rhs.widthv_, lhs.heightv_ - rhs.heightv_);}
+{return Sizef(lhs.d_[0] - rhs.d_[0], lhs.d_[1] - rhs.d_[1]);}
 
 inline const Sizef operator*(const Sizef& lhs, float rhs)
-{return Sizef(lhs.widthv_ * rhs, lhs.heightv_ * rhs);}
+{return Sizef(lhs.d_[0] * rhs, lhs.d_[1] * rhs);}
 
 inline const Sizef operator*(float lhs, const Sizef &rhs)
-{return Sizef(lhs * rhs.widthv_, lhs * rhs.heightv_);}
+{return Sizef(lhs * rhs.d_[0], lhs * rhs.d_[1]);}
 
 inline const Sizef operator/(const Sizef& lhs, float rhs)
-{return Sizef(lhs.widthv_ / rhs, lhs.heightv_ / rhs);}
+{return Sizef(lhs.d_[0] / rhs, lhs.d_[1] / rhs);}
 
 inline bool operator==(const Sizef& lhs, const Sizef& rhs)
 {
   static const float eps = std::numeric_limits<float>::epsilon();
-  return ((std::fabs(lhs.widthv_ - rhs.widthv_) < eps) &&
-          (std::fabs(lhs.heightv_ - rhs.heightv_) < eps));
+  return ((std::fabs(lhs.d_[0] - rhs.d_[0]) < eps) &&
+          (std::fabs(lhs.d_[1] - rhs.d_[1]) < eps));
 }
 
 inline bool operator!=(const Sizef& lhs, const Sizef& rhs)

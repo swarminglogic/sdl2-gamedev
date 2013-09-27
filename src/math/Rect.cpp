@@ -62,3 +62,14 @@ SDL_Rect Rect::toSdlRect() const
   return rect;
 }
 
+
+const int* Rect::getData() const
+{
+  return pos_.getData();
+}
+
+int* Rect::getData()
+{
+  return pos_.getData();
+}
+

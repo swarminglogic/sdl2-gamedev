@@ -106,6 +106,20 @@ public:
     TS_ASSERT_EQUALS(opA, Point(3,2));
   }
 
+
+  void testGetData() {
+    const Point cpoint(2, 3);
+    TS_ASSERT_EQUALS(cpoint.getData()[0], cpoint.x());
+    TS_ASSERT_EQUALS(cpoint.getData()[1], cpoint.y());
+    Point point(5, 6);
+    TS_ASSERT_EQUALS(point.getData()[0], point.x());
+    TS_ASSERT_EQUALS(point.getData()[1], point.y());
+    point.getData()[0] = 12;
+    point.getData()[1] = 42;
+    TS_ASSERT_EQUALS(point.x(), 12);
+    TS_ASSERT_EQUALS(point.y(), 42);
+  }
+
 private:
 };
 

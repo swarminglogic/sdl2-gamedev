@@ -108,6 +108,19 @@ public:
     TS_ASSERT_EQUALS(opA, Size(3,2));
   }
 
+  void testGetData() {
+    const Size csize(2, 3);
+    TS_ASSERT_EQUALS(csize.getData()[0], csize.w());
+    TS_ASSERT_EQUALS(csize.getData()[1], csize.h());
+    Size size(5, 6);
+    TS_ASSERT_EQUALS(size.getData()[0], size.w());
+    TS_ASSERT_EQUALS(size.getData()[1], size.h());
+    size.getData()[0] = 12;
+    size.getData()[1] = 42;
+    TS_ASSERT_EQUALS(size.w(), 12);
+    TS_ASSERT_EQUALS(size.h(), 42);
+  }
+
 private:
 };
 

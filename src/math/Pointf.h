@@ -20,29 +20,18 @@ public:
   Pointf(float x, float y);
   ~Pointf();
 
-  /**
-   * @return y
-   */
   float getY() const;
   void setY(float y);
-
-  // Short hand get/set
   float y() const;
   void y(float y);
 
-
-  /**
-   * @return x
-   */
   float getX() const;
   void setX(float x);
-
-  // Short hand get/set
   float x() const;
   void x(float x);
 
   /**
-   * Swaps x and y
+   * Swaps x <-> y
    */
   void transpose();
 
@@ -62,32 +51,38 @@ public:
   friend inline bool operator==(const Pointf& lhs, const Pointf& rhs);
   friend inline bool operator!=(const Pointf& lhs, const Pointf& rhs);
 
+  /**
+   * Returns pointer to data, which is a 2-sized float array.
+   * This is for used for giving direct access to members (e.g. for use
+   * w/OpenGL).
+   **/
+  const float* getData() const;
+  float* getData();
 
 private:
-  float xv_;
-  float yv_;
+  float d_[2];
 };
 
 inline const Pointf operator+(const Pointf& lhs, const Pointf& rhs)
-{return Pointf(lhs.xv_ + rhs.xv_, lhs.yv_ + rhs.yv_);}
+{return Pointf(lhs.d_[0] + rhs.d_[0], lhs.d_[1] + rhs.d_[1]);}
 
 inline const Pointf operator-(const Pointf& lhs, const Pointf& rhs)
-{return Pointf(lhs.xv_ - rhs.xv_, lhs.yv_ - rhs.yv_);}
+{return Pointf(lhs.d_[0] - rhs.d_[0], lhs.d_[1] - rhs.d_[1]);}
 
 inline const Pointf operator*(const Pointf& lhs, float rhs)
-{return Pointf(lhs.xv_ * rhs, lhs.yv_ * rhs);}
+{return Pointf(lhs.d_[0] * rhs, lhs.d_[1] * rhs);}
 
 inline const Pointf operator*(float lhs, const Pointf &rhs)
-{return Pointf(lhs * rhs.xv_, lhs * rhs.yv_);}
+{return Pointf(lhs * rhs.d_[0], lhs * rhs.d_[1]);}
 
 inline const Pointf operator/(const Pointf& lhs, float rhs)
-{return Pointf(lhs.xv_ / rhs, lhs.yv_ / rhs);}
+{return Pointf(lhs.d_[0] / rhs, lhs.d_[1] / rhs);}
 
 inline bool operator==(const Pointf& lhs, const Pointf& rhs)
 {
   static const float eps = std::numeric_limits<float>::epsilon();
-  return ((std::fabs(lhs.xv_ - rhs.xv_) < eps) &&
-          (std::fabs(lhs.yv_ - rhs.yv_) < eps));
+  return ((std::fabs(lhs.d_[0] - rhs.d_[0]) < eps) &&
+          (std::fabs(lhs.d_[1] - rhs.d_[1]) < eps));
 }
 
 inline bool operator!=(const Pointf& lhs, const Pointf& rhs)

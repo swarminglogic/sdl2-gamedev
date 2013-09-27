@@ -36,7 +36,7 @@ public:
 
 
   /**
-   * Swaps width and height
+   * Swaps width <-> height
    */
   void transpose();
 
@@ -57,33 +57,41 @@ public:
   friend inline bool operator!=(const Size& lhs, const Size& rhs);
 
 
+  /**
+   * Returns pointer to data, which is a 2-sized int array.
+   * This is for used for giving direct access to members (e.g. for use
+   * w/OpenGL).
+   */
+  const int* getData() const;
+  int* getData();
+
+
 private:
-  int width_;
-  int height_;
+  int d_[2];
 };
 
 inline const Size operator+(const Size& lhs, const Size& rhs)
-{return Size(lhs.width_ + rhs.width_, lhs.height_ + rhs.height_);}
+{return Size(lhs.d_[0] + rhs.d_[0], lhs.d_[1] + rhs.d_[1]);}
 
 inline const Size operator-(const Size& lhs, const Size& rhs)
-{return Size(lhs.width_ - rhs.width_, lhs.height_ - rhs.height_);}
+{return Size(lhs.d_[0] - rhs.d_[0], lhs.d_[1] - rhs.d_[1]);}
 
 inline const Size operator*(const Size& lhs, double rhs)
-{return Size(static_cast<int>(std::round(lhs.width_ * rhs)),
-             static_cast<int>(std::round(lhs.height_ * rhs)));}
+{return Size(static_cast<int>(std::round(lhs.d_[0] * rhs)),
+             static_cast<int>(std::round(lhs.d_[1] * rhs)));}
 
 inline const Size operator*(double lhs, const Size &rhs)
-{return Size(static_cast<int>(std::round(lhs * rhs.width_)),
-             static_cast<int>(std::round(lhs * rhs.height_)));}
+{return Size(static_cast<int>(std::round(lhs * rhs.d_[0])),
+             static_cast<int>(std::round(lhs * rhs.d_[1])));}
 
 inline const Size operator/(const Size& lhs, double rhs)
-{return Size(static_cast<int>(std::round(lhs.width_ / rhs)),
-             static_cast<int>(std::round(lhs.height_ / rhs)));}
+{return Size(static_cast<int>(std::round(lhs.d_[0] / rhs)),
+             static_cast<int>(std::round(lhs.d_[1] / rhs)));}
 
 inline bool operator==(const Size& lhs, const Size& rhs)
-{return (lhs.width_ == rhs.width_) && (lhs.height_ == rhs.height_);}
+{return (lhs.d_[0] == rhs.d_[0]) && (lhs.d_[1] == rhs.d_[1]);}
 
 inline bool operator!=(const Size& lhs, const Size& rhs)
-{return (lhs.width_ != rhs.width_) || (lhs.height_ != rhs.height_);}
+{return (lhs.d_[0] != rhs.d_[0]) || (lhs.d_[1] != rhs.d_[1]);}
 
 #endif
