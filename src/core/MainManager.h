@@ -4,7 +4,9 @@
 #include <memory>
 
 #include <ui/GraphicsManager.h>
+#include <ui/ImageRender.h>
 #include <ui/SDL_opengl.h>
+#include <ui/SDL_ttf.h>
 #include <util/FpsCounter.h>
 
 
@@ -52,6 +54,8 @@ private:
   void initSDLttf();
   void initSDLmixer();
 
+  void updateFpsText(double fps);
+
   // NonCopyable
   MainManager(const MainManager& c);
   MainManager& operator=(const MainManager& c);
@@ -60,6 +64,10 @@ private:
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;
+  ImageRender fpsRender_;
+  FontPtr font_;
+  SDL_Color fontColor_;
+
   bool isRunning_;
   FpsCounter fpsCounter_;
 };

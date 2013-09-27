@@ -13,11 +13,12 @@
 GraphicsManager::GraphicsManager()
   : log_("GraphicsManager"),
     window_(nullptr),
+    screenSize_(0, 0),
     context_(nullptr),
     isFullScreen_(false),
     isVSync_(true),
     isOpenGlDebugEnabled_(true),
-    isMouseGrab_(true)
+    isMouseGrab_(false)
 {
   const ViewConfig& viewConfig = ConfigManager::instance().getViewConfig();
   isFullScreen_ = viewConfig.isFullScreen();
@@ -125,6 +126,9 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
                                  sdlWindowFlags));
   if (!window_)
     throw log_.exception("Failed to initialize OpenGL", SDL_GetError);
+
+  // Store window dimensions
+  setScreenSize(viewConfig.getScreenSize());
 
   // Create OpenGL Context
   log_.i("Creating OpenGL Context");
@@ -263,3 +267,8 @@ void GraphicsManager::toggleMouseGrab()
   setIsMouseGrab(!isMouseGrab_);
 }
 
+
+Size GraphicsManager::getScreenSize() const
+{return screenSize_;}
+void GraphicsManager::setScreenSize(Size screenSize)
+{screenSize_ = screenSize;}

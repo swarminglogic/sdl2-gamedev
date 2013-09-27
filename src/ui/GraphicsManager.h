@@ -1,8 +1,10 @@
 #ifndef UI_GRAPHICSMANAGER_H
 #define UI_GRAPHICSMANAGER_H
 
+#include <math/Size.h>
 #include <ui/SDL.h>
 #include <util/Log.h>
+
 
 class ViewConfig;
 
@@ -41,11 +43,14 @@ public:
   void setIsMouseGrab(bool isMouseGrabEnabled);
   void toggleMouseGrab();
 
+  Size getScreenSize() const;
+  void setScreenSize(Size windowSize);
 private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
 
   Log log_;
   WindowPtr window_;
+  Size screenSize_;
   GLContextPtr context_;
   bool isFullScreen_;
   bool isVSync_;

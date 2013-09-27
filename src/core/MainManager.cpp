@@ -10,6 +10,7 @@
 #include <ui/SDL_ttf.h>
 #include <ui/ShaderUtil.h>
 #include <ui/VoidRenderer.h>
+#include <util/Asset.h>
 #include <util/Exception.h>
 #include <util/Log.h>
 #include <util/Timer.h>
@@ -20,6 +21,9 @@ MainManager::MainManager()
     graphics_(nullptr),
     runtime_(nullptr),
     basicRender_(nullptr),
+    fpsRender_(),
+    font_(nullptr),
+    fontColor_{180u, 190u, 200u, 255u},
     isRunning_(true),
     fpsCounter_(15)
 {
@@ -27,6 +31,8 @@ MainManager::MainManager()
   initSDLimg();
   initSDLttf();
   initSDLmixer();
+
+  font_.reset(TTF_OpenFont(Asset::font("Minecraftia.ttf").c_str(), 10));
 
   graphics_.reset(new GraphicsManager);
   runtime_.reset(new Timer);
@@ -52,16 +58,25 @@ MainManager& MainManager::instance()
 void MainManager::initialize()
 {
   log_.i("Inititalizing resources.");
-  if (basicRender_)
-    basicRender_->initialize();
+  basicRender_->initialize();
+  basicRender_->handleResize(graphics_->getScreenSize().w(),
+                             graphics_->getScreenSize().h());
+
+  fpsRender_.initialize();
+  updateFpsText(0.0);
+  fpsRender_.setPosition(20, 20);
+
+  fpsRender_.handleResize(graphics_->getScreenSize().w(),
+                          graphics_->getScreenSize().h());
+  updateFpsText(0.0);
 }
 
 
 void MainManager::finalize()
 {
   log_.i("Cleaning up resources.");
-  if (basicRender_)
-    basicRender_->finalize();
+  basicRender_->finalize();
+  fpsRender_.finalize();
 }
 
 void MainManager::run() {
@@ -76,19 +91,14 @@ void MainManager::run() {
       isDirty |= basicRender_->handleEvent(event);
     }
 
-    isDirty = true;
     ++frameNumber;
-    if (isDirty | (frameNumber % 20 == 0)) {
-      basicRender_->render(runtime_->getSeconds());
-      graphics_->swapBuffers();
-    }
-    isDirty = false;
-
+    basicRender_->render(runtime_->getSeconds());
+    fpsRender_.render(0);
+    graphics_->swapBuffers();
 
     fpsCounter_.tic();
-    if (isDirty | (frameNumber % 100 == 0)) {
-      log_.d() << "Fps: " << fpsCounter_.getFps() << Log::end;
-    }
+    if (frameNumber % 30 == 0)
+      updateFpsText(fpsCounter_.getFps());
   }
 }
 
@@ -98,9 +108,12 @@ void MainManager::handleEvent(const SDL_Event& event)
   switch (event.type) {
   case SDL_WINDOWEVENT:
     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-      log_.d() << "Window resized to "
-               << event.window.data1 << " x " << event.window.data2 << Log::end;
-      basicRender_->handleResize(event.window.data1, event.window.data2);
+      const int width = event.window.data1;
+      const int height = event.window.data2;
+      log_.i() << "Window resized to " << width << " x " << height << Log::end;
+      basicRender_->handleResize(width, height);
+      fpsRender_.handleResize(width, height);
+      graphics_->setScreenSize(Size(width, height));
     }
   case SDL_MOUSEBUTTONDOWN:
     break;
@@ -161,3 +174,15 @@ void MainManager::initSDLmixer()
     throw log_.exception("Failed to aquire sound device", Mix_GetError);
   atexit(Mix_CloseAudio);
 }
+
+void MainManager::updateFpsText(double fps)
+{
+  assert(font_ && "No font?");
+  std::stringstream ss;
+  ss.precision(2);
+  ss << std::fixed <<  "FPS: " << fps;
+  fpsRender_.setSurface(*TTF_RenderText_Blended(font_.get(),
+                                                ss.str().c_str(),
+                                                fontColor_));
+}
+
