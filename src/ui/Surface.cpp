@@ -7,19 +7,37 @@
 #include <util/Asset.h>
 
 
+Surface::Surface(SDL_Surface& surface)
+  : log_("Surface"),
+    surface_(&surface),
+    filename_(""),
+    textureId_(0),
+    clip_(0,0,surface.w,surface.h)
+{
+}
+
 Surface::Surface()
   : log_("Surface"),
     surface_(nullptr),
     filename_(""),
-    textureId_(0)
+    textureId_(0),
+    clip_(0,0,0,0)
 {
 }
 
 
 Surface::~Surface()
 {
-  if (textureId_)
+  releaseResources();
+}
+
+
+void Surface::releaseResources()
+{
+  if (textureId_) {
     glDeleteTextures(1, &textureId_);
+    textureId_ = 0;
+  }
 }
 
 
@@ -28,12 +46,23 @@ void Surface::loadImage(const std::string& filename)
   const std::string path {Asset::path(Asset::IMAGE, filename)};
   log_.d() << "Loading image: " << path << Log::end;
 
+  releaseResources();
+
   surface_.reset(IMG_Load(path.c_str()));
   if (!surface_) {
     log_.e() << "Failed to load image " << path << Log::end;
     log_.e() << SDL_GetError() << Log::end;
   }
   filename_ = filename;
+
+  setClip(Rect(0, 0, getWidth(), getHeight()));
+}
+
+void Surface::setSurface(SDL_Surface& surface)
+{
+  surface_.reset(&surface);
+  releaseResources();
+  setClip(Rect(0, 0, getWidth(), getHeight()));
 }
 
 
@@ -49,11 +78,30 @@ unsigned int Surface::getHeight() const
   return surface_->h;
 }
 
+const Rect& Surface::getClip() const
+{return clip_;}
+void Surface::setClip(const Rect& clip)
+{clip_ = clip;}
+
+
+float Surface::glTexCoordX(float texcoord) const
+{
+  float surfSpace = ((float)clip_.x() + texcoord * (float)clip_.w())/(float)getWidth();
+  return MathUtil::nextPow2TexCoord(surfSpace, getWidth());
+}
+
+
+float Surface::glTexCoordY(float texcoord) const
+{
+  float surfSpace = ((float)clip_.y() + texcoord * (float)clip_.h())/(float)getHeight();
+  return MathUtil::nextPow2TexCoord(surfSpace, getHeight());
+}
+
 
 void Surface::prepareForGl()
 {
   assert(surface_ && "Surface not set!");
-  assert(textureId_ == 0 && "Already bound to OpenGL!");
+  if (textureId_) {return;}
 
   const int width  = MathUtil::nextPow2(surface_->w);
   const int height = MathUtil::nextPow2(surface_->h);
