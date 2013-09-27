@@ -1,5 +1,6 @@
 #include <ui/ImageRender.h>
 
+#include <math/MathUtil.h>
 #include <ui/GlUtil.h>
 #include <util/Asset.h>
 
@@ -10,6 +11,7 @@ ImageRender::ImageRender()
      viewport_(0, 0),
      position_(0,0),
      surface_(),
+     zoomFactor_(1u),
      vertexBuffer_(0),
      textureBuffer_(0),
      vertices_(),
@@ -105,13 +107,23 @@ void ImageRender::setPosition(int x, int y)
 
 
 
+void ImageRender::setZoomFactor(unsigned char zoomFactor)
+{
+  if (!MathUtil::isPow2(zoomFactor))
+    log_.w() << zoomFactor << " is not a power of two! "
+      "Cannot render pixel perfect." << Log::end;
+  zoomFactor_ = zoomFactor;
+  updateQuad();
+}
+
+
 void ImageRender::prepareVertices()
 {
   int xi = surface_.getClip().w();
   int yi = surface_.getClip().h();
 
-  const GLfloat x = static_cast<float>(xi) * 2;
-  const GLfloat y = static_cast<float>(yi) * 2;
+  const GLfloat x = static_cast<float>(xi * 2 * zoomFactor_);
+  const GLfloat y = static_cast<float>(yi * 2 * zoomFactor_);
   const GLfloat z = 0.0f;
 
   // Offset by 1 if not multiples of two.
@@ -162,4 +174,3 @@ void ImageRender::updateTex()
 {
   prepareTexcoords();
 }
-

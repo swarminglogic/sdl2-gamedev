@@ -14,6 +14,11 @@ unsigned int MathUtil::nextPow2(unsigned int v)
   return v;
 }
 
+bool MathUtil::isPow2(unsigned int v)
+{
+  return v && !(v & (v - 1));
+}
+
 
 float MathUtil::nextPow2TexCoord(float original, int dimension)
 {

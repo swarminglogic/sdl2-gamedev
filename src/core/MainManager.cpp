@@ -32,7 +32,7 @@ MainManager::MainManager()
   initSDLttf();
   initSDLmixer();
 
-  font_.reset(TTF_OpenFont(Asset::font("Minecraftia.ttf").c_str(), 10));
+  font_.reset(TTF_OpenFont(Asset::font("Minecraftia.ttf").c_str(), 8));
 
   graphics_.reset(new GraphicsManager);
   runtime_.reset(new Timer);
@@ -68,6 +68,7 @@ void MainManager::initialize()
 
   fpsRender_.handleResize(graphics_->getScreenSize().w(),
                           graphics_->getScreenSize().h());
+  fpsRender_.setZoomFactor(2);
   updateFpsText(0.0);
 }
 
@@ -181,8 +182,7 @@ void MainManager::updateFpsText(double fps)
   std::stringstream ss;
   ss.precision(2);
   ss << std::fixed <<  "FPS: " << fps;
-  fpsRender_.setSurface(*TTF_RenderText_Blended(font_.get(),
-                                                ss.str().c_str(),
-                                                fontColor_));
+  fpsRender_.setSurface(*TTF_RenderText_Solid(font_.get(),
+                                              ss.str().c_str(),
+                                              fontColor_));
 }
-

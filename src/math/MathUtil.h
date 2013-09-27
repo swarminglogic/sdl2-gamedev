@@ -21,6 +21,10 @@ public:
    */
   static unsigned int nextPow2(unsigned int v);
 
+  /**
+   * Checks if value is a power of 2.
+   */
+  static bool isPow2(unsigned int v);
 
   /**
    * Translates texture coordinates from original image texture coordinates, to

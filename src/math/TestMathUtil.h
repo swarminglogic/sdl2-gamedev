@@ -38,6 +38,28 @@ public:
     }
   }
 
+  void testIsPow2()
+  {
+    TS_ASSERT(MathUtil::isPow2(1));
+    TS_ASSERT(MathUtil::isPow2(2));
+    TS_ASSERT(MathUtil::isPow2(4));
+    TS_ASSERT(MathUtil::isPow2(8));
+    TS_ASSERT(MathUtil::isPow2(16));
+    TS_ASSERT(MathUtil::isPow2(32));
+    TS_ASSERT(MathUtil::isPow2(64));
+    TS_ASSERT(MathUtil::isPow2(32768));
+    TS_ASSERT(MathUtil::isPow2(2097152));
+    TS_ASSERT(MathUtil::isPow2(536870912));
+
+    TS_ASSERT(!MathUtil::isPow2(0));
+    TS_ASSERT(!MathUtil::isPow2(3));
+    TS_ASSERT(!MathUtil::isPow2(9));
+    TS_ASSERT(!MathUtil::isPow2(24));
+    TS_ASSERT(!MathUtil::isPow2(2560));
+    TS_ASSERT(!MathUtil::isPow2(1023));
+    TS_ASSERT(!MathUtil::isPow2(18000));
+  }
+
 
 private:
 };

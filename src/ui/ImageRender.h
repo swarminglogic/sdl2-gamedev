@@ -34,6 +34,15 @@ public:
   void setPosition(Point position);
   void setPosition(int x, int y);
 
+  /**
+   * Sets zoom factor.
+   *
+   * Needs to be a power of two for pixel perfect rendering.
+   *
+   * @param zoomFactor
+   */
+  void setZoomFactor(unsigned char zoomFactor);
+
 private:
   void prepareVertices();
   void prepareTexcoords();
@@ -45,6 +54,7 @@ private:
   Size viewport_;
   Point position_;
   Surface surface_;
+  unsigned char zoomFactor_;
 
   GLuint vertexBuffer_;
   GLuint textureBuffer_;
