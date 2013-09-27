@@ -2,6 +2,7 @@
 #define UI_VOIDRENDERER_H
 
 #include <ui/BasicRender.h>
+#include <ui/SDL_opengl.h>
 
 
 /**
@@ -16,11 +17,13 @@ public:
   VoidRenderer();
   virtual ~VoidRenderer();
 
-  virtual void initialize();
-  virtual void render(float currentTime);
-  virtual void finalize();
+  virtual void initialize() override;
+  virtual void render(float currentTime) override;
+  virtual void finalize() override;
 
 private:
+  GLuint vao_;
+
   // NonCopyable
   VoidRenderer(const VoidRenderer& c);
   VoidRenderer& operator=(const VoidRenderer& c);

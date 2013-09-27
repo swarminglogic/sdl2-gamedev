@@ -16,9 +16,9 @@ public:
   BasicRender(){}
   virtual ~BasicRender(){}
 
-  virtual void initialize() = 0;
+  virtual void initialize() {};
   virtual void render(float currentTime) = 0;
-  virtual void finalize() = 0;
+  virtual void finalize() {};
 
   virtual bool handleEvent(const SDL_Event&) { return false; }
   virtual void handleResize(int width, int height) {

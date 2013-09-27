@@ -42,7 +42,7 @@ sourcepaths = [
     pathSdl + "/include/"]
 
 
-cppflags = ['-O0', '-g', '-fno-strict-aliasing',
+cppflags = ['-O0', '-g', '-gdwarf-2', '-fno-strict-aliasing',
             '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED']
 #cppflags = ['-O3', '-DGL_GLEXT_PROTOTYPES', '-D_REENTRANT']
 
