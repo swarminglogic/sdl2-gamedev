@@ -21,6 +21,7 @@ public:
   /**
    * @throw Exception (itself)
    */
+  [[ noreturn ]]
   virtual void raise() const;
   virtual const char* what() const;
 
