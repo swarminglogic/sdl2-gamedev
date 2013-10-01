@@ -38,6 +38,90 @@ public:
     }
   }
 
+  void testNextSquare()
+  {
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(0), 0);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(1), 1);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(3), 4);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(4), 4);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(5), 9);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(14), 16);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(20), 25);
+
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(114*114), 114*114);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(114*114+1), 115*115);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(1234*1234), 1234*1234);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(1234*1234 - 1), 1234*1234);
+    TS_ASSERT_EQUALS(MathUtil::nextSquare(1234*1234 + 1), 1235*1235);
+  }
+
+
+  void testNextSquareBase()
+  {
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(0), 0);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(1), 1);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(3), 2);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(4), 2);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(5), 3);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(14), 4);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(20), 5);
+
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(114*114), 114);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(114*114+1), 115);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(1234*1234), 1234);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(1234*1234 - 1), 1234);
+    TS_ASSERT_EQUALS(MathUtil::nextSquareBase(1234*1234 + 1), 1235);
+  }
+
+
+  void testPrevSquare()
+  {
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(0), 0);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(1), 1);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(3), 1);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(4), 4);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(5), 4);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(14), 9);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(20), 16);
+
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(114*114), 114*114);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(114*114 + 1), 114*114);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(114*114 - 1), 113*113);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(1234*1234), 1234*1234);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(1234*1234 - 1), 1233*1233);
+    TS_ASSERT_EQUALS(MathUtil::prevSquare(1234*1234 + 1), 1234*1234);
+  }
+
+  void testPrevSquareBase()
+  {
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(0), 0);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(1), 1);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(3), 1);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(4), 2);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(5), 2);
+
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(8), 2);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(9), 3);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(10), 3);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(11), 3);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(12), 3);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(13), 3);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(14), 3);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(15), 3);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(16), 4);
+
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(20), 4);
+
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(114*114), 114);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(114*114 + 1), 114);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(114*114 - 1), 113);
+
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(1234*1234), 1234);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(1234*1234 - 1), 1233);
+    TS_ASSERT_EQUALS(MathUtil::prevSquareBase(1234*1234 + 1), 1234);
+  }
+
+
   void testIsPow2()
   {
     TS_ASSERT(MathUtil::isPow2(1));
@@ -60,6 +144,24 @@ public:
     TS_ASSERT(!MathUtil::isPow2(18000));
   }
 
+  void testIsSquare()
+  {
+    TS_ASSERT(MathUtil::isSquare(1));
+    TS_ASSERT(!MathUtil::isSquare(2));
+    TS_ASSERT(MathUtil::isSquare(4));
+    TS_ASSERT(!MathUtil::isSquare(8));
+    TS_ASSERT(MathUtil::isSquare(16));
+    TS_ASSERT(!MathUtil::isSquare(32));
+    TS_ASSERT(MathUtil::isSquare(64));
+    TS_ASSERT(!MathUtil::isSquare(32768));
+    TS_ASSERT(!MathUtil::isSquare(2097152));
+    TS_ASSERT(!MathUtil::isSquare(536870912));
+
+    TS_ASSERT(MathUtil::isSquare(207936));
+    TS_ASSERT(MathUtil::isSquare(789*789));
+    TS_ASSERT(!MathUtil::isSquare(789*789+1));
+    TS_ASSERT(!MathUtil::isSquare(789*789-1));
+  }
 
 private:
 };

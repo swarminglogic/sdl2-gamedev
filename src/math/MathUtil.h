@@ -22,9 +22,50 @@ public:
   static unsigned int nextPow2(unsigned int v);
 
   /**
+   * Calculates the next or equal square.
+   *  3 -> 4 (2*2)
+   *  5 -> 9 (3*3)
+   *  9 -> 9 (3*3)
+   * 12 -> 16 (4*4)
+   * etc..
+   */
+  static unsigned int nextSquare(unsigned int v);
+
+  /**
+   * Same as above, but returns base.
+   *  3 -> 2 (2*2)
+   *  5 -> 3 (3*3)
+   *  9 -> 3 (3*3)
+   * 12 -> 4 (4*4)
+   */
+  static unsigned int nextSquareBase(unsigned int v);
+
+  /**
+   * Returns previous or equal square.
+   *  3 -> 1 (1*1)
+   *  5 -> 4 (2*2)
+   *  9 -> 9 (3*3)
+   */
+  static unsigned int prevSquare(unsigned int v);
+
+  /**
+   * Same as above, but returns base.
+   *  3 -> 1 (1*1)
+   *  5 -> 2 (2*2)
+   *  9 -> 3 (3*3)
+   */
+  static unsigned int prevSquareBase(unsigned int v);
+
+
+  /**
    * Checks if value is a power of 2.
    */
   static bool isPow2(unsigned int v);
+
+  /**
+   * Checks if value is a square.
+   */
+  static bool isSquare(unsigned int v);
 
   /**
    * Translates texture coordinates from original image texture coordinates, to

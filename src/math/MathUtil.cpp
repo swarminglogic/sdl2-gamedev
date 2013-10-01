@@ -14,9 +14,47 @@ unsigned int MathUtil::nextPow2(unsigned int v)
   return v;
 }
 
+unsigned int MathUtil::nextSquare(unsigned int v)
+{
+  unsigned int base = nextSquareBase(v);
+  return base*base;
+}
+
+
+unsigned int MathUtil::nextSquareBase(unsigned int v)
+{
+  unsigned int base =
+    static_cast<unsigned int>(std::ceil(std::sqrt(static_cast<float>(v))));
+  return base;
+}
+
+
+unsigned int MathUtil::prevSquare(unsigned int v)
+{
+  unsigned int base = prevSquareBase(v);
+  return base*base;
+}
+
+
+unsigned int MathUtil::prevSquareBase(unsigned int v)
+{
+  if (v == 0) return 0u;
+  unsigned int base =
+    static_cast<unsigned int>(std::floor(std::sqrt(static_cast<float>(v))));
+  return base;
+}
+
+
+
 bool MathUtil::isPow2(unsigned int v)
 {
   return v && !(v & (v - 1));
+}
+
+
+bool MathUtil::isSquare(unsigned int v)
+{
+  return v == nextSquare(v);
 }
 
 
