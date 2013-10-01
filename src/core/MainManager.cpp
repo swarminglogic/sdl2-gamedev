@@ -71,6 +71,9 @@ void MainManager::initialize()
                           graphics_->getScreenSize().h());
   fpsRender_.setZoomFactor(2);
   updateFpsText(0.0);
+
+  // Set mouse grab based on main renderer preference.
+  graphics_->setIsMouseGrab(basicRender_->prefersMouseGrab());
 }
 
 

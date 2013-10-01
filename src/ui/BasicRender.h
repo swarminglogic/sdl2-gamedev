@@ -25,6 +25,8 @@ public:
     glViewport( 0.f, 0.f, width, height );
   }
 
+  virtual bool prefersMouseGrab() const { return false; }
+
 private:
   // NonCopyable
   BasicRender(const BasicRender& c);
