@@ -45,6 +45,9 @@ public:
    */
   void finalize();
 
+  Uint32 getRuntimeTics() const;
+  float getRuntimeSecs() const;
+
 private:
   MainManager();
   void handleEvent(const SDL_Event& event);

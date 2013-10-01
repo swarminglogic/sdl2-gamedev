@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include <io/Keyboard.h>
 #include <ui/BasicRender.h>
 #include <ui/SDL.h>
 #include <ui/SDL_image.h>
@@ -80,6 +81,18 @@ void MainManager::finalize()
   fpsRender_.finalize();
 }
 
+
+Uint32 MainManager::getRuntimeTics() const
+{
+  return runtime_->getTicks();
+}
+
+float MainManager::getRuntimeSecs() const
+{
+  return runtime_->getSeconds();
+}
+
+
 void MainManager::run() {
   assert(basicRender_ && "You need a renderer, fool!");
 
@@ -118,12 +131,17 @@ void MainManager::handleEvent(const SDL_Event& event)
     }
   case SDL_MOUSEBUTTONDOWN:
     break;
+  case SDL_KEYUP:
+    Keyboard::instance().handleEvent(event);
+    break;
   case SDL_KEYDOWN:
+    Keyboard::instance().handleEvent(event);
     switch (event.key.keysym.sym) {
-    case SDLK_q: case SDLK_ESCAPE: isRunning_ = false; break;
+    case SDLK_ESCAPE: isRunning_ = false; break;
     case SDLK_f: graphics_->toggleFullScreen(); break;
     case SDLK_v: graphics_->toggleVSync(); break;
     case SDLK_m: graphics_->toggleMouseGrab(); break;
+    case SDLK_SPACE: runtime_->togglePauseResume(); break;
     default:
       break;
     }
@@ -186,3 +204,4 @@ void MainManager::updateFpsText(double fps)
                                               ss.str().c_str(),
                                               fontColor_));
 }
+
