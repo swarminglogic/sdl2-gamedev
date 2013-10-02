@@ -143,6 +143,21 @@ public:
     TS_ASSERT_EQUALS(formatted[4], "to yawn.");
   }
 
+  void testCopy()
+  {
+    TextBoxText tbt;
+    tbt.setWidthFixed(10);
+    tbt.setBoxWidth(100);
+    tbt.setText("My pony \nhas a pink tail\nand likes to yawn.");
+
+    TextBoxText tbtCopy(tbt);
+    std::vector<std::string> formatted = tbt.getFormatted(0.5f);
+    TS_ASSERT_EQUALS(formatted.size(), 3);
+    TS_ASSERT_EQUALS(formatted[0], "My pony");
+    TS_ASSERT_EQUALS(formatted[1], "has a pink");
+    TS_ASSERT_EQUALS(formatted[2], "ta");
+  }
+
 private:
 };
 

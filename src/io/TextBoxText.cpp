@@ -34,6 +34,19 @@ void TextBoxText::setWidthHeight(TTF_Font* font)
   // TODO swarminglogic, 2013-09-27:
 }
 
+uint8_t TextBoxText::getHeight() const
+{
+  return height_;
+}
+
+const std::array<uint8_t, 256>& TextBoxText::getWidths() const
+{
+  return width_;
+}
+
+
+
+
 void TextBoxText::setBoxWidth(unsigned int boxWidth)
 {boxWidth_ = boxWidth;}
 

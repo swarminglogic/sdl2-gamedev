@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <ui/SDL_ttf.h>
 
-class TTF_Font;
 
 /**
  * TextBoxText class.
@@ -40,6 +40,9 @@ public:
   void setWidth(const std::array<uint8_t, 256>& widths);
   void setWidthHeight(TTF_Font* font);
 
+  uint8_t getHeight() const;
+  const std::array<uint8_t, 256>& getWidths() const;
+
   /**
    * Set box width in font pixels.
    * For unlimited width, set to 0.
@@ -65,14 +68,10 @@ private:
 
   std::string source_;
   unsigned int boxWidth_;
-  int height_ = 0;
+  uint8_t height_ = 0;
   // Table with the widths for each ascii character.
   std::array<uint8_t, 256> width_;
   std::vector<std::string> formatted_;
-
-  // NonCopyable
-  TextBoxText(const TextBoxText& c);
-  TextBoxText& operator=(const TextBoxText& c);
 };
 
 #endif
