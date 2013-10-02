@@ -1,6 +1,7 @@
 #ifndef UI_GLUTIL_H
 #define UI_GLUTIL_H
 
+#include <cassert>
 #include <vector>
 
 #include <ui/SDL_opengl.h>
@@ -40,9 +41,9 @@ public:
    *
    * Use fillVertexBuffer to fill w/data.
    */
-  static GLuint prepareVertexBuffer(GLsizeiptr size,
-                                    GLenum target = GL_ARRAY_BUFFER,
-                                    GLenum usage = GL_STATIC_DRAW);
+  static GLuint allocateVertexBuffer(GLsizeiptr size,
+                                     GLenum target = GL_ARRAY_BUFFER,
+                                     GLenum usage = GL_STATIC_DRAW);
 
   /**
    * Fills vertex buffer with data.

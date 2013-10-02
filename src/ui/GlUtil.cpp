@@ -1,11 +1,9 @@
 #include <ui/GlUtil.h>
 
-#include <cassert>
 
-
-GLuint GlUtil::prepareVertexBuffer(GLsizeiptr size,
-                                   GLenum target,
-                                   GLenum usage)
+GLuint GlUtil::allocateVertexBuffer(GLsizeiptr size,
+                                    GLenum target,
+                                    GLenum usage)
 {
   GLuint buffername = 0;
   glGenBuffers(1, &buffername);
@@ -13,4 +11,3 @@ GLuint GlUtil::prepareVertexBuffer(GLsizeiptr size,
   glBufferData(GL_ARRAY_BUFFER, size, nullptr, usage);
   return buffername;
 }
-

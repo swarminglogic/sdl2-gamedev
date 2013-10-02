@@ -34,8 +34,8 @@ void ImageRender::initialize()
                      Asset::shader("2dscreentexture.frag"));
   program_.compile();
 
-  vertexBuffer_  = GlUtil::prepareVertexBuffer(3*4*sizeof(GLfloat));
-  textureBuffer_ = GlUtil::prepareVertexBuffer(2*4*sizeof(GLfloat));
+  vertexBuffer_  = GlUtil::allocateVertexBuffer(3*4*sizeof(GLfloat));
+  textureBuffer_ = GlUtil::allocateVertexBuffer(2*4*sizeof(GLfloat));
 }
 
 
@@ -126,7 +126,6 @@ void ImageRender::prepareVertices()
   const GLfloat y = static_cast<float>(yi * 2 * zoomFactor_);
   const GLfloat z = 0.0f;
 
-  // Offset by 1 if not multiples of two.
   const float xoff = 0.375f + static_cast<float>(position_.x() - viewport_.w());
   const float yoff = 0.375f + static_cast<float>(viewport_.h() - position_.y());
 
