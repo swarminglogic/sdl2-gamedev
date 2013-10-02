@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <io/Keyboard.h>
+#include <io/TextBoxText.h>
 #include <ui/BasicRender.h>
 #include <ui/SDL.h>
 #include <ui/SDL_image.h>
@@ -12,6 +13,7 @@
 #include <ui/ShaderUtil.h>
 #include <ui/VoidRenderer.h>
 #include <util/Asset.h>
+#include <util/CharMap.h>
 #include <util/Exception.h>
 #include <util/Log.h>
 #include <util/Timer.h>
@@ -22,7 +24,8 @@ MainManager::MainManager()
     graphics_(nullptr),
     runtime_(nullptr),
     basicRender_(nullptr),
-    fpsRender_(),
+    // fpsRender_(),
+    textRenderer_(),
     font_(nullptr),
     fontColor_{180u, 190u, 200u, 255u},
     isRunning_(true),
@@ -63,17 +66,44 @@ void MainManager::initialize()
   basicRender_->handleResize(graphics_->getScreenSize().w(),
                              graphics_->getScreenSize().h());
 
-  fpsRender_.initialize();
-  updateFpsText(0.0);
-  fpsRender_.setPosition(20, 20);
+  // TODO swarminglogic, 2013-10-02: Keeping fpsRender usage commented.
+  // fpsRender_.initialize();
+  // updateFpsText(0.0);
+  // fpsRender_.setPosition(20, 20);
+  // fpsRender_.handleResize(graphics_->getScreenSize().w(),
+  //                         graphics_->getScreenSize().h());
+  // fpsRender_.setZoomFactor(2);
 
-  fpsRender_.handleResize(graphics_->getScreenSize().w(),
-                          graphics_->getScreenSize().h());
-  fpsRender_.setZoomFactor(2);
-  updateFpsText(0.0);
 
   // Set mouse grab based on main renderer preference.
   graphics_->setIsMouseGrab(basicRender_->prefersMouseGrab());
+
+  // Text font renderer
+  textRenderer_.loadImage("gnsh-bitmapfont.png");
+  TextBoxText tbt;
+  tbt.setHeight(12u);
+  tbt.setWidthFixed(5u);
+  textRenderer_.setTextBoxText(tbt);
+  CharMap cm(Size(5, 12));
+  std::vector<CharMap::Trait> traits = {
+    CharMap::C_GOLDEN,
+    CharMap::C_CYAN,
+    CharMap::C_RED,
+    CharMap::C_MAGENTA,
+    CharMap::C_GREY,
+    CharMap::C_WHITE,
+    CharMap::C_GREEN,
+    CharMap::C_BLUE,
+    CharMap::C_OLIVE };
+  cm.setTraits(traits);
+  textRenderer_.setCharMap(cm);
+  textRenderer_.handleResize(graphics_->getScreenSize().w(),
+                             graphics_->getScreenSize().h());
+  textRenderer_.initialize();
+  textRenderer_.setPosition(Point(40, 40));
+  textRenderer_.setZoomFactor(1);
+  textRenderer_.postConfigureInitialize();
+  updateFpsText(0.0);
 }
 
 
@@ -81,7 +111,7 @@ void MainManager::finalize()
 {
   log_.i("Cleaning up resources.");
   basicRender_->finalize();
-  fpsRender_.finalize();
+  // fpsRender_.finalize();
 }
 
 
@@ -110,7 +140,8 @@ void MainManager::run() {
 
     ++frameNumber;
     basicRender_->render(runtime_->getSeconds());
-    fpsRender_.render(0);
+    textRenderer_.render(0);
+    // fpsRender_.render(0);
     graphics_->swapBuffers();
 
     fpsCounter_.tic();
@@ -129,7 +160,8 @@ void MainManager::handleEvent(const SDL_Event& event)
       const int height = event.window.data2;
       log_.i() << "Window resized to " << width << " x " << height << Log::end;
       basicRender_->handleResize(width, height);
-      fpsRender_.handleResize(width, height);
+      // fpsRender_.handleResize(width, height);
+      textRenderer_.handleResize(width, height);
       graphics_->setScreenSize(Size(width, height));
     }
   case SDL_MOUSEBUTTONDOWN:
@@ -203,8 +235,9 @@ void MainManager::updateFpsText(double fps)
   std::stringstream ss;
   ss.precision(2);
   ss << std::fixed <<  "FPS: " << fps;
-  fpsRender_.setSurface(*TTF_RenderText_Solid(font_.get(),
-                                              ss.str().c_str(),
-                                              fontColor_));
+  if (textRenderer_.isReady())
+    textRenderer_.setText(ss.str());
+  // fpsRender_.setSurface(*TTF_RenderText_Solid(font_.get(),
+  //                                             ss.str().c_str(),
+  //                                             fontColor_));
 }
-

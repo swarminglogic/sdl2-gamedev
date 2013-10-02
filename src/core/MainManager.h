@@ -7,6 +7,7 @@
 #include <ui/ImageRender.h>
 #include <ui/SDL_opengl.h>
 #include <ui/SDL_ttf.h>
+#include <ui/TextBoxTextRender.h>
 #include <util/FpsCounter.h>
 
 
@@ -67,7 +68,9 @@ private:
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;
-  ImageRender fpsRender_;
+  // ImageRender fpsRender_;
+  TextBoxTextRender textRenderer_;
+
   FontPtr font_;
   SDL_Color fontColor_;
 
