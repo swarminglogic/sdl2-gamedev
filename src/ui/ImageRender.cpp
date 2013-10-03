@@ -1,6 +1,7 @@
 #include <ui/ImageRender.h>
 
 #include <math/MathUtil.h>
+#include <ui/GlState.h>
 #include <ui/GlUtil.h>
 #include <util/Asset.h>
 
@@ -15,7 +16,9 @@ ImageRender::ImageRender()
      vertexBuffer_(0),
      textureBuffer_(0),
      vertices_(),
-     texcoords_()
+     texcoords_(),
+     viewportParamId_(-1),
+     texParamId_(-1)
 {
 }
 
@@ -32,7 +35,7 @@ void ImageRender::initialize()
                      Asset::shader("2dscreentexture.vert"));
   program_.setShader(ShaderProgram::FRAGMENT,
                      Asset::shader("2dscreentexture.frag"));
-  program_.compile();
+  updateShader();
 
   vertexBuffer_  = GlUtil::allocateVertexBuffer(3*4*sizeof(GLfloat));
   textureBuffer_ = GlUtil::allocateVertexBuffer(2*4*sizeof(GLfloat));
@@ -41,20 +44,18 @@ void ImageRender::initialize()
 
 void ImageRender::render(float)
 {
-  if(program_.isModified()) program_.compile();
+  if(program_.isModified()) updateShader();
   glEnable(GL_BLEND);
   glEnable(GL_DEPTH_TEST);
 
   // Uniform Viewport
-  glUseProgram(program_.get());
-  GLuint viewportParamId  = glGetUniformLocation(program_.get(), "Viewport");
-  glUniform2iv(viewportParamId, 1, viewport_.getData());
+  GlState::useProgram(program_.get());
+  glUniform2iv(viewportParamId_, 1, viewport_.getData());
 
   // Uniform Tex1
-  glActiveTexture(GL_TEXTURE0);
+  GlState::activeTexture(GL_TEXTURE0);
   surface_.glBind();
-  GLuint texParamId  = glGetUniformLocation(program_.get(), "Tex1");
-  glUniform1i(texParamId, 0);
+  glUniform1i(texParamId_, 0);
 
   // vec3 vpos
   glEnableVertexAttribArray(0);
@@ -172,4 +173,11 @@ void ImageRender::updateQuad()
 void ImageRender::updateTex()
 {
   prepareTexcoords();
+}
+
+void ImageRender::updateShader()
+{
+  program_.compile();
+  viewportParamId_ = glGetUniformLocation(program_.get(), "Viewport");
+  texParamId_  = glGetUniformLocation(program_.get(), "Tex1");
 }

@@ -1,6 +1,8 @@
 #ifndef UI_BASICRENDER_H
 #define UI_BASICRENDER_H
 
+#include <math/Rect.h>
+#include <ui/GlState.h>
 #include <ui/SDL_opengl.h>
 #include <util/SDL_Event_fwd.h>
 
@@ -22,7 +24,7 @@ public:
 
   virtual bool handleEvent(const SDL_Event&) { return false; }
   virtual void handleResize(int width, int height) {
-    glViewport( 0.f, 0.f, width, height );
+    GlState::viewport(Rect(0, 0, width, height));
   }
 
   virtual bool prefersMouseGrab() const { return false; }

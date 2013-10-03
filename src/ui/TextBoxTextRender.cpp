@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <io/TextBoxText.h>
 #include <math/Pointf.h>
+#include <ui/GlState.h>
 #include <ui/GlUtil.h>
 #include <ui/Surface.h>
 #include <util/Asset.h>
@@ -60,10 +61,10 @@ void TextBoxTextRender::render(float )
   assert(charmap_ && surface_ && textBoxText_);
   assert(!vertices_.empty() && "Forget postConfigureInitialize() ?");
   if(program_.isModified()) updateShader();
-  glUseProgram(program_.get());
+  GlState::useProgram(program_.get());
 
   // Uniform Tex1
-  glActiveTexture(GL_TEXTURE0);
+  GlState::activeTexture(GL_TEXTURE0);
   surface_->glBind();
   glUniform1i(paramId_Tex1_, 0);
 
@@ -117,7 +118,7 @@ void TextBoxTextRender::render(float )
     glUniform4fv(paramId_offset_, toRender, &offset[0][0] + rendered);
 
     // render toRender quads, with information
-    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, remaining);
+    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, toRender);
 
     // Increment, decrement counters
     rendered += toRender;

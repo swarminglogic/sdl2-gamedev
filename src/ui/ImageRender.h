@@ -48,6 +48,7 @@ private:
   void prepareTexcoords();
   void updateQuad();
   void updateTex();
+  void updateShader();
 
   Log log_;
   ShaderProgram program_;
@@ -60,7 +61,8 @@ private:
   GLuint textureBuffer_;
   std::vector<GLfloat> vertices_;
   std::vector<GLfloat> texcoords_;
-
+  GLint viewportParamId_;
+  GLint texParamId_;
   // NonCopyable
   ImageRender(const ImageRender& c);
   ImageRender& operator=(const ImageRender& c);
