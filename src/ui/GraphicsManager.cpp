@@ -18,7 +18,7 @@ GraphicsManager::GraphicsManager()
     isFullScreen_(false),
     isVSync_(true),
     isOpenGlDebugEnabled_(true),
-    isMouseGrab_(false)
+    isMouseGrab_(true)
 {
   const ViewConfig& viewConfig = ConfigManager::instance().getViewConfig();
   isFullScreen_ = viewConfig.isFullScreen();
@@ -98,17 +98,19 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,        24);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,         24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,       8);
-  SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,     8);
-  SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,   8);
-  SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,    8);
-  SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,   8);
+  // Accumulation buffer doesn't exist in OpenGL 3+ core profile
+  // SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,     8);
+  // SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,   8);
+  // SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,    8);
+  // SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,   8);
   SDL_GL_SetAttribute(SDL_GL_STEREO,             0);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 32);
-  // SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Causes error, SDL bug?
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 24);
+  // SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Error, SDL bug?
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+                      SDL_GL_CONTEXT_PROFILE_CORE);
   if (isOpenGlDebugEnabled_)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 
@@ -243,7 +245,6 @@ void GraphicsManager::setIsMouseGrab(bool isMouseGrabEnabled)
 {
   log_.i() << (isMouseGrabEnabled ? "Enabling" : "Disabling")
            << " mouse grab" << Log::end;
-
 
   int ret = -1;
   if (isMouseGrabEnabled) {

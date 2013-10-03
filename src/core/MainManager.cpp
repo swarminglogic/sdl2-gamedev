@@ -17,6 +17,7 @@
 #include <util/Exception.h>
 #include <util/Log.h>
 #include <util/Timer.h>
+#include <wip/InstancedCubeRenderer.h>
 
 
 MainManager::MainManager()
@@ -44,7 +45,7 @@ MainManager::MainManager()
 
   // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
   // class, which manages the renderer?
-  basicRender_.reset(new VoidRenderer);
+  basicRender_.reset(new InstancedCubeRenderer);
 }
 
 MainManager::~MainManager()
@@ -101,7 +102,7 @@ void MainManager::initialize()
                              graphics_->getScreenSize().h());
   textRenderer_.initialize();
   textRenderer_.setPosition(Point(40, 40));
-  textRenderer_.setZoomFactor(1);
+  textRenderer_.setZoomFactor(2);
   textRenderer_.postConfigureInitialize();
   updateFpsText(0.0);
 }
