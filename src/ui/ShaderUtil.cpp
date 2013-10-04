@@ -3,6 +3,7 @@
 #include <array>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 #include <util/FileUtil.h>
@@ -46,11 +47,10 @@ std::string ShaderUtil::checkShaderInfo(GLuint shaderId,
     GLint loglen;
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &loglen);
     if (loglen > 0) {
-      char* log = new char[loglen];
+      std::unique_ptr<char[]> log(new char[loglen]);
       GLsizei written;
-      glGetShaderInfoLog(shaderId, loglen, &written, log);
-      ss << log << std::endl;
-      delete[] log;
+      glGetShaderInfoLog(shaderId, loglen, &written, log.get());
+      ss << log.get() << std::endl;
     }
     return ss.str();
   }
@@ -70,11 +70,10 @@ std::string ShaderUtil::checkProgramInfo(GLuint programId,
     GLint loglen;
     glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &loglen);
     if (loglen > 0) {
-      char* log = new char[loglen];
+      std::unique_ptr<char[]> log(new char[loglen]);
       GLsizei written;
-      glGetProgramInfoLog(programId, loglen, &written, log);
-      ss << log << std::endl;
-      delete[] log;
+      glGetProgramInfoLog(programId, loglen, &written, log.get());
+      ss << log.get() << std::endl;
     }
     return ss.str();
   }
