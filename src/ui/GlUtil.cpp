@@ -2,12 +2,12 @@
 
 
 GLuint GlUtil::allocateVertexBuffer(GLsizeiptr size,
-                                    GLenum target,
+                                    GlState::BufferTarget target,
                                     GLenum usage)
 {
   GLuint buffername = 0;
   glGenBuffers(1, &buffername);
-  glBindBuffer(target, buffername);
-  glBufferData(GL_ARRAY_BUFFER, size, nullptr, usage);
+  GlState::bindBuffer(target, buffername);
+  GlState::bufferData(target, size, nullptr, usage);
   return buffername;
 }

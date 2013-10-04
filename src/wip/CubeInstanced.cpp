@@ -35,11 +35,10 @@ void CubeInstanced::render(float time)
   }
   GlState::useProgram(program_.get());
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer_);
-
+  GlState::bindBuffer(GlState::ELEMENT_ARRAY_BUFFER, indexBuffer_);
   glUniformMatrix4fv(pvID_, 1, GL_FALSE, pv_);
 
-  glBindBuffer(GL_ARRAY_BUFFER, vertBuffer_);
+  GlState::bindBuffer(GlState::ARRAY_BUFFER, vertBuffer_);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
   glEnableVertexAttribArray(0);
 
@@ -86,7 +85,8 @@ void CubeInstanced::initialize()
   prepareVertices();
 
   vertBuffer_  = GlUtil::prepareVertexBuffer(vertices_);
-  indexBuffer_ = GlUtil::prepareVertexBuffer(indices_, GL_ELEMENT_ARRAY_BUFFER);
+  indexBuffer_ = GlUtil::prepareVertexBuffer(indices_,
+                                             GlState::ELEMENT_ARRAY_BUFFER);
 }
 
 void CubeInstanced::prepareVertices()

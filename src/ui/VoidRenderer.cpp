@@ -1,5 +1,6 @@
 #include <ui/VoidRenderer.h>
 
+#include <ui/GlState.h>
 #include <ui/SDL_opengl.h>
 
 
@@ -17,9 +18,9 @@ void VoidRenderer::initialize()
 {
   glGenVertexArrays(1, &vao_);
   glBindVertexArray(vao_);
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  GlState::enable(GlState::DEPTH_TEST);
+  GlState::enable(GlState::CULL_FACE);
+  GlState::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void VoidRenderer::render(float)
@@ -32,4 +33,3 @@ void VoidRenderer::render(float)
 void VoidRenderer::finalize()
 {
 }
-

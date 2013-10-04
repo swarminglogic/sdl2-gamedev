@@ -3,6 +3,7 @@
 
 #include <config/ConfigManager.h>
 #include <core/MainManager.h>
+#include <ui/GlState.h>
 #include <util/Exception.h>
 #include <util/Log.h>
 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
   try {
     ConfigManager::instance();
     MainManager& mainManager = MainManager::instance();
+    GlState::syncronize();
     mainManager.initialize();
     mainManager.run();
   }

@@ -1,13 +1,23 @@
 #include <ui/GlState.h>
 
+#include <cassert>
+
+const std::array<GLenum, GlState::N_GLCAP> GlState::capEnumToGL_
+{GL_BLEND, GL_CULL_FACE, GL_DEPTH_TEST};
+const std::array<GLenum, GlState::N_BUFFER> GlState::bufferEnumToGL_
+{GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER};
 
 GlState::GlState()
-  : isBlending_(false),
-    isDepthTest_(false),
+  : capStates_(),
+    bufferBindings_{0},
     viewport_(Rect(0,0, 0,0)),
     activeTexture_(GL_TEXTURE0),
-    program_(0)
+    program_(0),
+    blendSFactor_(0),
+    blendDFactor_(0)
+
 {}
+
 GlState::~GlState()
 {}
 
@@ -18,22 +28,29 @@ GlState& GlState::instance()
 }
 
 
-bool GlState::blending(bool toggle)
-{return instance().f_blending(toggle);}
-bool GlState::depthTest(bool toggle)
-{return instance().f_depthTest(toggle);}
+void GlState::syncronize()
+{instance().f_syncronize();}
+
+
+bool GlState::enable(Capability cap)
+{return instance().f_enable(cap);}
+bool GlState::disable(Capability cap)
+{return instance().f_disable(cap);}
 bool GlState::viewport(const Rect& vp)
 {return instance().f_viewport(vp);}
 bool GlState::activeTexture(GLenum activeTex)
 {return instance().f_activeTexture(activeTex);}
 bool GlState::useProgram(GLuint program)
 {return instance().f_useProgram(program);}
+bool GlState::blendFunc(GLenum sfactor, GLenum dfactor)
+{return instance().f_blendFunc(sfactor, dfactor);}
+bool GlState::bindBuffer(BufferTarget target, GLuint buffer)
+{return instance().f_bindBuffer(target, buffer);}
 
 
-bool GlState::isBlending()
-{return instance().f_isBlending();}
-bool GlState::isDepthTest()
-{return instance().f_isDepthTest();}
+
+bool GlState::isEnabled(Capability cap)
+{return instance().f_isEnabled(cap);}
 Rect GlState::getViewport()
 {return instance().f_getViewport();}
 GLenum GlState::getActiveTexture()
@@ -42,25 +59,33 @@ GLuint GlState::getProgram()
 {return instance().f_getProgram();}
 
 
-
-bool GlState::f_blending(bool toggle)
+void GlState::f_syncronize()
 {
-  const bool change = toggle != isBlending_;
-  if (change) {
-    toggle ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
-    isBlending_ = toggle;
-  }
-  return change;
+  GLint vp[4] {0};
+  glGetIntegerv(GL_VIEWPORT, vp);
+  viewport_ = Rect(vp[0], vp[1], vp[2], vp[3]);
 }
 
-bool GlState::f_depthTest(bool toggle)
+bool GlState::f_enable(Capability cap)
 {
-  const bool change = toggle != isDepthTest_;
-  if (change) {
-    toggle ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-    isDepthTest_ = toggle;
+  assert(cap != N_GLCAP);
+  if (!capStates_[cap]) {
+    glEnable(capEnumToGL_[cap]);
+    capStates_[cap] = true;
+    return true;
   }
-  return change;
+  return false;
+}
+
+bool GlState::f_disable(Capability cap)
+{
+  assert(cap != N_GLCAP);
+  if (capStates_[cap]) {
+    glDisable(capEnumToGL_[cap]);
+    capStates_[cap] = false;
+    return true;
+  }
+  return false;
 }
 
 bool GlState::f_viewport(const Rect& vp)
@@ -93,15 +118,57 @@ bool GlState::f_useProgram(GLuint program)
   return change;
 }
 
+bool GlState::f_blendFunc(GLenum sfactor, GLenum dfactor)
+{
+  const bool change = sfactor != blendSFactor_ && dfactor != blendDFactor_;
+  if (change) {
+    glBlendFunc(sfactor, dfactor);
+    blendSFactor_ = sfactor;
+    blendDFactor_ = dfactor;
+  }
+  return change;
+}
 
-bool GlState::f_isBlending() const
-{return isBlending_;}
-bool GlState::f_isDepthTest() const
-{return isDepthTest_;}
+bool GlState::f_bindBuffer(BufferTarget target, GLuint buffer)
+{
+  const bool change = bufferBindings_[target] != buffer;
+  if (change) {
+    glBindBuffer(bufferEnumToGL_[target], buffer);
+    bufferBindings_[target ] = buffer;
+  }
+  return change;
+}
+
+
+bool GlState::f_isEnabled(Capability cap) const
+{return capStates_[cap];}
 Rect GlState::f_getViewport() const
 {return viewport_;}
 GLenum GlState::f_getActiveTexture() const
 {return activeTexture_;}
 GLuint GlState::f_getProgram() const
 {return program_;}
+
+
+// Pass-through functions
+void GlState::bufferData(BufferTarget target,
+                         GLsizeiptr size,
+                         const GLvoid * data,
+                         GLenum usage)
+{glBufferData(bufferEnumToGL_[target], size, data, usage);}
+
+void GlState::bufferSubData(BufferTarget target, GLintptr offset,
+                            GLsizeiptr size, const GLvoid * data)
+{glBufferSubData(bufferEnumToGL_[target], offset, size, data);}
+
+
+GLenum GlState::toGLenum(Capability cap)
+{
+  return capEnumToGL_[cap];
+}
+
+GLenum GlState::toGLenum(BufferTarget target)
+{
+  return bufferEnumToGL_[target];
+}
 

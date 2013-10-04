@@ -45,8 +45,8 @@ void ImageRender::initialize()
 void ImageRender::render(float)
 {
   if(program_.isModified()) updateShader();
-  glEnable(GL_BLEND);
-  glEnable(GL_DEPTH_TEST);
+  GlState::enable(GlState::BLEND);
+  GlState::enable(GlState::DEPTH_TEST);
 
   // Uniform Viewport
   GlState::useProgram(program_.get());
@@ -59,12 +59,12 @@ void ImageRender::render(float)
 
   // vec3 vpos
   glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer_);
+  GlState::bindBuffer(GlState::ARRAY_BUFFER, vertexBuffer_);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
   // vec2 tpos
   glEnableVertexAttribArray(1);
-  glBindBuffer(GL_ARRAY_BUFFER, textureBuffer_);
+  GlState::bindBuffer(GlState::ARRAY_BUFFER, textureBuffer_);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); // Draw 0 vertices, starting from 0.
@@ -140,7 +140,7 @@ void ImageRender::prepareVertices()
                 C[0], C[1], C[2],
                 D[0], D[1], D[2] };
 
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer_);
+  GlState::bindBuffer(GlState::ARRAY_BUFFER, vertexBuffer_);
   GlUtil::fillVertexBuffer(vertices_);
 }
 
@@ -155,7 +155,7 @@ void ImageRender::prepareTexcoords()
                 xmax , ymax,
                 xmin , ymin,
                 xmax , ymin};
-  glBindBuffer(GL_ARRAY_BUFFER, textureBuffer_);
+  GlState::bindBuffer(GlState::ARRAY_BUFFER, textureBuffer_);
   GlUtil::fillVertexBuffer(texcoords_);
 }
 
@@ -179,5 +179,5 @@ void ImageRender::updateShader()
 {
   program_.compile();
   viewportParamId_ = glGetUniformLocation(program_.get(), "Viewport");
-  texParamId_  = glGetUniformLocation(program_.get(), "Tex1");
+  texParamId_      = glGetUniformLocation(program_.get(), "Tex1");
 }

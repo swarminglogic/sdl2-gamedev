@@ -73,9 +73,9 @@ void InstancedCubeRenderer::initialize()
 
   cube_.initialize();
 
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  GlState::enable(GlState::DEPTH_TEST);
+  GlState::enable(GlState::CULL_FACE);
+  GlState::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 
@@ -87,25 +87,9 @@ void InstancedCubeRenderer::render(float time)
 
   glClearBufferfv(GL_COLOR, 0, clearColor_);
   glClear(GL_DEPTH_BUFFER_BIT);
-  // glClear(GL_ACCUM_BUFFER_BIT);
 
-  // TODO swarminglogic, 2013-09-30: WHO DOES GLBLEND FAIL HERE?
-  // glEnable(GL_BLEND);
-  glEnable(GL_DEPTH_TEST);
-
-  // std::vector<glm::vec3> bokehs = camera_->getBokehPositions(10);
-  // for (size_t i = 0 ; i < bokehs.size() ; ++i) {
-  //   viewMat_ = glm::lookAt(camera_->getPosition() + bokehs[i],
-  //                          camera_->getTargetPosition(),
-  //                          glm::vec3(0.0f, 1.0f, 0.0f));
-  //   mvpMat_ = projectionMat_ * viewMat_;
-  //   cube_.setPvPointer(&mvpMat_[0][0]);
-  //   cube_.render(time);
-  //   glAccum(i ? GL_ACCUM : GL_LOAD,
-  //           1.0f / (float)bokehs.size());
-  // }
-  // glAccum(GL_RETURN, 1);
-
+  GlState::enable(GlState::BLEND);
+  GlState::enable(GlState::DEPTH_TEST);
 
   mvpMat_ = projectionMat_ * viewMat_;
   cube_.setPvPointer(&mvpMat_[0][0]);

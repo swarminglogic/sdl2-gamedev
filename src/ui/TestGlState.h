@@ -16,27 +16,41 @@
 class TestGlState : public CxxTest::TestSuite
 {
 public:
+  void testGlStatics()
+  {
+    TS_ASSERT_EQUALS(GlState::toGLenum(GlState::BLEND), GL_BLEND);
+    TS_ASSERT_EQUALS(GlState::toGLenum(GlState::CULL_FACE), GL_CULL_FACE);
+    TS_ASSERT_EQUALS(GlState::toGLenum(GlState::DEPTH_TEST), GL_DEPTH_TEST);
+
+    TS_ASSERT_EQUALS(GlState::toGLenum(GlState::ARRAY_BUFFER),
+                     GL_ARRAY_BUFFER);
+    TS_ASSERT_EQUALS(GlState::toGLenum(GlState::ELEMENT_ARRAY_BUFFER),
+                     GL_ELEMENT_ARRAY_BUFFER);
+  }
+
+
   void testGlState()
   {
+    GlState::Capability cap = GlState::BLEND;
     // Checking that default is false
-    TS_ASSERT(!GlState::isBlending());
+    TS_ASSERT(!GlState::isEnabled(cap));
     // Checking that setting it false is redundant.
-    TS_ASSERT(!GlState::blending(false));
+    TS_ASSERT(!GlState::disable(cap));
     // Checking that setting it true is not redundant
-    TS_ASSERT(GlState::blending(true));
-    TS_ASSERT(GlState::isBlending());
+    TS_ASSERT(GlState::enable(cap));
+    TS_ASSERT(GlState::isEnabled(cap));
     // Checking that setting it true is now redundant.
-    TS_ASSERT(!GlState::blending(true));
-    TS_ASSERT(GlState::isBlending());
+    TS_ASSERT(!GlState::enable(cap));
+    TS_ASSERT(GlState::isEnabled(cap));
 
-    // Same for depth test
-    // Checking that default is false
-    TS_ASSERT(!GlState::isDepthTest());
-    TS_ASSERT(!GlState::depthTest(false));
-    TS_ASSERT(GlState::depthTest(true));
-    TS_ASSERT(GlState::isDepthTest());
-    TS_ASSERT(!GlState::depthTest(true));
-    TS_ASSERT(GlState::isDepthTest());
+    // // Same for depth test
+    cap = GlState::DEPTH_TEST;
+    TS_ASSERT(!GlState::isEnabled(cap));
+    TS_ASSERT(!GlState::disable(cap));
+    TS_ASSERT(GlState::enable(cap));
+    TS_ASSERT(GlState::isEnabled(cap));
+    TS_ASSERT(!GlState::enable(cap));
+    TS_ASSERT(GlState::isEnabled(cap));
 
     // Viewport
     // Checking that default is false

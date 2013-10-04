@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 
+#include <ui/GlState.h>
 #include <ui/SDL_opengl.h>
 
 
@@ -22,16 +23,17 @@ public:
    */
   template <typename T>
   static GLuint prepareVertexBuffer(const std::vector<T>& data,
-                                    GLenum target = GL_ARRAY_BUFFER,
+                                    GlState::BufferTarget target =
+                                        GlState::ARRAY_BUFFER,
                                     GLenum usage = GL_STATIC_DRAW)
   {
     GLuint buffername = 0;
     glGenBuffers(1, &buffername);
-    glBindBuffer(target, buffername);
-    glBufferData(target,
-                 data.size() * sizeof(data[0]),
-                 &data[0],
-                 usage);
+    GlState::bindBuffer(target, buffername);
+    GlState::bufferData(target,
+                        data.size() * sizeof(data[0]),
+                        &data[0],
+                        usage);
     return buffername;
   }
 
@@ -42,7 +44,8 @@ public:
    * Use fillVertexBuffer to fill w/data.
    */
   static GLuint allocateVertexBuffer(GLsizeiptr size,
-                                     GLenum target = GL_ARRAY_BUFFER,
+                                    GlState::BufferTarget target =
+                                        GlState::ARRAY_BUFFER,
                                      GLenum usage = GL_STATIC_DRAW);
 
   /**
@@ -51,13 +54,14 @@ public:
    */
   template <typename T>
   static void fillVertexBuffer(const std::vector<T>& data,
-                               GLenum target = GL_ARRAY_BUFFER)
+                               GlState::BufferTarget target =
+                                   GlState::ARRAY_BUFFER)
   {
     assert(!data.empty() && "Cannot fill vertex buffer w/empty data!");
-    glBufferSubData(target,
-                    0,
-                    data.size() * sizeof(data[0]),
-                    &data[0]);
+    GlState::bufferSubData(target,
+                           0,
+                           data.size() * sizeof(data[0]),
+                           &data[0]);
   }
 
 private:
