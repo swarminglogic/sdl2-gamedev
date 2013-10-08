@@ -22,6 +22,11 @@ std::string Asset::font(const std::string& filename)
   return path(FONT, filename);
 }
 
+std::string Asset::mesh(const std::string& filename)
+{
+  return path(MESH, filename);
+}
+
 
 std::string Asset::typeToPath(Asset::Type type)
 {
@@ -33,6 +38,8 @@ std::string Asset::typeToPath(Asset::Type type)
     return std::string("./assets/images/");
   case FONT:
     return std::string("./assets/fonts/");
+  case MESH:
+    return std::string("./assets/meshes/");
   default:
     return std::string("");
   }

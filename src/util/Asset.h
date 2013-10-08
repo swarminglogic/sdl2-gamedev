@@ -15,13 +15,15 @@ public:
   enum Type{
     SHADER,
     IMAGE,
-    FONT
+    FONT,
+    MESH
   };
 
   static std::string path(Type type, const std::string& filename);
   static std::string image(const std::string& filename);
   static std::string shader(const std::string& filename);
   static std::string font(const std::string& filename);
+  static std::string mesh(const std::string& filename);
 
 
 private:
