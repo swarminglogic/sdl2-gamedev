@@ -37,6 +37,22 @@ public:
     return buffername;
   }
 
+  template <typename T>
+  static GLuint prepareVertexBuffer(GLuint buffername,
+                                    const std::vector<T>& data,
+                                    GlState::BufferTarget target =
+                                        GlState::ARRAY_BUFFER,
+                                    GLenum usage = GL_STATIC_DRAW)
+  {
+    GlState::bindBuffer(target, buffername);
+    GlState::bufferData(target,
+                        data.size() * sizeof(data[0]),
+                        &data[0],
+                        usage);
+    return buffername;
+  }
+
+
   /**
    * Creates a vertex buffer, does NOT fill buffer w/data
    * Returns name of buffer.
@@ -44,7 +60,7 @@ public:
    * Use fillVertexBuffer to fill w/data.
    */
   static GLuint allocateVertexBuffer(GLsizeiptr size,
-                                    GlState::BufferTarget target =
+                                     GlState::BufferTarget target =
                                         GlState::ARRAY_BUFFER,
                                      GLenum usage = GL_STATIC_DRAW);
 
