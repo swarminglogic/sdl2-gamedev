@@ -1,3 +1,4 @@
+#include <util/Log.h>
 #include <wip/ObjRenderer.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -45,6 +46,7 @@ void ObjRenderer::initialize()
   updateShader();
   updateModel();
   texture_.loadImage("uv_colorgrid.png");
+  texture_.setIsMaxFiltering(true);
   texture_.prepareForGl();
 }
 

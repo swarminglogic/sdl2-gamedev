@@ -26,6 +26,7 @@ TextBoxTextRender::TextBoxTextRender()
     paramId_charBoxDimensions_(-1),
     paramId_offset_(-1)
 {
+  surface_->setIsMaxFiltering(false);
 }
 
 
@@ -193,10 +194,6 @@ void TextBoxTextRender::updateQuad()
 {
   prepareVertices();
   surface_->prepareForGl();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 bool TextBoxTextRender::isReady() const

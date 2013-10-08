@@ -12,7 +12,8 @@ Surface::Surface(SDL_Surface& surface)
     surface_(&surface),
     filename_(""),
     textureId_(0),
-    clip_(0,0,surface.w,surface.h)
+    clip_(0,0,surface.w,surface.h),
+    isMaxFiltering_(true)
 {
 }
 
@@ -126,8 +127,20 @@ void Surface::prepareForGl()
                 width, height, 0, GL_RGBA,
                 GL_UNSIGNED_BYTE, tempSurface->pixels );
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  if (isMaxFiltering_) {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    float maxAnistropy;
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnistropy);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnistropy);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  } else {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  }
+
 }
 
 
@@ -145,4 +158,15 @@ GLuint Surface::glBind()
 GLuint Surface::getTextureId() const
 {
   return textureId_;
+}
+
+
+bool Surface::isMaxFiltering() const
+ {
+   return isMaxFiltering_;
+ }
+
+void Surface::setIsMaxFiltering(bool isMaxFilteringSet)
+{
+  isMaxFiltering_ = isMaxFilteringSet;
 }

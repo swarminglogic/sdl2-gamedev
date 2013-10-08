@@ -62,6 +62,15 @@ public:
    */
   float glTexCoordX(float texcoord) const;
   float glTexCoordY(float texcoord) const;
+
+
+  /**
+   * If set true, it enables linear mipmapping and anisotropic filtering.
+   * If set false, sets nearest filter, with clamp to edge wrapping.
+   */
+  void setIsMaxFiltering(bool isMaxFiltering);
+  bool isMaxFiltering() const;
+
 private:
   void releaseResources();
 
@@ -70,6 +79,7 @@ private:
   std::string filename_;
   GLuint textureId_;
   Rect clip_;
+  bool isMaxFiltering_;
 
   // NonCopyable
   Surface(const Surface& c);
