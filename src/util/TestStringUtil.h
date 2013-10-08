@@ -45,6 +45,21 @@ public:
     TS_ASSERT_EQUALS(ct, "Hello world!");
   }
 
+  void testSuffixPrefix()
+  {
+    std::string txt {"abcdef012345"};
+
+    // Prefix
+    TS_ASSERT_EQUALS(StringUtil::prefix(txt, 0), "");
+    TS_ASSERT_EQUALS(StringUtil::prefix(txt, 4), "abcd");
+    TS_ASSERT_EQUALS(StringUtil::prefix(txt, 200), txt);
+
+    // Suffix
+    TS_ASSERT_EQUALS(StringUtil::suffix(txt, 0), "");
+    TS_ASSERT_EQUALS(StringUtil::suffix(txt, 4), "2345");
+    TS_ASSERT_EQUALS(StringUtil::suffix(txt, 200), txt);
+  }
+
 
 private:
 };

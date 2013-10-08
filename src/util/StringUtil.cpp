@@ -26,6 +26,17 @@ StringVector StringUtil::split(const std::string &text,
   return elements;
 }
 
+std::string StringUtil::suffix(const std::string& text, size_t length)
+{
+  if (length >= text.size())
+    return text;
+  return text.substr(text.size() - length, length);
+}
+
+std::string StringUtil::prefix(const std::string& text, size_t length)
+{
+  return text.substr(0, length);
+}
 
 
 std::string StringUtil::ltrimc(const std::string& text)

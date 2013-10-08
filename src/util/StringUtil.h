@@ -24,6 +24,9 @@ public:
                                         char delimiter);
 
 
+  static std::string suffix(const std::string& text, size_t length);
+  static std::string prefix(const std::string& text, size_t length);
+
   // Creating a copy of the string
   static std::string ltrimc(const std::string& text);
   static std::string rtrimc(const std::string& text);
