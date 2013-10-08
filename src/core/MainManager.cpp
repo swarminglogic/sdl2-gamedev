@@ -18,6 +18,7 @@
 #include <util/Log.h>
 #include <util/Timer.h>
 #include <wip/InstancedCubeRenderer.h>
+#include <wip/ObjRenderer.h>
 
 
 MainManager::MainManager()
@@ -45,7 +46,7 @@ MainManager::MainManager()
 
   // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
   // class, which manages the renderer?
-  basicRender_.reset(new InstancedCubeRenderer);
+  basicRender_.reset(new ObjRenderer);
 }
 
 MainManager::~MainManager()
