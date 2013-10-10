@@ -24,7 +24,7 @@ public:
    * Create based on SDL_Surface.
    * @note Takes ownership!
    */
-  Surface(SDL_Surface& surface);
+  Surface(SDL_Surface* surface);
 
   virtual ~Surface();
 
@@ -39,6 +39,8 @@ public:
    */
   void setSurface(SDL_Surface& surface);
 
+  void setGlTextureId(GLuint textureId, Size size);
+
   GLuint glBind();
   void prepareForGl();
 
@@ -46,9 +48,7 @@ public:
 
   unsigned int getWidth() const;
   unsigned int getHeight() const;
-
-  const Rect& getClip() const;
-  void setClip(const Rect& clip);
+  Size getSize() const;
 
   /**
    * Only use if image dimensions are not a power of two.
@@ -78,7 +78,7 @@ private:
   SurfacePtr surface_;
   std::string filename_;
   GLuint textureId_;
-  Rect clip_;
+  Rect imageRect_;
   bool isMaxFiltering_;
 
   // NonCopyable

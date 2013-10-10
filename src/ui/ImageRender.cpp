@@ -10,7 +10,7 @@ ImageRender::ImageRender()
   :  log_("ImageRender"),
      program_(),
      viewport_(0, 0),
-     position_(0,0),
+     rect_(0, 0, 0, 0),
      surface_(),
      zoomFactor_(1u),
      vertexBuffer_(0),
@@ -20,6 +20,7 @@ ImageRender::ImageRender()
      viewportParamId_(-1),
      texParamId_(-1)
 {
+  surface_.setIsMaxFiltering(false);
 }
 
 
@@ -86,6 +87,8 @@ void ImageRender::handleResize(int width, int height)
 void ImageRender::loadImage(const std::string& filename)
 {
   surface_.loadImage(filename);
+  rect_.w(surface_.getWidth());
+  rect_.h(surface_.getHeight());
   updateQuad();
   updateTex();
 }
@@ -94,15 +97,24 @@ void ImageRender::loadImage(const std::string& filename)
 void ImageRender::setSurface(SDL_Surface& surface)
 {
   surface_.setSurface(surface);
+  rect_.setSize(surface_.getSize());
   updateQuad();
   updateTex();
 }
 
+void ImageRender::setGlTextureId(GLuint textureId, Size size)
+{
+  rect_.setSize(size);
+  surface_.setGlTextureId(textureId, size);
+  updateQuad();
+}
+
+
 
 Point ImageRender::getPosition() const
-{return position_;}
+{return rect_.getPosition();}
 void ImageRender::setPosition(Point position)
-{position_ = position;}
+{rect_.setPosition(position);}
 void ImageRender::setPosition(int x, int y)
 {setPosition(Point(x, y));}
 
@@ -120,15 +132,15 @@ void ImageRender::setZoomFactor(unsigned char zoomFactor)
 
 void ImageRender::prepareVertices()
 {
-  int xi = surface_.getClip().w();
-  int yi = surface_.getClip().h();
+  int xi = rect_.w();
+  int yi = rect_.h();
 
   const GLfloat x = static_cast<float>(xi * 2 * zoomFactor_);
   const GLfloat y = static_cast<float>(yi * 2 * zoomFactor_);
   const GLfloat z = 0.0f;
 
-  const float xoff = 0.375f + static_cast<float>(position_.x() - viewport_.w());
-  const float yoff = 0.375f + static_cast<float>(viewport_.h() - position_.y());
+  const float xoff = 0.375f + static_cast<float>(rect_.x() - viewport_.w());
+  const float yoff = 0.375f + static_cast<float>(viewport_.h() - rect_.y());
 
   const GLfloat A[] = {0 + xoff, -y + yoff, z};
   const GLfloat B[] = {x + xoff, -y + yoff, z};
@@ -164,10 +176,6 @@ void ImageRender::updateQuad()
 {
   prepareVertices();
   surface_.prepareForGl();
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
 void ImageRender::updateTex()

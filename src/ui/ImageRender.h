@@ -26,8 +26,13 @@ public:
   virtual void render(float currentTime) override;
   virtual void handleResize(int width, int height) override;
 
+  // Three ways to set up image data.
+  // loadImage: load an image from file, create Surface
+  // setSurface: use an SDL_Surface object
+  // setGlTextureId: use a pre-prepared OpenGL texture.
   void loadImage(const std::string& filename);
   void setSurface(SDL_Surface& surface);
+  void setGlTextureId(GLuint textureId, Size size);
 
   // Position: screen location in pixels, (0, 0) is top left.
   Point getPosition() const;
@@ -53,7 +58,7 @@ private:
   Log log_;
   ShaderProgram program_;
   Size viewport_;
-  Point position_;
+  Rect rect_;
   Surface surface_;
   unsigned char zoomFactor_;
 

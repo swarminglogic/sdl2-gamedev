@@ -3,26 +3,23 @@
 #include <cassert>
 
 #include <math/MathUtil.h>
+#include <ui/GlState.h>
 #include <ui/SDL_image.h>
 #include <util/Asset.h>
 
 
-Surface::Surface(SDL_Surface& surface)
+Surface::Surface(SDL_Surface* surface)
   : log_("Surface"),
-    surface_(&surface),
+    surface_(surface),
     filename_(""),
     textureId_(0),
-    clip_(0,0,surface.w,surface.h),
+    imageRect_(0, 0, 0, 0),
     isMaxFiltering_(true)
 {
 }
 
 Surface::Surface()
-  : log_("Surface"),
-    surface_(nullptr),
-    filename_(""),
-    textureId_(0),
-    clip_(0,0,0,0)
+  : Surface(nullptr)
 {
 }
 
@@ -56,53 +53,63 @@ void Surface::loadImage(const std::string& filename)
   }
   filename_ = filename;
 
-  setClip(Rect(0, 0, getWidth(), getHeight()));
+  imageRect_ = Rect(0, 0, surface_->w, surface_->h);
 }
 
 void Surface::setSurface(SDL_Surface& surface)
 {
   surface_.reset(&surface);
   releaseResources();
-  setClip(Rect(0, 0, getWidth(), getHeight()));
+  imageRect_ = Rect(0, 0, surface_->w, surface_->h);
 }
+
+void Surface::setGlTextureId(GLuint textureId, Size size)
+{
+  releaseResources();
+  textureId_ = textureId;
+  imageRect_ = Rect(0, 0, size.w(), size.h());
+}
+
 
 
 unsigned int Surface::getWidth() const
 {
-  assert(surface_ && "Surface not set!");
-  return surface_->w;
+  assert((surface_ || textureId_) && "Neither surface nor textureId set!");
+  return imageRect_.w();
 }
 
 unsigned int Surface::getHeight() const
 {
-  assert(surface_ && "Surface not set!");
-  return surface_->h;
+  assert((surface_ || textureId_) && "Neither surface nor textureId set!");
+  return imageRect_.h();
 }
 
-const Rect& Surface::getClip() const
-{return clip_;}
-void Surface::setClip(const Rect& clip)
-{clip_ = clip;}
+Size Surface::getSize() const
+{
+  return imageRect_.getSize();
+}
 
 
 float Surface::glTexCoordX(float texcoord) const
 {
-  float surfSpace = ((float)clip_.x() + texcoord * (float)clip_.w())/(float)getWidth();
+  float surfSpace = ((float)imageRect_.x() + texcoord * (float)imageRect_.w()) /
+    (float)imageRect_.w();
   return MathUtil::nextPow2TexCoord(surfSpace, getWidth());
 }
 
 
 float Surface::glTexCoordY(float texcoord) const
 {
-  float surfSpace = ((float)clip_.y() + texcoord * (float)clip_.h())/(float)getHeight();
+  float surfSpace = ((float)imageRect_.y() + texcoord * (float)imageRect_.h()) /
+    (float)imageRect_.h();
   return MathUtil::nextPow2TexCoord(surfSpace, getHeight());
 }
 
 
 void Surface::prepareForGl()
 {
-  assert(surface_ && "Surface not set!");
   if (textureId_) {return;}
+  assert(surface_ && "Surface not set!");
 
   const int width  = MathUtil::nextPow2(surface_->w);
   const int height = MathUtil::nextPow2(surface_->h);
@@ -121,7 +128,7 @@ void Surface::prepareForGl()
   SDL_BlitSurface( surface_.get(), NULL, tempSurface.get(), NULL );
 
   glGenTextures( 1, &textureId_ );
-  glBindTexture( GL_TEXTURE_2D, textureId_ );
+  GlState::bindTexture(GL_TEXTURE_2D, textureId_);
 
   glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA,
                 width, height, 0, GL_RGBA,
@@ -146,12 +153,12 @@ void Surface::prepareForGl()
 
 GLuint Surface::glBind()
 {
-  assert(surface_ && "Surface not set!");
-
   if (textureId_ == 0)
     prepareForGl();
 
-  glBindTexture( GL_TEXTURE_2D, textureId_ );
+  assert(textureId_ && "OpenGL texture id not set!");
+
+  GlState::bindTexture(GL_TEXTURE_2D, textureId_);
   return textureId_;
 }
 
