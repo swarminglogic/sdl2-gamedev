@@ -29,10 +29,9 @@ CubeInstanced::~CubeInstanced()
 
 void CubeInstanced::render(float time)
 {
-  if(program_.isModified()) {
-    program_.compile();
+  if(program_.isModified())
     updateShader();
-  }
+
   GlState::useProgram(program_.get());
 
   GlState::bindBuffer(GlState::ELEMENT_ARRAY_BUFFER, indexBuffer_);

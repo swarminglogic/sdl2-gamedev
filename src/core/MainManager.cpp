@@ -19,6 +19,7 @@
 #include <util/Timer.h>
 #include <wip/InstancedCubeRenderer.h>
 #include <wip/ObjRenderer.h>
+#include <wip/ToTextureRenderer.h>
 
 
 MainManager::MainManager()
@@ -31,7 +32,7 @@ MainManager::MainManager()
     font_(nullptr),
     fontColor_{180u, 190u, 200u, 255u},
     isRunning_(true),
-    fpsCounter_(15)
+    fpsCounter_(30)
 {
   initSDL();
   initSDLimg();
@@ -46,7 +47,7 @@ MainManager::MainManager()
 
   // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
   // class, which manages the renderer?
-  basicRender_.reset(new ObjRenderer);
+  basicRender_.reset(new ToTextureRenderer);
 }
 
 MainManager::~MainManager()
