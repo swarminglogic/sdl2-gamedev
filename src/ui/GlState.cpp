@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+
 const std::array<GLenum, GlState::N_GLCAP> GlState::capEnumToGL_
 {GL_BLEND, GL_CULL_FACE, GL_DEPTH_TEST};
 const std::array<GLenum, GlState::N_BUFFER> GlState::bufferEnumToGL_
@@ -15,11 +16,11 @@ GlState::GlState()
     program_(0),
     blendSFactor_(0),
     blendDFactor_(0)
-
 {}
 
 GlState::~GlState()
 {}
+
 
 GlState& GlState::instance()
 {
@@ -29,7 +30,9 @@ GlState& GlState::instance()
 
 
 void GlState::syncronize()
-{instance().f_syncronize();}
+{
+  instance().f_syncronize();
+}
 
 
 bool GlState::enable(Capability cap)
@@ -46,6 +49,12 @@ bool GlState::blendFunc(GLenum sfactor, GLenum dfactor)
 {return instance().f_blendFunc(sfactor, dfactor);}
 bool GlState::bindBuffer(BufferTarget target, GLuint buffer)
 {return instance().f_bindBuffer(target, buffer);}
+bool GlState::bindTexture(GLenum target, GLuint buffer)
+{return instance().f_bindTexture(target, buffer);}
+bool GlState::bindFramebuffer(GLenum target, GLuint buffer)
+{return instance().f_bindFramebuffer(target, buffer);}
+bool GlState::bindRenderbuffer(GLuint buffer)
+{return instance().f_bindRenderbuffer(buffer);}
 
 
 
@@ -66,6 +75,7 @@ void GlState::f_syncronize()
   viewport_ = Rect(vp[0], vp[1], vp[2], vp[3]);
 }
 
+
 bool GlState::f_enable(Capability cap)
 {
   assert(cap != N_GLCAP);
@@ -76,6 +86,7 @@ bool GlState::f_enable(Capability cap)
   }
   return false;
 }
+
 
 bool GlState::f_disable(Capability cap)
 {
@@ -88,6 +99,7 @@ bool GlState::f_disable(Capability cap)
   return false;
 }
 
+
 bool GlState::f_viewport(const Rect& vp)
 {
   const bool change = vp != viewport_;
@@ -97,6 +109,7 @@ bool GlState::f_viewport(const Rect& vp)
   }
   return change;
 }
+
 
 bool GlState::f_activeTexture(GLenum activeTex)
 {
@@ -108,6 +121,7 @@ bool GlState::f_activeTexture(GLenum activeTex)
   return change;
 }
 
+
 bool GlState::f_useProgram(GLuint program)
 {
   const bool change = program != program_;
@@ -118,9 +132,10 @@ bool GlState::f_useProgram(GLuint program)
   return change;
 }
 
+
 bool GlState::f_blendFunc(GLenum sfactor, GLenum dfactor)
 {
-  const bool change = sfactor != blendSFactor_ && dfactor != blendDFactor_;
+  const bool change = sfactor != blendSFactor_ || dfactor != blendDFactor_;
   if (change) {
     glBlendFunc(sfactor, dfactor);
     blendSFactor_ = sfactor;
@@ -129,12 +144,67 @@ bool GlState::f_blendFunc(GLenum sfactor, GLenum dfactor)
   return change;
 }
 
+
 bool GlState::f_bindBuffer(BufferTarget target, GLuint buffer)
 {
   const bool change = bufferBindings_[target] != buffer;
   if (change) {
     glBindBuffer(bufferEnumToGL_[target], buffer);
     bufferBindings_[target ] = buffer;
+  }
+  return change;
+}
+
+
+bool GlState::f_bindTexture(GLenum target, GLuint buffer)
+{
+  assert(target == GL_TEXTURE_1D ||
+         target == GL_TEXTURE_2D ||
+         target == GL_TEXTURE_1D_ARRAY ||
+         target == GL_TEXTURE_2D_ARRAY ||
+         target == GL_TEXTURE_3D ||
+         target == GL_TEXTURE_RECTANGLE ||
+         target == GL_TEXTURE_BUFFER ||
+         target == GL_TEXTURE_CUBE_MAP ||
+         target == GL_TEXTURE_CUBE_MAP_ARRAY ||
+         target == GL_TEXTURE_2D_MULTISAMPLE ||
+         target == GL_TEXTURE_2D_MULTISAMPLE_ARRAY);
+
+  const bool change = (textureBinding_.first != target ||
+                       textureBinding_.second != buffer);
+  if (change) {
+    glBindTexture(target, buffer);
+    textureBinding_.first  = target;
+    textureBinding_.second = buffer;
+  }
+  return change;
+}
+
+
+bool GlState::f_bindFramebuffer(GLenum target, GLuint buffer)
+{
+  assert(target == GL_DRAW_FRAMEBUFFER ||
+         target == GL_READ_FRAMEBUFFER ||
+         target == GL_FRAMEBUFFER);
+
+  const bool change = (framebufferBinding_.first != target ||
+                       framebufferBinding_.second != buffer);
+  if (change) {
+    glBindFramebuffer(target, buffer);
+    framebufferBinding_.first = target;
+    framebufferBinding_.second = buffer;
+  }
+
+  return change;
+}
+
+
+bool GlState::f_bindRenderbuffer(GLuint buffer)
+{
+  const bool change = buffer != renderbufferBinding_;
+  if (change) {
+    glBindRenderbuffer(GL_RENDERBUFFER, buffer);
+    renderbufferBinding_ = buffer;
   }
   return change;
 }
@@ -171,4 +241,3 @@ GLenum GlState::toGLenum(BufferTarget target)
 {
   return bufferEnumToGL_[target];
 }
-

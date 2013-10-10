@@ -94,6 +94,9 @@ public:
   static bool useProgram(GLuint program);
   static bool blendFunc(GLenum sfactor, GLenum dfactor);
   static bool bindBuffer(BufferTarget target, GLuint buffer);
+  static bool bindTexture(GLenum target, GLuint buffer);
+  static bool bindFramebuffer(GLenum target, GLuint buffer);
+  static bool bindRenderbuffer(GLuint buffer);
 
   static bool isEnabled(Capability cap);
   static Rect getViewport();
@@ -115,6 +118,7 @@ public:
   // Converters
   static GLenum toGLenum(Capability cap);
   static GLenum toGLenum(BufferTarget target);
+
 private:
   static GlState& instance();
   void f_syncronize();
@@ -126,6 +130,9 @@ private:
   bool f_useProgram(GLuint program);
   bool f_blendFunc(GLenum sfactor, GLenum dfactor);
   bool f_bindBuffer(BufferTarget target, GLuint buffer);
+  bool f_bindTexture(GLenum target, GLuint buffer);
+  bool f_bindFramebuffer(GLenum target, GLuint buffer);
+  bool f_bindRenderbuffer(GLuint buffer);
 
   /**
    * Functions to get state information.
@@ -147,6 +154,10 @@ private:
   GLuint program_;
   GLenum blendSFactor_;
   GLenum blendDFactor_;
+
+  std::pair<GLenum, GLuint> framebufferBinding_;
+  std::pair<GLenum, GLuint> textureBinding_;
+  GLuint renderbufferBinding_;
 
   GlState();
   ~GlState();

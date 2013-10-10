@@ -18,10 +18,12 @@ class TestGlState : public CxxTest::TestSuite
 public:
   void testGlStatics()
   {
+    // GlState::Capabaility
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::BLEND), GL_BLEND);
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::CULL_FACE), GL_CULL_FACE);
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::DEPTH_TEST), GL_DEPTH_TEST);
 
+    // GlState::BufferTarget
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::ARRAY_BUFFER),
                      GL_ARRAY_BUFFER);
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::ELEMENT_ARRAY_BUFFER),
