@@ -62,7 +62,8 @@ cppflags.extend(['-isystem', pathBoost + '/include',
                  '-isystem', pathSdl + '/include/',
                  '-isystem', pathGlm,
                  '-isystem', pathAngel + '/include',
-                 '-isystem', pathAngel + '/include/angelscript'])
+                 '-isystem', pathAngel + '/include/angelscript'
+              ])
 for addon in angelAddons:
    cppflags.append(['-isystem', pathAngel + '/addon/' + addon])
 
@@ -72,7 +73,7 @@ if env['CXX'] == 'g++-4.8':
 #'-Waggregate-return', # Problem with iterators in stl containers.
    cppflags.append([
          '-Wall', '-Wextra', '-Wcast-align', '-Wcast-qual',
-         '-Wconversion', '-Wdisabled-optimization', '-Weffc++',
+         '-Wconversion', '-Wdisabled-optimization', #'-Weffc++',
          '-Wfloat-equal', '-Wformat=2', '-Wimport', '-Winit-self',
          '-Winline', '-Winvalid-pch', '-Wlong-long',
          '-Wmissing-format-attribute', '-Wmissing-include-dirs',
