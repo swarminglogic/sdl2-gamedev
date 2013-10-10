@@ -79,6 +79,25 @@ public:
     }
   }
 
+
+  void testCopy( void )
+  {
+    const float delta = 0.00001f;
+    Averager averager(3);
+    averager.insertValue(1.0f);
+    TS_ASSERT_DELTA(averager.getAverage(), 1.0f, delta);
+    averager.insertValue(2.0f);
+    TS_ASSERT_DELTA(averager.getAverage(), (1.0f + 2.0f) / 2.0f, delta);
+
+    Averager copy(averager);
+    TS_ASSERT_DELTA(copy.getAverage(), (1.0f + 2.0f) / 2.0f, delta);
+    averager.insertValue(7.0f);
+    TS_ASSERT_DELTA(averager.getAverage(), (1.0f + 2.0f + 7.0f) / 3.0f, delta);
+    TS_ASSERT_DELTA(copy.getAverage(), (1.0f + 2.0f) / 2.0f, delta);
+    copy.insertValue(7.0f);
+    TS_ASSERT_DELTA(copy.getAverage(), (1.0f + 2.0f + 7.0f) / 3.0f, delta);
+  }
+
 private:
 };
 

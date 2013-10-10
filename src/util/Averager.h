@@ -81,10 +81,6 @@ private:
   int N_;
   double MX_n_;
   std::list<double> x_;
-
-  // Not implemented!
-  Averager(const Averager& c);
-  Averager& operator=(const Averager& c);
 };
 
 #endif
