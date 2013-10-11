@@ -104,8 +104,8 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   // SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,    8);
   // SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,   8);
   SDL_GL_SetAttribute(SDL_GL_STEREO,             0);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 24);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
   // SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Error, SDL bug?
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);

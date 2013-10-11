@@ -48,6 +48,7 @@ private:
   glm::mat4 mvpMat_;
   glm::mat4 unit_;
   glm::mat4 projectionMat_, viewMat_, modelMat_;
+  glm::mat3 normalMat_;
   Size viewport_;
 
   // Regular render members
@@ -55,8 +56,9 @@ private:
   ObjMesh mesh_;
   ShaderProgram shader_;
   GLint mvpID_;
+  GLint modelViewMatID_;
+  GLint normalMatID_;
   GLint textureId_;
-  GLint diffuseColorId_;
 
   // To texture members
   GLuint fboHandle_;
