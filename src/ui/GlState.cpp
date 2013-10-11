@@ -4,7 +4,7 @@
 
 
 const std::array<GLenum, GlState::N_GLCAP> GlState::capEnumToGL_
-{GL_BLEND, GL_CULL_FACE, GL_DEPTH_TEST};
+{GL_BLEND, GL_CULL_FACE, GL_DEPTH_CLAMP, GL_DEPTH_TEST};
 const std::array<GLenum, GlState::N_BUFFER> GlState::bufferEnumToGL_
 {GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER};
 

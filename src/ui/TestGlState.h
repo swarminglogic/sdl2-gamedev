@@ -22,6 +22,7 @@ public:
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::BLEND), GL_BLEND);
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::CULL_FACE), GL_CULL_FACE);
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::DEPTH_TEST), GL_DEPTH_TEST);
+    TS_ASSERT_EQUALS(GlState::toGLenum(GlState::DEPTH_CLAMP), GL_DEPTH_CLAMP);
 
     // GlState::BufferTarget
     TS_ASSERT_EQUALS(GlState::toGLenum(GlState::ARRAY_BUFFER),

@@ -36,7 +36,7 @@ public:
     CULL_FACE,
     // DEBUG_OUTPUT,
     // DEBUG_OUTPUT_SYNCHRONOUS,
-    // DEPTH_CLAMP,
+    DEPTH_CLAMP,
     DEPTH_TEST,
     // DITHER,
     // FRAMEBUFFER_SRGB,
