@@ -5,6 +5,18 @@
 #include <ui/GlUtil.h>
 #include <util/Asset.h>
 
+namespace {
+  static unsigned int seed = 0x13371337;
+  static inline float random_float()
+  {
+    float res;
+    unsigned int tmp;
+    seed *= 16807;
+    tmp = seed ^ (seed >> 4) ^ (seed << 15);
+    *((unsigned int *) &res) = (tmp >> 9) | 0x3F800000;
+    return (res - 1.0f);
+  }
+}
 
 DeferredQuadRender::DeferredQuadRender()
   :  log_("DeferredQuadRender"),
@@ -19,12 +31,33 @@ DeferredQuadRender::DeferredQuadRender()
      lightPosID_(-1),
      lightPos_(0.0f),
      viewportID_(-1),
-     timeID_(-1)
-
+     timeID_(-1),
+     ssaoDataBuffer_(0)
 {
   for (auto& surface : textures_) {
     surface.setIsMaxFiltering(false);
   }
+
+  for (size_t i = 0 ; i < 256 ; ++i) {
+    do {
+      ssaoData_.pos[i][0] = random_float() * 2.0f - 1.0f;
+      ssaoData_.pos[i][1] = random_float() * 2.0f - 1.0f;
+      ssaoData_.pos[i][2] = random_float();
+      ssaoData_.pos[i][3] = 0.0f;
+    } while (glm::length(ssaoData_.pos[i]) > 1.0f);
+    glm::normalize(ssaoData_.pos[i]);
+  }
+  for (size_t i = 0 ; i < 256 ; ++i) {
+    ssaoData_.vec[i][0] = random_float();
+    ssaoData_.vec[i][1] = random_float();
+    ssaoData_.vec[i][2] = random_float();
+    ssaoData_.vec[i][3] = random_float();
+  }
+
+  glGenBuffers(1, &ssaoDataBuffer_);
+  glBindBuffer(GL_UNIFORM_BUFFER, ssaoDataBuffer_);
+  glBufferData(GL_UNIFORM_BUFFER, sizeof(SsaoData),
+               &ssaoData_, GL_STATIC_DRAW);
 }
 
 
@@ -98,6 +131,8 @@ void DeferredQuadRender::render(float time)
 
   if (timeID_ >= 0)
     glUniform1f(timeID_, time);
+
+  glBindBufferBase(GL_UNIFORM_BUFFER, 0, ssaoDataBuffer_);
 
   // vec3 vpos
   glEnableVertexAttribArray(0);

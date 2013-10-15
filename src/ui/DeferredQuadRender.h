@@ -66,6 +66,14 @@ private:
   GLint viewportID_;
   GLint timeID_;
 
+  struct SsaoData {
+    glm::vec4 pos[256];
+    glm::vec4 vec[256];
+  };
+
+  SsaoData ssaoData_;
+  GLuint ssaoDataBuffer_;
+
   // NonCopyable
   DeferredQuadRender(const DeferredQuadRender& c);
   DeferredQuadRender& operator=(const DeferredQuadRender& c);
