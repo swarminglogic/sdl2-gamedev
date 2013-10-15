@@ -20,9 +20,14 @@ macroDefinitions = [
 for macro in macroDefinitions:
    cppflags.append('-D' + macro)
 
-
+pathBoost = os.environ['BOOSTDIR'];
+pathSdl  = os.environ['SDL2DIR'];
+pathAngel  = os.environ["ANGELSCRIPTDIR"];
 pathCxxTest = os.environ['CXXTESTDIR'];
 pathCxxTestBuilder = pathCxxTest + '/build_tools/SCons/'
+
+cppflags.extend(['-isystem', pathSdl + '/include/'])
+
 env_test = env.Clone(tools=['default','cxxtest'],
                      toolpath=['#/common', pathCxxTestBuilder])
 env_test.Replace(CXXTEST_INSTALL_DIR = pathCxxTest)
@@ -30,9 +35,7 @@ env_test.Replace(CXXTEST_SUFFIX = '.h')
 env_test.Replace(CXXFLAGS = ' '.join(cppflags))
 env_test.Replace(CXXTEST_CPPPATH = ['#/src', pathCxxTest])
 env_test.Replace(CXXTEST_OPTS = '--have-eh')
-pathBoost = os.environ['BOOSTDIR'];
-pathSdl  = os.environ['SDL2DIR'];
-pathAngel  = os.environ["ANGELSCRIPTDIR"];
+
 sourcepaths = [pathBoost + "/include/", pathSdl + '/include/', pathAngel + '/include']
 libs = ['main', 'angeladdon', 'SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
         'angelscript', 'boost_system', 'boost_filesystem',
