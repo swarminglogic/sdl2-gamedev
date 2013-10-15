@@ -17,6 +17,7 @@
 #include <util/Exception.h>
 #include <util/Log.h>
 #include <util/Timer.h>
+#include <wip/DeferredRenderer.h>
 #include <wip/InstancedCubeRenderer.h>
 #include <wip/ObjRenderer.h>
 #include <wip/ToTextureRenderer.h>
@@ -47,7 +48,8 @@ MainManager::MainManager()
 
   // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
   // class, which manages the renderer?
-  basicRender_.reset(new ToTextureRenderer);
+  // basicRender_.reset(new DeferredRenderer);
+  basicRender_.reset(new DeferredRenderer);
 }
 
 MainManager::~MainManager()
