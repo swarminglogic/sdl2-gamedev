@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <math/Pointf.h>
 #include <math/Point.h>
 #include <math/Size.h>
 #include <ui/BasicRender.h>
@@ -42,13 +44,17 @@ public:
   void setPosition(Point position);
 
   void setZoomFactor(unsigned char zoomFactor);
-
   bool isReady() const;
+
+  void setBoxWidth(unsigned int boxWidth);
+
 private:
+  void prepareTextData();
   void prepareVertices();
   void prepareTexcoords();
   void updateQuad();
   void updateTex();
+  void makeDirty();
 
   Log log_;
 
@@ -68,6 +74,10 @@ private:
   std::vector<GLfloat> vertices_;
   // std::vector<GLfloat> texcoords_;
   unsigned char zoomFactor_;
+
+  std::vector<glm::vec4> textData_;
+  Pointf charTextDim_;
+  bool isDirty_;
 
   // Shader specific texture paramters.
   GLint paramId_Tex1_;
