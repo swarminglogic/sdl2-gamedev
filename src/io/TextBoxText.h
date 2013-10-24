@@ -61,6 +61,8 @@ public:
   std::vector<std::string> getFormatted(float partial) const;
   const std::vector<std::string>& getFormatted() const;
 
+  size_t getNCharacters() const;
+
   void buildFormatted();
 
 private:

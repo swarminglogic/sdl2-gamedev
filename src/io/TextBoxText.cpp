@@ -104,6 +104,11 @@ const std::vector<std::string>& TextBoxText::getFormatted() const
   return formatted_;
 }
 
+size_t TextBoxText::getNCharacters() const
+{
+  return source_.size();
+}
+
 
 void TextBoxText::buildFormatted()
 {

@@ -16,7 +16,11 @@ DeferredRenderer::DeferredRenderer()
     projectionMat_(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)),
     viewport_(),
     texture_(),
-    mesh_("sss2.cobj"),
+    mesh_("sss.cobj"),
+    // mesh2_(new MeshRender("teapot.cobj")),
+    // mesh3_(new MeshRender("head.cobj")),
+    // mesh4_(new MeshRender("dragon.cobj")),
+    // mesh5_(new MeshRender("buddah.cobj")),
     sceneBoxTexture_(),
     sceneBox_("scenebox.cobj"),
     shader_(),
@@ -34,6 +38,7 @@ DeferredRenderer::DeferredRenderer()
 {
   camera_.reset(new CameraFpv(glm::vec3(3.3f), glm::vec3(0.0f)));
   // camera_.reset(new CameraSpherical(3.3f, Pointf(0.47f, 0.45f)));
+  quadRender_.setProjectionMat(projectionMat_);
   updateViewMatrix();
 }
 
@@ -55,7 +60,7 @@ void DeferredRenderer::initialize()
   shader_.setShader(ShaderProgram::FRAGMENT,
                     Asset::shader("deferredobjrender.frag"));
   updateShader();
-  // texture_.loadImage("rungholt-RGB.png");
+  // texture_.loadImage("rungholt-RGBA.png");
   texture_.loadImage("uv_colorgrid.png");
   texture_.setIsMaxFiltering(true);
   texture_.prepareForGl();
@@ -162,6 +167,10 @@ void DeferredRenderer::render(float time)
     updateShader();
 
   mesh_.refresh();
+  if (mesh2_) mesh2_->refresh();
+  if (mesh3_) mesh3_->refresh();
+  if (mesh4_) mesh4_->refresh();
+  if (mesh5_) mesh5_->refresh();
   sceneBox_.refresh();
   camera_->update();
   updateViewMatrix();
@@ -176,7 +185,7 @@ void DeferredRenderer::render(float time)
   GlState::disable(GlState::BLEND);
   GlState::useProgram(shader_.get());
   GlState::enable(GlState::DEPTH_CLAMP);
-
+  GlState::enable(GlState::CULL_FACE);
   // Only the geometry pass updates the depth buffer
 
   // MVP
@@ -198,6 +207,10 @@ void DeferredRenderer::render(float time)
       glUniform1f(textureRepeatID_, 1.0f);
   }
   mesh_.render(0.0f);
+  if (mesh2_) mesh2_->render(0.0f);
+  if (mesh3_) mesh3_->render(0.0f);
+  if (mesh4_) mesh4_->render(0.0f);
+  if (mesh5_) mesh5_->render(0.0f);
 
   if (textureId_ >= 0) {
     sceneBoxTexture_.glBind();
@@ -232,6 +245,7 @@ void DeferredRenderer::handleResize(int width, int height)
   projectionMat_ = glm::perspective(45.0f, aspect, 0.1f, 100.0f);
   viewport_ = Size(width, height);
   quadRender_.handleResize(width, height);
+  quadRender_.setProjectionMat(projectionMat_);
   updateToTextureRenderFBO();
 }
 
