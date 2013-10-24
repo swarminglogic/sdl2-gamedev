@@ -43,6 +43,7 @@ public:
   void setGlTextureId(GBufferTarget target, GLuint textureId);
 
   void setModelViewMat(const glm::mat4 modelViewMat);
+  void setProjectionMat(const glm::mat4 projectionMat);
 
 private:
   std::string getUniformName(GBufferTarget target);
@@ -59,16 +60,18 @@ private:
   std::vector<GLfloat> vertices_;
   GLint timeParamId_;
 
+  GLint projectionMatID_;
   GLint modelViewMatID_;
   glm::mat4 modelViewMat_;
+  glm::mat4 projectionMat_;
   GLint lightPosID_;
   glm::vec4 lightPos_;
   GLint viewportID_;
   GLint timeID_;
 
   struct SsaoData {
-    glm::vec4 pos[256];
-    glm::vec4 vec[256];
+    glm::vec4 pos[64];
+    glm::vec4 vec[64];
   };
 
   SsaoData ssaoData_;

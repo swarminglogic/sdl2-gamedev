@@ -1,22 +1,11 @@
 #include <ui/DeferredQuadRender.h>
 
 #include <math/MathUtil.h>
+#include <math/Random.h>
 #include <ui/GlState.h>
 #include <ui/GlUtil.h>
 #include <util/Asset.h>
 
-namespace {
-  static unsigned int seed = 0x13371337;
-  static inline float random_float()
-  {
-    float res;
-    unsigned int tmp;
-    seed *= 16807;
-    tmp = seed ^ (seed >> 4) ^ (seed << 15);
-    *((unsigned int *) &res) = (tmp >> 9) | 0x3F800000;
-    return (res - 1.0f);
-  }
-}
 
 DeferredQuadRender::DeferredQuadRender()
   :  log_("DeferredQuadRender"),
@@ -26,6 +15,7 @@ DeferredQuadRender::DeferredQuadRender()
      vertexBuffer_(0),
      vertices_(),
      timeParamId_(-1),
+     projectionMatID_(-1),
      modelViewMatID_(-1),
      modelViewMat_(0.0f),
      lightPosID_(-1),
@@ -38,21 +28,24 @@ DeferredQuadRender::DeferredQuadRender()
     surface.setIsMaxFiltering(false);
   }
 
-  for (size_t i = 0 ; i < 256 ; ++i) {
-    do {
-      ssaoData_.pos[i][0] = random_float() * 2.0f - 1.0f;
-      ssaoData_.pos[i][1] = random_float() * 2.0f - 1.0f;
-      ssaoData_.pos[i][2] = random_float();
-      ssaoData_.pos[i][3] = 0.0f;
-    } while (glm::length(ssaoData_.pos[i]) > 1.0f);
-    glm::normalize(ssaoData_.pos[i]);
+  for (size_t i = 0 ; i < 64 ; ++i) {
+    ssaoData_.pos[i][0] = Random::get(-1.0f, 1.0f);
+    ssaoData_.pos[i][1] = Random::get(-1.0f, 1.0f);
+    ssaoData_.pos[i][2] = Random::get(-1.0f, 1.0f);
+    ssaoData_.pos[i][3] = 0.0f;
+    ssaoData_.pos[i] = glm::normalize(ssaoData_.pos[i]);
+
+    float scale = static_cast<float>(i) / 64.0f;
+    scale = MathUtil::lerp(0.1f, 1.0f, scale * scale);
+    ssaoData_.pos[i] *= scale;
   }
-  for (size_t i = 0 ; i < 256 ; ++i) {
-    ssaoData_.vec[i][0] = random_float();
-    ssaoData_.vec[i][1] = random_float();
-    ssaoData_.vec[i][2] = random_float();
-    ssaoData_.vec[i][3] = random_float();
+  for (size_t i = 0 ; i < 64 ; ++i) {
+    ssaoData_.vec[i][0] = Random::get(-1.0f, 1.0f);
+    ssaoData_.vec[i][1] = Random::get(-1.0f, 1.0f);
+    ssaoData_.vec[i][2] = Random::get(-1.0f, 1.0f);
+    ssaoData_.vec[i][3] = Random::get(-1.0f, 1.0f);
   }
+
 
   glGenBuffers(1, &ssaoDataBuffer_);
   glBindBuffer(GL_UNIFORM_BUFFER, ssaoDataBuffer_);
@@ -114,9 +107,11 @@ void DeferredQuadRender::render(float time)
     glUniform1i(uniformTextureIds_[GBUFFERTARGET_POSITION], 0);
   }
 
-  if (modelViewMatID_ >= 0) {
+  if (modelViewMatID_ >= 0)
     glUniformMatrix4fv(modelViewMatID_, 1, GL_FALSE, &modelViewMat_[0][0]);
-  }
+
+  if (projectionMatID_ >= 0)
+    glUniformMatrix4fv(projectionMatID_, 1, GL_FALSE, &projectionMat_[0][0]);
 
   // Uniform Time
   if (timeParamId_ >= 0)
@@ -163,8 +158,12 @@ void DeferredQuadRender::setGlTextureId(GBufferTarget target, GLuint textureId)
 void DeferredQuadRender::setModelViewMat(const glm::mat4 modelViewMat)
 {
   modelViewMat_ = modelViewMat;
-
   lightPos_ = modelViewMat_ * glm::vec4(-8,10, 8, 1);
+}
+
+void DeferredQuadRender::setProjectionMat(const glm::mat4 projectionMat)
+{
+  projectionMat_ = projectionMat;
 }
 
 
@@ -183,16 +182,18 @@ void DeferredQuadRender::updateShader()
                << " uniform not found" << Log::end;
   }
 
-  modelViewMatID_ = glGetUniformLocation(program_.get(), "ModelViewMat");
-  lightPosID_     = glGetUniformLocation(program_.get(), "lightPos");
-  viewportID_     = glGetUniformLocation(program_.get(), "viewport");
-  timeID_         = glGetUniformLocation(program_.get(), "time");
+  modelViewMatID_  = glGetUniformLocation(program_.get(), "ModelViewMat");
+  projectionMatID_ = glGetUniformLocation(program_.get(), "ProjectMat");
+  lightPosID_      = glGetUniformLocation(program_.get(), "lightPos");
+  viewportID_      = glGetUniformLocation(program_.get(), "viewport");
+  timeID_          = glGetUniformLocation(program_.get(), "time");
 
-  if(modelViewMatID_ < 0) log_.w("ModelViewMat uniform not found");
-  if(lightPosID_     < 0) log_.w("lightPos uniform not found");
-  if(timeID_         < 0) log_.w("time uniform not found");
+  // if(modelViewMatID_  < 0) log_.w("ModelViewMat uniform not found");
+  // if(projectionMatID_ < 0) log_.e("ProjectMat uniform not found");
+  if(lightPosID_      < 0) log_.w("lightPos uniform not found");
+  if(viewportID_      < 0) log_.w("viewport uniform not found");
+  if(timeID_          < 0) log_.w("time uniform not found");
 }
-
 
 std::string DeferredQuadRender::getUniformName(GBufferTarget target)
 {
