@@ -13,6 +13,24 @@
 class MathUtil
 {
 public:
+
+  /**
+   * Linear interpolation between [min, max].
+   * parameter, a, is interpolation factor [0, 1] (clamped).
+   */
+  static float lerp(float min, float max, float a);
+
+  /**
+   * Clamps value to [min, max]
+   */
+  static float clamp(float value, float min, float max);
+
+  /**
+   * Clamps value to [0, 1]
+   */
+  static float clamp(float value);
+
+
   /**
    * Calculates the next greater or equal power of two.
    * 3 -> 4
@@ -55,7 +73,6 @@ public:
    *  9 -> 3 (3*3)
    */
   static unsigned int prevSquareBase(unsigned int v);
-
 
   /**
    * Checks if value is a power of 2.

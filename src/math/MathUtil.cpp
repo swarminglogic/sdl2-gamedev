@@ -1,5 +1,27 @@
 #include <math/MathUtil.h>
 
+#include <algorithm>
+#include <cassert>
+
+
+float MathUtil::lerp(float min, float max, float a)
+{
+  assert(min <= max);
+  a = clamp(a);
+  return min + (max - min) * a;
+}
+
+
+float MathUtil::clamp(float value, float min, float max)
+{
+  return std::min(std::max(value, min), max);
+}
+
+
+float MathUtil::clamp(float value)
+{
+  return clamp(value, 0.0f, 1.0f);
+}
 
 
 unsigned int MathUtil::nextPow2(unsigned int v)
@@ -45,7 +67,6 @@ unsigned int MathUtil::prevSquareBase(unsigned int v)
 }
 
 
-
 bool MathUtil::isPow2(unsigned int v)
 {
   return v && !(v & (v - 1));
@@ -72,4 +93,3 @@ Pointf MathUtil::nextPow2TexCoord(const Pointf& original,
   return Pointf(nextPow2TexCoord(original.x(), dimension.w()),
                 nextPow2TexCoord(original.y(), dimension.h()));
 }
-
