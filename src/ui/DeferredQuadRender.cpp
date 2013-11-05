@@ -63,9 +63,9 @@ void DeferredQuadRender::initialize()
 {
   log_.d("Initializing");
   program_.setShader(ShaderProgram::VERTEX,
-                     Asset::shader("deferredquad.vert"));
+                     AssetShader("deferredquad.vert"));
   program_.setShader(ShaderProgram::FRAGMENT,
-                     Asset::shader("deferredquad.frag"));
+                     AssetShader("deferredquad.frag"));
   updateShader();
 
   float s = 1.0f;

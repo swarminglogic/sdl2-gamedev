@@ -40,7 +40,7 @@ MainManager::MainManager()
   initSDLttf();
   initSDLmixer();
 
-  font_.reset(TTF_OpenFont(Asset::font("Minecraftia.ttf").c_str(), 8));
+  font_.reset(TTF_OpenFont(AssetFont("Minecraftia.ttf").path().c_str(), 8));
 
   graphics_.reset(new GraphicsManager);
   runtime_.reset(new Timer);
@@ -84,7 +84,7 @@ void MainManager::initialize()
   graphics_->setIsMouseGrab(basicRender_->prefersMouseGrab());
 
   // Text font renderer
-  textRenderer_.loadImage("gnsh-bitmapfont.png");
+  textRenderer_.loadImage(AssetImage("gnsh-bitmapfont.png"));
   TextBoxText tbt;
   tbt.setHeight(12u);
   tbt.setWidthFixed(5u);

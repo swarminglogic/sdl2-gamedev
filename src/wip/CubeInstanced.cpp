@@ -78,8 +78,8 @@ void CubeInstanced::setPvPointer(float* pv)
 
 void CubeInstanced::initialize()
 {
-  program_.setShader(ShaderProgram::VERTEX, Asset::shader("cubeinstanced.vert"));
-  program_.setShader(ShaderProgram::FRAGMENT, Asset::shader("passthru.frag"));
+  program_.setShader(ShaderProgram::VERTEX, AssetShader("cubeinstanced.vert"));
+  program_.setShader(ShaderProgram::FRAGMENT, AssetShader("passthru.frag"));
   updateShader();
   prepareVertices();
 

@@ -5,7 +5,6 @@
 #include <ui/GlState.h>
 #include <ui/GlUtil.h>
 #include <ui/Surface.h>
-#include <util/Asset.h>
 #include <util/CharMap.h>
 
 
@@ -44,9 +43,9 @@ void TextBoxTextRender::initialize()
   assert(viewport_ != Size(0, 0));
 
   program_.setShader(ShaderProgram::VERTEX,
-                     Asset::shader("2dscreentext.vert"));
+                     AssetShader("2dscreentext.vert"));
   program_.setShader(ShaderProgram::FRAGMENT,
-                     Asset::shader("2dscreentext.frag"));
+                     AssetShader("2dscreentext.frag"));
   updateShader();
 
   vertexBuffer_  = GlUtil::allocateVertexBuffer(2*4*sizeof(GLfloat));
@@ -128,8 +127,8 @@ void TextBoxTextRender::setCharMap(const CharMap& charmap)
 }
 
 
-void TextBoxTextRender::loadImage(const std::string& filename)
-{surface_->loadImage(filename);}
+void TextBoxTextRender::loadImage(const AssetImage& imagefile)
+{surface_->loadImage(imagefile);}
 
 void TextBoxTextRender::setText(const std::string& text)
 {

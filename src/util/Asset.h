@@ -16,25 +16,62 @@ public:
     SHADER,
     IMAGE,
     FONT,
-    MESH
+    MESH,
+    INVALID_TYPE
   };
-
-  static std::string path(Type type, const std::string& filename);
-  static std::string image(const std::string& filename);
-  static std::string shader(const std::string& filename);
-  static std::string font(const std::string& filename);
-  static std::string mesh(const std::string& filename);
-
-
-private:
-  static std::string typeToPath(Type type);
 
   Asset();
   virtual ~Asset();
 
-  // NonCopyable
-  Asset(const Asset& c);
-  Asset& operator=(const Asset& c);
+  Asset::Type type() const;
+  std::string path() const;
+
+  static std::string getBasePath();
+
+protected:
+  Asset::Type type_;
+  std::string path_;
+
+private:
+  static const std::string base_;
+
+  // TODO swarminglogic, 2013-11-05: Remove
+  static std::string typeToPath(Asset::Type type);
+
 };
+
+
+
+class AssetShader : public Asset
+{
+public:
+  AssetShader(const std::string& resource);
+  virtual ~AssetShader();
+};
+
+class AssetImage : public Asset
+{
+public:
+  AssetImage(const std::string& resource);
+  virtual ~AssetImage();
+};
+
+class AssetFont : public Asset
+{
+public:
+  AssetFont(const std::string& resource);
+  virtual ~AssetFont();
+};
+
+class AssetMesh : public Asset
+{
+public:
+  AssetMesh(const std::string& resource);
+  virtual ~AssetMesh();
+};
+
+
+
+
 
 #endif

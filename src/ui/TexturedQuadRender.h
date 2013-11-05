@@ -7,6 +7,7 @@
 #include <ui/SDL_opengl.h>
 #include <ui/ShaderProgram.h>
 #include <ui/Surface.h>
+#include <util/Asset.h>
 #include <util/Log.h>
 
 
@@ -31,7 +32,7 @@ public:
   //  2. setSurface: use an SDL_Surface object
   //  3. setGlTextureId: use a pre-prepared OpenGL texture.
 
-  void loadImage(const std::string& filename);
+  void loadImage(const AssetImage& imagefile);
   void setSurface(SDL_Surface& surface);
   void setGlTextureId(GLuint textureId, Size size);
 

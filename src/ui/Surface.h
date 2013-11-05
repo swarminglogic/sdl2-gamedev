@@ -1,11 +1,10 @@
 #ifndef UI_SURFACE_H
 #define UI_SURFACE_H
 
-#include <string>
-
 #include <math/Rect.h>
 #include <ui/SDL.h>
 #include <ui/SDL_opengl.h>
+#include <util/Asset.h>
 #include <util/Log.h>
 
 
@@ -31,7 +30,7 @@ public:
   /**
    * @param filename Just the filename, it prepends image directory.
    */
-  void loadImage(const std::string& filename);
+  void loadImage(const AssetImage& imagefile);
 
   /**
    * Fill using a SDL_Surface.
@@ -76,7 +75,6 @@ private:
 
   Log log_;
   SurfacePtr surface_;
-  std::string filename_;
   GLuint textureId_;
   Rect imageRect_;
   bool isMaxFiltering_;

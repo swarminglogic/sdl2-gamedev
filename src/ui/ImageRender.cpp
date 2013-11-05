@@ -33,9 +33,9 @@ void ImageRender::initialize()
 {
   log_.d("Initializing");
   program_.setShader(ShaderProgram::VERTEX,
-                     Asset::shader("2dscreentexture.vert"));
+                     AssetShader("2dscreentexture.vert"));
   program_.setShader(ShaderProgram::FRAGMENT,
-                     Asset::shader("2dscreentexture.frag"));
+                     AssetShader("2dscreentexture.frag"));
   updateShader();
 
   vertexBuffer_  = GlUtil::allocateVertexBuffer(3*4*sizeof(GLfloat));

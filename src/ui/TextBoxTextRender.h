@@ -1,15 +1,17 @@
 #ifndef UI_TEXTBOXTEXTRENDER_H
 #define UI_TEXTBOXTEXTRENDER_H
 
+#include <iosfwd>
 #include <vector>
 
 #include <glm/glm.hpp>
-#include <math/Pointf.h>
 #include <math/Point.h>
+#include <math/Pointf.h>
 #include <math/Size.h>
 #include <ui/BasicRender.h>
 #include <ui/SDL_opengl.h>
 #include <ui/ShaderProgram.h>
+#include <util/Asset.h>
 #include <util/Log.h>
 
 
@@ -36,7 +38,7 @@ public:
   // Required initializations
   void setTextBoxText(const TextBoxText& textBoxText);
   void setCharMap(const CharMap& charmap);
-  void loadImage(const std::string& filename);
+  void loadImage(const AssetImage& imagefile);
 
   // Dynamic variables
   void setText(const std::string& text);

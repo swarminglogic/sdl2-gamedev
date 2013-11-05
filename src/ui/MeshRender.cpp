@@ -1,17 +1,17 @@
 #include <ui/MeshRender.h>
 
-#include <util/Asset.h>
 
-
-MeshRender::MeshRender(const std::string& meshFile)
-  : mesh_(Asset::mesh(meshFile))
+MeshRender::MeshRender(const AssetMesh& meshfile)
+  : mesh_(meshfile)
 {
   mesh_.load();
 }
 
+
 MeshRender::~MeshRender()
 {
 }
+
 
 void MeshRender::render(float)
 {
@@ -51,6 +51,7 @@ void MeshRender::render(float)
     if (hasNormalData) glDisableVertexAttribArray(2);
   }
 }
+
 
 void MeshRender::refresh()
 {

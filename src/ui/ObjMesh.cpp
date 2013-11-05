@@ -1,7 +1,6 @@
 #include <ui/ObjMesh.h>
 
 #include <fstream>
-#include <iostream>
 
 #include <ui/GlState.h>
 #include <ui/GlUtil.h>
@@ -9,12 +8,12 @@
 #include <util/StringUtil.h>
 
 
-ObjMesh::ObjMesh(const std::string& filename)
+ObjMesh::ObjMesh(const AssetMesh& meshfile)
   : log_("ObjMesh"),
-    filename_(filename),
+    filename_(meshfile.path()),
     shapes_(),
     bufferIds_(),
-    fileMonitor_(filename),
+    fileMonitor_(meshfile.path()),
     cached_isObjModified_(false),
     guard_isObjModified_(std::bind(&ObjMesh::guard_isObjModified,
                                    this),

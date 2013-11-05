@@ -1,48 +1,68 @@
 #include <util/Asset.h>
 
 
+const std::string Asset::base_("./assets/");
 
-std::string Asset::path(Type type, const std::string& filename)
+Asset::Asset()
+  : type_(INVALID_TYPE),
+    path_("")
 {
-  return typeToPath(type) + filename;
 }
 
-std::string Asset::image(const std::string& filename)
+Asset::~Asset()
 {
-  return path(IMAGE, filename);
-}
-
-std::string Asset::shader(const std::string& filename)
-{
-  return path(SHADER, filename);
-}
-
-std::string Asset::font(const std::string& filename)
-{
-  return path(FONT, filename);
-}
-
-std::string Asset::mesh(const std::string& filename)
-{
-  return path(MESH, filename);
 }
 
 
-std::string Asset::typeToPath(Asset::Type type)
+Asset::Type Asset::type() const
 {
-  // TODO swarminglogic, 2013-09-25: Differentiate with subfolders
-  switch (type) {
-  case SHADER:
-    return std::string("./assets/shaders/");
-  case IMAGE:
-    return std::string("./assets/images/");
-  case FONT:
-    return std::string("./assets/fonts/");
-  case MESH:
-    return std::string("./assets/meshes/");
-  default:
-    return std::string("");
-  }
+  return type_;
 }
 
 
+std::string Asset::path() const
+{
+  return base_ + path_;
+}
+
+
+std::string Asset::getBasePath()
+{
+  return base_;
+}
+
+
+// Shader Asset
+AssetShader::AssetShader(const std::string& resource)
+{
+  type_ = SHADER;
+  path_ = std::string("shaders/") + resource;
+}
+AssetShader::~AssetShader(){}
+
+
+// Image Asset
+AssetImage::AssetImage(const std::string& resource)
+{
+  type_ = IMAGE;
+  path_ = std::string("images/") + resource;
+}
+AssetImage::~AssetImage(){}
+
+
+// Font Asset
+AssetFont::AssetFont(const std::string& resource)
+{
+  type_ = FONT;
+  path_ = std::string("fonts/") + resource;
+}
+AssetFont::~AssetFont(){}
+
+
+// Mesh Asset
+AssetMesh::AssetMesh(const std::string& resource)
+{
+  type_ = MESH;
+  path_ = std::string("meshes/") + resource;
+}
+AssetMesh::~AssetMesh(){}

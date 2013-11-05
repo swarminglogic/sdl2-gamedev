@@ -1,10 +1,9 @@
 #ifndef UI_MESHRENDER_H
 #define UI_MESHRENDER_H
 
-#include <string>
-
 #include <ui/BasicRender.h>
 #include <ui/ObjMesh.h>
+#include <util/Asset.h>
 
 
 /**
@@ -18,7 +17,7 @@
 class MeshRender : public BasicRender
 {
 public:
-  MeshRender(const std::string& meshFile);
+  MeshRender(const AssetMesh& meshfile);
 
   virtual ~MeshRender();
   virtual void render(float currentTime) override;

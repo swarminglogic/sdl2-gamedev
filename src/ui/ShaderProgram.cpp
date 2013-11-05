@@ -38,9 +38,9 @@ void ShaderProgram::clear()
 }
 
 
-void ShaderProgram::setShader(ShaderType type, const std::string& filename)
+void ShaderProgram::setShader(ShaderType type, const AssetShader& shaderfile)
 {
-  shaders_[type] = File(filename);
+  shaders_[type] = File(shaderfile.path());
   isShaderInformationModified_ = true;
 }
 

@@ -16,7 +16,7 @@ ToTextureRenderer::ToTextureRenderer()
     projectionMat_(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)),
     viewport_(),
     texture_(),
-    mesh_(Asset::mesh("sss2.cobj")),
+    mesh_(AssetMesh("sss2.cobj")),
     shader_(),
     mvpID_(-1),
     modelViewMatID_(-1),
@@ -43,11 +43,11 @@ void ToTextureRenderer::initialize()
   GlState::enable(GlState::CULL_FACE);
   GlState::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  shader_.setShader(ShaderProgram::VERTEX, Asset::shader("objrender.vert"));
-  shader_.setShader(ShaderProgram::FRAGMENT, Asset::shader("objrender.frag"));
+  shader_.setShader(ShaderProgram::VERTEX, AssetShader("objrender.vert"));
+  shader_.setShader(ShaderProgram::FRAGMENT, AssetShader("objrender.frag"));
   updateShader();
   updateModel();
-  texture_.loadImage("uv_colorgrid.png");
+  texture_.loadImage(AssetImage("uv_colorgrid.png"));
   texture_.setIsMaxFiltering(true);
   texture_.prepareForGl();
 

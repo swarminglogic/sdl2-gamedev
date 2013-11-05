@@ -1,17 +1,16 @@
 #include <ui/Surface.h>
 
 #include <cassert>
+#include <string>
 
 #include <math/MathUtil.h>
 #include <ui/GlState.h>
 #include <ui/SDL_image.h>
-#include <util/Asset.h>
 
 
 Surface::Surface(SDL_Surface* surface)
   : log_("Surface"),
     surface_(surface),
-    filename_(""),
     textureId_(0),
     imageRect_(0, 0, 0, 0),
     isMaxFiltering_(true)
@@ -39,9 +38,9 @@ void Surface::releaseResources()
 }
 
 
-void Surface::loadImage(const std::string& filename)
+void Surface::loadImage(const AssetImage& imagefile)
 {
-  const std::string path {Asset::path(Asset::IMAGE, filename)};
+  const std::string path = imagefile.path();
   log_.d() << "Loading image: " << path << Log::end;
 
   releaseResources();
@@ -51,7 +50,6 @@ void Surface::loadImage(const std::string& filename)
     log_.e() << "Failed to load image " << path << Log::end;
     log_.e() << SDL_GetError() << Log::end;
   }
-  filename_ = filename;
 
   imageRect_ = Rect(0, 0, surface_->w, surface_->h);
 }

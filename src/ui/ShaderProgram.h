@@ -4,6 +4,7 @@
 #include <map>
 
 #include <ui/ShaderUtil.h>
+#include <util/Asset.h>
 #include <util/Log.h>
 #include <util/TimedExecution.h>
 
@@ -37,7 +38,7 @@ public:
   GLuint get() const;
 
   void clear();
-  void setShader(ShaderType type, const std::string& filename);
+  void setShader(ShaderType type, const AssetShader& shaderfile);
 
   /**
    * Deletes the registered

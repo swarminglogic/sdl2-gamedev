@@ -8,6 +8,7 @@
 #include <extern/tiny_obj_loader.h>
 #include <glm/glm.hpp>
 #include <ui/SDL_opengl.h>
+#include <util/Asset.h>
 #include <util/FileMonitor.h>
 #include <util/Log.h>
 #include <util/TimedExecution.h>
@@ -21,7 +22,7 @@
 class ObjMesh
 {
 public:
-  ObjMesh(const std::string& filename);
+  ObjMesh(const AssetMesh& meshfile);
   virtual ~ObjMesh();
 
   size_t getShapeCount() const;

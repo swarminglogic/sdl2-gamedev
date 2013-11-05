@@ -16,13 +16,13 @@ DeferredRenderer::DeferredRenderer()
     projectionMat_(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)),
     viewport_(),
     texture_(),
-    mesh_("sss.cobj"),
-    // mesh2_(new MeshRender("teapot.cobj")),
-    // mesh3_(new MeshRender("head.cobj")),
-    // mesh4_(new MeshRender("dragon.cobj")),
-    // mesh5_(new MeshRender("buddah.cobj")),
+    mesh_(AssetMesh("sss.cobj")),
+    // mesh2_(new MeshRender(AssetMesh("teapot.cobj"))),
+    // mesh3_(new MeshRender(AssetMesh("head.cobj"))),
+    // mesh4_(new MeshRender(AssetMesh("dragon.cobj"))),
+    // mesh5_(new MeshRender(AssetMesh("buddah.cobj"))),
     sceneBoxTexture_(),
-    sceneBox_("scenebox.cobj"),
+    sceneBox_(AssetMesh("scenebox.cobj")),
     shader_(),
     mvpID_(-1),
     modelViewMatID_(-1),
@@ -56,16 +56,16 @@ void DeferredRenderer::initialize()
   GlState::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   shader_.setShader(ShaderProgram::VERTEX,
-                    Asset::shader("deferredobjrender.vert"));
+                    AssetShader("deferredobjrender.vert"));
   shader_.setShader(ShaderProgram::FRAGMENT,
-                    Asset::shader("deferredobjrender.frag"));
+                    AssetShader("deferredobjrender.frag"));
   updateShader();
   // texture_.loadImage("rungholt-RGBA.png");
-  texture_.loadImage("uv_colorgrid.png");
+  texture_.loadImage(AssetImage("uv_colorgrid.png"));
   texture_.setIsMaxFiltering(true);
   texture_.prepareForGl();
 
-  sceneBoxTexture_.loadImage("uv_browngrid.png");
+  sceneBoxTexture_.loadImage(AssetImage("uv_browngrid.png"));
   sceneBoxTexture_.setIsMaxFiltering(true);
   sceneBoxTexture_.prepareForGl();
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

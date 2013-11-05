@@ -3,7 +3,6 @@
 #include <math/MathUtil.h>
 #include <ui/GlState.h>
 #include <ui/GlUtil.h>
-#include <util/Asset.h>
 
 
 TexturedQuadRender::TexturedQuadRender()
@@ -29,9 +28,9 @@ void TexturedQuadRender::initialize()
 {
   log_.d("Initializing");
   program_.setShader(ShaderProgram::VERTEX,
-                     Asset::shader("texturedquad.vert"));
+                     AssetShader("texturedquad.vert"));
   program_.setShader(ShaderProgram::FRAGMENT,
-                     Asset::shader("texturedquad.frag"));
+                     AssetShader("texturedquad.frag"));
   updateShader();
 
   float s = 1.0f;
@@ -83,9 +82,9 @@ void TexturedQuadRender::handleResize(int width, int height)
 }
 
 
-void TexturedQuadRender::loadImage(const std::string& filename)
+void TexturedQuadRender::loadImage(const AssetImage& imagefile)
 {
-  surface_.loadImage(filename);
+  surface_.loadImage(imagefile);
   rect_.w(surface_.getWidth());
   rect_.h(surface_.getHeight());
 }
