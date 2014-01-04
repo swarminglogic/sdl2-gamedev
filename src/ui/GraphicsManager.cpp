@@ -1,8 +1,10 @@
 #include <ui/GraphicsManager.h>
 
+#include <array>
 #include <cassert>
 #include <iomanip>
 #include <sstream>
+#include <utility>
 
 #include <config/ConfigManager.h>
 #include <config/ViewConfig.h>
@@ -98,17 +100,11 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,        24);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,         24);
   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,       8);
-  // Accumulation buffer doesn't exist in OpenGL 3+ core profile
-  // SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,     8);
-  // SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,   8);
-  // SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,    8);
-  // SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,   8);
   SDL_GL_SetAttribute(SDL_GL_STEREO,             0);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-  // SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1); // Error, SDL bug?
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                       SDL_GL_CONTEXT_PROFILE_CORE);
   if (isOpenGlDebugEnabled_)
@@ -116,7 +112,7 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 
   int sdlWindowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
   if (viewConfig.isFullScreen())
-    sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
+    sdlWindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
   if (viewConfig.isResizeable())
     sdlWindowFlags |= SDL_WINDOW_RESIZABLE;
 
@@ -132,19 +128,38 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   // Store window dimensions
   setScreenSize(viewConfig.getScreenSize());
 
+
   // Create OpenGL Context
   log_.i("Creating OpenGL Context");
-  context_.reset(new SDL_GLContext(SDL_GL_CreateContext(window_.get())));
-  if (!context_)
+
+  // Lists opengl versions intended to try
+  const std::array<std::pair<int, int>, 11> glVersions
+    {{{4,4}, {4,3}, {4,2}, {4,1}, {4,0},
+      {3,3}, {3,2}, {3,1}, {3,0},
+      {2,1}, {2,0}
+    }};
+
+  int redsize = 0;
+  SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &redsize);
+  log_.i() << redsize << Log::end;
+
+  SDL_GLContext context = nullptr;
+  for (auto& glVersion : glVersions) {
+    log_.d() << "Trying to create GL " << glVersion.first << "."
+             << glVersion.second << " context" << Log::end;
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glVersion.first);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glVersion.second);
+    context = SDL_GL_CreateContext(window_.get());
+    if (context != nullptr)
+      break;
+  }
+  if (context == nullptr)
     throw log_.exception("Failed to create OpenGL Context", SDL_GetError);
+  context_.reset(new SDL_GLContext(context));
 
   // Set VSync
   if(SDL_GL_SetSwapInterval(static_cast<int>(viewConfig.isVSync())) < 0)
     log_.w() << "Failed to change vsync mode: " << SDL_GetError() << Log::end;
-
-
-  // TODO swarminglogic, 2013-09-14: Have fallback methods when creating
-  // the OpenGL context.
 
   // // Make it the current context
   SDL_GL_MakeCurrent(window_.get(), *context_);
