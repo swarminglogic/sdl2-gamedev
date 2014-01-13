@@ -138,6 +138,14 @@ void MainManager::run() {
   bool isDirty = true;
   uint frameNumber = 0;
   while (isRunning_) {
+#ifndef NDEBUG
+    const char* err = SDL_GetError();
+    if (err[0] != '\0') {
+      log_.e() << "SDL_GetError(): " << err << Log::end;
+    }
+#endif
+    SDL_ClearError();
+
     while (SDL_PollEvent(&event)) {
       handleEvent(event);
       isDirty |= basicRender_->handleEvent(event);
