@@ -46,15 +46,22 @@ void GraphicsManager::toggleFullScreen()
 
 void GraphicsManager::setFullScreen(bool isFullScreenEnabled)
 {
+  bool isMouseGrabSet = isMouseGrab();
+  setIsMouseGrab(false);
+
   if (isFullScreenEnabled) {
     log_.i("Enabling fullscreen");
-    SDL_SetWindowFullscreen(window_.get(), SDL_WINDOW_FULLSCREEN);
+    SDL_SetWindowFullscreen(window_.get(), SDL_WINDOW_FULLSCREEN_DESKTOP);
   }
   else {
     log_.i("Disabling fullscreen");
     SDL_SetWindowFullscreen(window_.get(), 0);
   }
   isFullScreen_ = isFullScreenEnabled;
+
+  // Reenable mouse grab if it was previously active,
+  // as a new window has been created/
+  setIsMouseGrab(isMouseGrabSet);
 }
 
 bool GraphicsManager::isFullScreen() const
@@ -91,19 +98,19 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
 {
   log_.i("Initalizing OpenGL");
 
-  // TODO swarminglogic, 2013-09-23: Improve cross system compatibility!
-  SDL_GL_SetAttribute(SDL_GL_RED_SIZE,           8);
-  SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,         8);
-  SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,          8);
-  SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,         8);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,       1);
-  SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,        24);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,         24);
-  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,       8);
-  SDL_GL_SetAttribute(SDL_GL_STEREO,             0);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
-  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+  // TODO swarminglogic, 2014-01-13: Determine if these are ever necessary
+  // SDL_GL_SetAttribute(SDL_GL_RED_SIZE,           8);
+  // SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,         8);
+  // SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,          8);
+  // SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,         8);
+  // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,       1);
+  // SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,        24);
+  // SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,         24);
+  // SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE,       8);
+  // SDL_GL_SetAttribute(SDL_GL_STEREO,             0);
+  // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 0);
+  // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 0);
+  // SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
                       SDL_GL_CONTEXT_PROFILE_CORE);
@@ -156,6 +163,7 @@ void GraphicsManager::initalizeOpenGL(const ViewConfig& viewConfig)
   if (context == nullptr)
     throw log_.exception("Failed to create OpenGL Context", SDL_GetError);
   context_.reset(new SDL_GLContext(context));
+  SDL_ClearError();
 
   // Set VSync
   if(SDL_GL_SetSwapInterval(static_cast<int>(viewConfig.isVSync())) < 0)
