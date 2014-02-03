@@ -1,6 +1,7 @@
 #ifndef UTIL_TESTASSET_H
 #define UTIL_TESTASSET_H
 
+#include <memory>
 #include <util/Asset.h>
 
 #include <cxxtest/TestSuite.h>
@@ -46,6 +47,28 @@ public:
     AssetShader shader("test.frag");
     TS_ASSERT_EQUALS(shader.path(), "./assets/shaders/test.frag");
     TS_ASSERT_EQUALS(shader.type(), Asset::SHADER);
+  }
+
+  void testVirtual() {
+    std::unique_ptr<Asset> asset(new AssetShader("test.frag"));
+    TS_ASSERT_EQUALS(asset->path(), "./assets/shaders/test.frag");
+    TS_ASSERT_EQUALS(asset->type(), Asset::SHADER);
+
+    asset.reset(new AssetImage("image.png"));
+    TS_ASSERT_EQUALS(asset->path(), "./assets/images/image.png");
+    TS_ASSERT_EQUALS(asset->type(), Asset::IMAGE);
+  }
+
+  void testOperators() {
+    // Comparison
+    AssetShader shader("test.frag");
+    AssetShader shaderSame("test.frag");
+    TS_ASSERT(shader == shaderSame);
+    TS_ASSERT_EQUALS(shader, shaderSame);
+    AssetShader shaderDifferentPath("other.frag");
+    TS_ASSERT_DIFFERS(shader, shaderDifferentPath);
+    AssetImage shaderDifferentType("test.frag");
+    TS_ASSERT_DIFFERS(shader, shaderDifferentType);
   }
 
 private:

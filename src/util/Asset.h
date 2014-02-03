@@ -28,6 +28,11 @@ public:
 
   static std::string getBasePath();
 
+  friend inline bool operator<(const Asset& lhs, const Asset& rhs);
+  friend inline bool operator==(const Asset& lhs, const Asset& rhs);
+  friend inline bool operator!=(const Asset& lhs, const Asset& rhs);
+
+
 protected:
   Asset::Type type_;
   std::string path_;
@@ -39,6 +44,20 @@ private:
   static std::string typeToPath(Asset::Type type);
 
 };
+
+
+
+inline bool operator<(const Asset& lhs, const Asset& rhs) {
+  return lhs.path() < rhs.path();
+}
+
+
+inline bool operator==(const Asset& lhs, const Asset& rhs) {
+  return (lhs.type_ == rhs.type_) && (lhs.path_ == rhs.path_);
+}
+inline bool operator!=(const Asset& lhs, const Asset& rhs) {
+  return !(lhs == rhs);
+}
 
 
 
