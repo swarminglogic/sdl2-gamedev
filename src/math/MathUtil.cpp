@@ -3,6 +3,14 @@
 #include <algorithm>
 #include <cassert>
 
+#include <math/Pointf.h>
+#include <math/Size.h>
+#include <math/Sizef.h>
+
+
+float MathUtil::PI = 3.14159265359f;
+float MathUtil::PIHALF = 1.57079633f;
+float MathUtil::PIQUARTER = 0.78539816f;
 
 float MathUtil::lerp(float min, float max, float a)
 {
@@ -93,3 +101,4 @@ Pointf MathUtil::nextPow2TexCoord(const Pointf& original,
   return Pointf(nextPow2TexCoord(original.x(), dimension.w()),
                 nextPow2TexCoord(original.y(), dimension.h()));
 }
+

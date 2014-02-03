@@ -23,7 +23,6 @@ public:
     TS_ASSERT_DELTA(MathUtil::clamp(-0.2f, -1.0f, 1.0f), -0.2f,delta);
     TS_ASSERT_DELTA(MathUtil::clamp(-1.2f, -10.0f, 1.0f), -1.2f,delta);
 
-
     // Default ranges [0, 1]
     TS_ASSERT_DELTA(MathUtil::clamp(1.0f), 1.0f,delta);
     TS_ASSERT_DELTA(MathUtil::clamp(0.0f), 0.0f,delta);

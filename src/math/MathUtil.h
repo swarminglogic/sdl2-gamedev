@@ -1,9 +1,8 @@
 #ifndef MATH_MATHUTIL_H
 #define MATH_MATHUTIL_H
 
-#include <math/Pointf.h>
-#include <math/Size.h>
-
+class Pointf;
+class Size;
 
 /**
  * MathUtil class.
@@ -13,6 +12,9 @@
 class MathUtil
 {
 public:
+  static float PI;
+  static float PIHALF;
+  static float PIQUARTER;
 
   /**
    * Linear interpolation between [min, max].
