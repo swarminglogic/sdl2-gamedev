@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include <io/Keyboard.h>
+#include <io/ResourceManager.h>
 #include <io/TextBoxText.h>
 #include <model/PhysicsWorld.h>
 #include <ui/BasicRender.h>
@@ -145,6 +146,13 @@ PhysicsWorld& MainManager::getPhysicsWorld()
 {
   return *physics_.get();
 }
+
+ResourceManager& MainManager::getResourceManager()
+{
+  return *resouceManager_;
+
+}
+
 
 
 void MainManager::run() {

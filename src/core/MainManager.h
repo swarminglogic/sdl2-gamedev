@@ -14,6 +14,7 @@
 class BasicRender;
 class Log;
 class PhysicsWorld;
+class ResourceManager;
 class Timer;
 
 /**
@@ -53,6 +54,8 @@ public:
 
   PhysicsWorld& getPhysicsWorld();
 
+  ResourceManager& getResourceManager();
+
 private:
   MainManager();
   void handleEvent(const SDL_Event& event);
@@ -73,6 +76,7 @@ private:
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;
   std::unique_ptr<PhysicsWorld> physics_;
+  std::unique_ptr<ResourceManager> resouceManager_;
 
   // ImageRender fpsRender_;
   TextBoxTextRender textRenderer_;
