@@ -1,5 +1,7 @@
 #include <math/Sizef.h>
 
+#include <math/Pointf.h>
+
 
 Sizef::Sizef()
   : d_{0.0f, 0.0f}
@@ -43,6 +45,18 @@ void Sizef::w(float widthv)
 { setWidth(widthv); }
 
 
+float Sizef::getLength() const
+{
+  return std::sqrt(d_[0]*d_[0] + d_[1]*d_[1]);
+}
+
+void Sizef::normalize()
+{
+  const float length = getLength();
+  d_[0] /= length;
+  d_[1] /= length;
+}
+
 void Sizef::transpose()
 {
   const float temp = d_[0];
@@ -78,8 +92,11 @@ Sizef& Sizef::operator/=(float rhs)
   return *this;
 }
 
-
 const float* Sizef::getData() const
 {return d_;}
 float* Sizef::getData()
 {return d_;}
+
+Sizef::operator Pointf() const {
+  return Pointf(d_[0], d_[1]);
+}

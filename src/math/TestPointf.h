@@ -2,6 +2,7 @@
 #define MATH_TESTPOINTF_H
 
 #include <math/Pointf.h>
+#include <math/Sizef.h>
 
 #include <cxxtest/TestSuite.h>
 
@@ -121,6 +122,47 @@ public:
     Pointf resDiv = opB / 2.0f;
     Pointf resDivExp(2.5f, 3.5f);
     TS_ASSERT_EQUALS(resDiv, resDivExp);
+  }
+
+  void testExplicitTypeConversion() {
+    const float delta = 0.00001;
+    Pointf pt(1.0f, 2.0f);
+    Sizef op = static_cast<Sizef>(pt);
+    TS_ASSERT_DELTA(op.w(), pt.x(), delta);
+    TS_ASSERT_DELTA(op.h(), pt.y(), delta);
+  }
+
+  void testGetLength() {
+    const float delta = 0.00001;
+    Pointf opA(2.0f, 0.0f);
+    TS_ASSERT_DELTA(opA.getLength(), 2.0f, delta);
+    opA = Pointf(3.0f, 4.0f);
+    TS_ASSERT_DELTA(opA.getLength(), 5.0f, delta);
+    opA = Pointf(4.0f, 3.0f);
+    TS_ASSERT_DELTA(opA.getLength(), 5.0f, delta);
+    opA = Pointf(-4.0f, 3.0f);
+    TS_ASSERT_DELTA(opA.getLength(), 5.0f, delta);
+  }
+
+  void testNormalize() {
+    const float delta = 0.00001f;
+    Pointf opA(2.0f, 0.0f);
+    opA.normalize();
+    TS_ASSERT_DELTA(opA.getLength(), 1.0f, delta);
+    TS_ASSERT_DELTA(opA.x(), 1.0f, delta);
+    TS_ASSERT_DELTA(opA.y(), 0.0f, delta);
+
+    opA = Pointf(1.0f, 1.0f);
+    opA.normalize();
+    TS_ASSERT_DELTA(opA.getLength(), 1.0f, delta);
+    TS_ASSERT_DELTA(opA.x(), 0.7071f, delta);
+    TS_ASSERT_DELTA(opA.y(), 0.7071f, delta);
+
+    opA = Pointf(-1.0f, 1.0f);
+    opA.normalize();
+    TS_ASSERT_DELTA(opA.getLength(), 1.0f, delta);
+    TS_ASSERT_DELTA(opA.x(), -0.7071f, delta);
+    TS_ASSERT_DELTA(opA.y(), 0.7071f, delta);
   }
 
   void testTranspose() {

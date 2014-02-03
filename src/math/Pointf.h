@@ -5,6 +5,8 @@
 #include <limits>
 
 
+class Sizef;
+
 /**
  * Pointf class. Simple class representing an float-pair.
  * Logically represents x and y.
@@ -30,6 +32,9 @@ public:
   float x() const;
   void x(float x);
 
+  float getLength() const;
+  void normalize();
+
   /**
    * Swaps x <-> y
    */
@@ -50,6 +55,9 @@ public:
 
   friend inline bool operator==(const Pointf& lhs, const Pointf& rhs);
   friend inline bool operator!=(const Pointf& lhs, const Pointf& rhs);
+
+  explicit operator Sizef() const;
+
 
   /**
    * Returns pointer to data, which is a 2-sized float array.

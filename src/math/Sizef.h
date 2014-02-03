@@ -4,6 +4,7 @@
 #include <cmath>
 #include <limits>
 
+class Pointf;
 
 /**
  * Sizef class. Simple class representing an float-pair.
@@ -34,6 +35,9 @@ public:
   float w() const;
   void w(float width);
 
+  void normalize();
+  float getLength() const;
+
   /**
    * Swaps width <-> height
    */
@@ -63,6 +67,7 @@ public:
   const float* getData() const;
   float* getData();
 
+  explicit operator Pointf() const;
 
 private:
   float d_[2];
