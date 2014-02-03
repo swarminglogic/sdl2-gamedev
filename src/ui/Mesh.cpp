@@ -1,21 +1,23 @@
-#include <ui/ObjMesh.h>
+#include <ui/Mesh.h>
 
 #include <fstream>
 
+#include <glm/glm.hpp>
 #include <ui/GlState.h>
 #include <ui/GlUtil.h>
 #include <util/CObjUtil.h>
+#include <util/FileUtil.h>
 #include <util/StringUtil.h>
 
 
-ObjMesh::ObjMesh(const AssetMesh& meshfile)
-  : log_("ObjMesh"),
+Mesh::Mesh(const AssetMesh& meshfile)
+  : log_("Mesh"),
     filename_(meshfile.path()),
     shapes_(),
     bufferIds_(),
     fileMonitor_(meshfile.path()),
     cached_isObjModified_(false),
-    guard_isObjModified_(std::bind(&ObjMesh::guard_isObjModified,
+    guard_isObjModified_(std::bind(&Mesh::guard_isObjModified,
                                    this),
                          1000),
     timer_()
@@ -23,19 +25,25 @@ ObjMesh::ObjMesh(const AssetMesh& meshfile)
 }
 
 
-ObjMesh::~ObjMesh()
+Mesh::~Mesh()
 {
   clear();
 }
 
 
-size_t ObjMesh::getShapeCount() const
+bool Mesh::isEmpty() const
+{
+  return shapes_.empty();
+}
+
+
+size_t Mesh::getShapeCount() const
 {
   return shapes_.size();
 }
 
 
-GLsizei ObjMesh::getIndicesCount(size_t shapeIndex) const
+GLsizei Mesh::getIndicesCount(size_t shapeIndex) const
 {
   if (shapeIndex >= shapes_.size())
     return 0u;
@@ -44,58 +52,60 @@ GLsizei ObjMesh::getIndicesCount(size_t shapeIndex) const
 }
 
 
-GLuint ObjMesh::getIndexBuffer(size_t shapeIndex) const
+GLuint Mesh::getIndexBuffer(size_t shapeIndex) const
 {
   assert(shapeIndex < shapes_.size());
   return bufferIds_[shapeIndex].index;
 }
 
 
-GLuint ObjMesh::getVertexBuffer(size_t shapeIndex) const
+GLuint Mesh::getVertexBuffer(size_t shapeIndex) const
 {
   assert(shapeIndex < shapes_.size());
   return bufferIds_[shapeIndex].vertex;
 }
 
 
-GLuint ObjMesh::getUVBuffer(size_t shapeIndex) const
+GLuint Mesh::getUVBuffer(size_t shapeIndex) const
 {
   assert(shapeIndex < shapes_.size());
   return bufferIds_[shapeIndex].uv;
 }
 
 
-GLuint ObjMesh::getNormalBuffer(size_t shapeIndex) const
+GLuint Mesh::getNormalBuffer(size_t shapeIndex) const
 {
   assert(shapeIndex < shapes_.size());
   return bufferIds_[shapeIndex].normal;
 }
 
 
-const tinyobj::material_t& ObjMesh::getMaterial(size_t shapeIndex) const
+const tinyobj::material_t& Mesh::getMaterial(size_t shapeIndex) const
 {
   assert(shapeIndex < shapes_.size());
   return shapes_[shapeIndex].material;
 }
 
 
-bool ObjMesh::hasUVdata(size_t shapeIndex) const
+bool Mesh::hasUVdata(size_t shapeIndex) const
 {
   assert(shapeIndex < shapes_.size());
   return !shapes_[shapeIndex].mesh.texcoords.empty();
 }
 
 
-bool ObjMesh::hasNormalData(size_t shapeIndex) const
+bool Mesh::hasNormalData(size_t shapeIndex) const
 {
   assert(shapeIndex < shapes_.size());
   return !shapes_[shapeIndex].mesh.normals.empty();
 }
 
 
-void ObjMesh::load()
+bool Mesh::load()
 {
   log_.i() << "Loading OBJ file: " << filename_ << Log::end;
+  if (!FileUtil::exists(filename_))
+    return false;
 
   timer_.start();
   std::vector<tinyobj::shape_t> tempShapes;
@@ -145,17 +155,18 @@ void ObjMesh::load()
     log_.e() << "Error: " << StringUtil::trimc(emsg) << Log::end;
   }
 
+  return loadOk;
 }
 
 
-bool ObjMesh::isUpdated()
+bool Mesh::isUpdated()
 {
   cached_isObjModified_ = false;
   const bool wasExecuted = guard_isObjModified_.exec();
   return wasExecuted && cached_isObjModified_;
 }
 
-void ObjMesh::clear()
+void Mesh::clear()
 {
   for (size_t i = 0 ; i < bufferIds_.size() ; ++i) {
     if (bufferIds_[i].index  != 0)
@@ -172,7 +183,7 @@ void ObjMesh::clear()
 }
 
 
-void ObjMesh::guard_isObjModified()
+void Mesh::guard_isObjModified()
 {
   cached_isObjModified_ = fileMonitor_.isUpdated();
 }

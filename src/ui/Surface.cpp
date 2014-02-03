@@ -50,8 +50,9 @@ void Surface::loadImage(const AssetImage& imagefile)
     log_.e() << "Failed to load image " << path << Log::end;
     log_.e() << SDL_GetError() << Log::end;
   }
-
-  imageRect_ = Rect(0, 0, surface_->w, surface_->h);
+  else {
+    imageRect_ = Rect(0, 0, surface_->w, surface_->h);
+  }
 }
 
 void Surface::setSurface(SDL_Surface& surface)
@@ -60,6 +61,12 @@ void Surface::setSurface(SDL_Surface& surface)
   releaseResources();
   imageRect_ = Rect(0, 0, surface_->w, surface_->h);
 }
+
+SDL_Surface* Surface::getSurface()
+{
+  return surface_.get();
+}
+
 
 void Surface::setGlTextureId(GLuint textureId, Size size)
 {
@@ -116,7 +123,7 @@ void Surface::prepareForGl()
   Uint32 Rmask, Gmask, Bmask, Amask = 0;
   SDL_PixelFormatEnumToMasks(SDL_PIXELFORMAT_ABGR8888, &bpp,
                              &Rmask, &Gmask, &Bmask, &Amask);
-  SurfacePtr tempSurface(SDL_CreateRGBSurface(0, width, height,
+  SdlSurfacePtr tempSurface(SDL_CreateRGBSurface(0, width, height,
                                               bpp,
                                               Rmask, Gmask, Bmask, Amask));
 

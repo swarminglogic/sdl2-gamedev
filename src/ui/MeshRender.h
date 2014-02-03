@@ -2,13 +2,13 @@
 #define UI_MESHRENDER_H
 
 #include <ui/BasicRender.h>
-#include <ui/ObjMesh.h>
+#include <ui/Mesh.h>
 #include <util/Asset.h>
 
 
 /**
  * MeshRender class.
- * Wrapper for rendering ObjMesh objects.
+ * Wrapper for rendering Mesh objects.
  * Has functions for assigning various textures.
  * Expects to be rendered with deferredobjrender.{vert|frag} shader.
  *
@@ -25,7 +25,7 @@ public:
   void refresh();
 
 private:
-  ObjMesh mesh_;
+  Mesh mesh_;
 
   // NonCopyable
   MeshRender(const MeshRender& c);

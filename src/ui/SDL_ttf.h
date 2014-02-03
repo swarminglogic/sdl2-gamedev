@@ -10,6 +10,6 @@
  * SDL ttf header wrapper
  * @author SwarmingLogic (Roald Fernandez)
  */
-CREATE_RAII(TTF_Font,     TTF_CloseFont)       FontPtr;
+CREATE_RAII_UP(TTF_Font,     TTF_CloseFont)       FontPtr;
 
 #endif

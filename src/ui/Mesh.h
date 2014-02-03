@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <memory>
 #include <extern/tiny_obj_loader.h>
-#include <glm/glm.hpp>
 #include <ui/SDL_opengl.h>
 #include <util/Asset.h>
 #include <util/FileMonitor.h>
@@ -15,16 +15,17 @@
 
 
 /**
- * ObjMesh class
+ * Mesh class
  *
  * @author SwarmingLogic (Roald Fernandez)
  */
-class ObjMesh
+class Mesh
 {
 public:
-  ObjMesh(const AssetMesh& meshfile);
-  virtual ~ObjMesh();
+  Mesh(const AssetMesh& meshfile);
+  virtual ~Mesh();
 
+  bool isEmpty() const;
   size_t getShapeCount() const;
   GLsizei getIndicesCount(size_t shapeIndex) const;
   GLuint getIndexBuffer(size_t shapeIndex) const;
@@ -34,7 +35,7 @@ public:
   const tinyobj::material_t& getMaterial(size_t shapeIndex) const;
   tinyobj::shape_t& getShape(size_t shapeIndex) const;
 
-  void load();
+  bool load();
   bool isUpdated();
 
   bool hasUVdata(size_t shapeIndex) const;
@@ -70,8 +71,10 @@ private:
   Timer timer_;
 
   // NonCopyable
-  ObjMesh(const ObjMesh& c);
-  ObjMesh& operator=(const ObjMesh& c);
+  Mesh(const Mesh& c);
+  Mesh& operator=(const Mesh& c);
 };
+
+typedef std::shared_ptr<Mesh> MeshShPtr;
 
 #endif

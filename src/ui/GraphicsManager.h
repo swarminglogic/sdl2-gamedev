@@ -49,9 +49,9 @@ private:
   void initalizeOpenGL(const ViewConfig& viewConfig);
 
   Log log_;
-  WindowPtr window_;
+  SdlWindowPtr window_;
   Size screenSize_;
-  GLContextPtr context_;
+  SdlGLContextPtr context_;
   bool isFullScreen_;
   bool isVSync_;
   bool isOpenGlDebugEnabled_;

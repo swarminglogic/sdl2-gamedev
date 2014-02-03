@@ -11,11 +11,11 @@
  * @author SwarmingLogic (Roald Fernandez)
  */
 
-CREATE_RAII(SDL_Surface,  SDL_FreeSurface)     SurfacePtr;
-CREATE_RAII(SDL_Texture,  SDL_DestroyTexture)  TexturePtr;
-CREATE_RAII(SDL_Renderer, SDL_DestroyRenderer) RendererPtr;
-CREATE_RAII(SDL_Window,   SDL_DestroyWindow)   WindowPtr;
+CREATE_RAII_UP(SDL_Surface,  SDL_FreeSurface)     SdlSurfacePtr;
+CREATE_RAII_UP(SDL_Texture,  SDL_DestroyTexture)  SdlTexturePtr;
+CREATE_RAII_UP(SDL_Renderer, SDL_DestroyRenderer) SdlRendererPtr;
+CREATE_RAII_UP(SDL_Window,   SDL_DestroyWindow)   SdlWindowPtr;
 
-CREATE_RAII2(SDL_GLContext,   SDL_GL_DeleteContext)   GLContextPtr;
+CREATE_RAII2_UP(SDL_GLContext,   SDL_GL_DeleteContext)   SdlGLContextPtr;
 
 #endif

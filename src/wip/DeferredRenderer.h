@@ -10,7 +10,6 @@
 #include <ui/BasicRender.h>
 #include <ui/DeferredQuadRender.h>
 #include <ui/MeshRender.h>
-#include <ui/ObjMesh.h>
 #include <ui/SDL_opengl.h>
 #include <ui/ShaderProgram.h>
 #include <ui/Surface.h>

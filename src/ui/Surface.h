@@ -1,6 +1,8 @@
 #ifndef UI_SURFACE_H
 #define UI_SURFACE_H
 
+#include <memory>
+
 #include <math/Rect.h>
 #include <ui/SDL.h>
 #include <ui/SDL_opengl.h>
@@ -37,6 +39,7 @@ public:
    * @note Takes ownership!
    */
   void setSurface(SDL_Surface& surface);
+  SDL_Surface* getSurface();
 
   void setGlTextureId(GLuint textureId, Size size);
 
@@ -74,7 +77,7 @@ private:
   void releaseResources();
 
   Log log_;
-  SurfacePtr surface_;
+  SdlSurfacePtr surface_;
   GLuint textureId_;
   Rect imageRect_;
   bool isMaxFiltering_;
@@ -83,5 +86,8 @@ private:
   Surface(const Surface& c);
   Surface& operator=(const Surface& c);
 };
+
+
+typedef std::shared_ptr<Surface> SurfaceShPtr;
 
 #endif

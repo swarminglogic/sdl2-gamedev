@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <math/Size.h>
 #include <ui/BasicRender.h>
-#include <ui/ObjMesh.h>
+#include <ui/Mesh.h>
 #include <ui/SDL_opengl.h>
 #include <ui/ShaderProgram.h>
 #include <ui/Surface.h>
@@ -45,7 +45,7 @@ private:
   Size viewport_;
 
   Surface texture_;
-  ObjMesh mesh_;
+  Mesh mesh_;
   ShaderProgram shader_;
   GLint mvpID_;
   GLint textureId_;
