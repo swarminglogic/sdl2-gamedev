@@ -23,6 +23,10 @@ public:
     return dist(device_);
   }
 
+  static bool getBool() {
+    return get() > 0.5f;
+  }
+
   static int getInt(int min, int max) {
     assert(min <= max);
     std::uniform_int_distribution<int> dist(min, max);
@@ -51,7 +55,4 @@ private:
   Random& operator=(const Random& c);
 };
 
-std::mt19937 Random::device_ = std::mt19937(std::random_device{}());
-std::uniform_real_distribution<float> Random::dist_(0.0f, 1.0f);
-unsigned int Random::seed_(0);
 #endif
