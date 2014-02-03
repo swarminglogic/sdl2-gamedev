@@ -19,7 +19,7 @@ CameraFpv::CameraFpv(const glm::vec3& pos,
     localTime_(),
     angles_(0.0f, 0.0f),
     targetDistanceOffset_(0.0f),
-    cameraAngle_(new MouseRelMoveInput(0.2f,
+    cameraAngle_(new MouseRelMoveInput(0.003f,
                                        Pointf(0.0f, 0.0f)))
 {
   localTime_.start();
