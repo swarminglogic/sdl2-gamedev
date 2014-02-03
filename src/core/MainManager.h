@@ -13,6 +13,7 @@
 
 class BasicRender;
 class Log;
+class PhysicsWorld;
 class Timer;
 
 /**
@@ -48,6 +49,9 @@ public:
 
   Uint32 getRuntimeTics() const;
   float getRuntimeSecs() const;
+  float getCurrentTimeDelta() const;
+
+  PhysicsWorld& getPhysicsWorld();
 
 private:
   MainManager();
@@ -68,6 +72,8 @@ private:
   std::unique_ptr<GraphicsManager> graphics_;
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;
+  std::unique_ptr<PhysicsWorld> physics_;
+
   // ImageRender fpsRender_;
   TextBoxTextRender textRenderer_;
 
@@ -76,6 +82,8 @@ private:
 
   bool isRunning_;
   FpsCounter fpsCounter_;
+
+  float currentTimeDelta_;
 };
 
 #endif

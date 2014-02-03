@@ -4,6 +4,7 @@
 
 #include <io/Keyboard.h>
 #include <io/TextBoxText.h>
+#include <model/PhysicsWorld.h>
 #include <ui/BasicRender.h>
 #include <ui/SDL.h>
 #include <ui/SDL_image.h>
@@ -28,28 +29,19 @@ MainManager::MainManager()
     graphics_(nullptr),
     runtime_(nullptr),
     basicRender_(nullptr),
+    physics_(nullptr),
     // fpsRender_(),
     textRenderer_(),
     font_(nullptr),
     fontColor_{180u, 190u, 200u, 255u},
     isRunning_(true),
-    fpsCounter_(30)
+    fpsCounter_(30),
+    currentTimeDelta_(1.0f/60.0f)
 {
   initSDL();
   initSDLimg();
   initSDLttf();
   initSDLmixer();
-
-  font_.reset(TTF_OpenFont(AssetFont("Minecraftia.ttf").path().c_str(), 8));
-
-  graphics_.reset(new GraphicsManager);
-  runtime_.reset(new Timer);
-  runtime_->start();
-
-  // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
-  // class, which manages the renderer?
-  // basicRender_.reset(new DeferredRenderer);
-  basicRender_.reset(new DeferredRenderer);
 }
 
 MainManager::~MainManager()
@@ -66,6 +58,19 @@ MainManager& MainManager::instance()
 
 void MainManager::initialize()
 {
+
+  font_.reset(TTF_OpenFont(AssetFont("Minecraftia.ttf").path().c_str(), 8));
+
+  graphics_.reset(new GraphicsManager);
+  runtime_.reset(new Timer);
+  runtime_->start();
+
+  // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
+  // class, which manages the renderer?
+  // basicRender_.reset(new DeferredRenderer);
+  basicRender_.reset(new DeferredRenderer);
+  physics_.reset(new PhysicsWorld),
+
   log_.i("Inititalizing resources.");
   basicRender_->initialize();
   basicRender_->handleResize(graphics_->getScreenSize().w(),
@@ -130,13 +135,27 @@ float MainManager::getRuntimeSecs() const
   return runtime_->getSeconds();
 }
 
+float MainManager::getCurrentTimeDelta() const
+{
+  return currentTimeDelta_;
+}
+
+
+PhysicsWorld& MainManager::getPhysicsWorld()
+{
+  return *physics_.get();
+}
+
 
 void MainManager::run() {
   assert(basicRender_ && "You need a renderer, fool!");
 
   SDL_Event event;
+
   bool isDirty = true;
   uint frameNumber = 0;
+  float previousTime = runtime_->getSeconds();
+
   while (isRunning_) {
 #ifndef NDEBUG
     const char* err = SDL_GetError();
@@ -152,6 +171,11 @@ void MainManager::run() {
     }
 
     ++frameNumber;
+
+    currentTimeDelta_ = runtime_->getSeconds() - previousTime;
+    previousTime = runtime_->getSeconds();
+    physics_->stepSimulation(currentTimeDelta_);
+
     basicRender_->render(runtime_->getSeconds());
     textRenderer_.render(0);
     // fpsRender_.render(0);
