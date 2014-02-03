@@ -2,6 +2,7 @@
 #define MATH_TESTMATHUTIL_H
 
 #include <math/MathUtil.h>
+#include <math/Rectf.h>
 
 #include <cxxtest/TestSuite.h>
 
@@ -189,6 +190,22 @@ public:
     TS_ASSERT(MathUtil::isSquare(789*789));
     TS_ASSERT(!MathUtil::isSquare(789*789+1));
     TS_ASSERT(!MathUtil::isSquare(789*789-1));
+  }
+
+
+  void testIsRectangleOverlap()
+  {
+    Rectf rectA(0, 0, 1, 1);
+    Rectf rectB(2, 2, 1, 1);
+    TS_ASSERT(!MathUtil::isRectangleOverlap(rectA, rectB));
+
+    rectB.x(1.001f);
+    rectB.y(1.001f);
+    TS_ASSERT(!MathUtil::isRectangleOverlap(rectA, rectB));
+
+    rectB.x(0.999f);
+    rectB.y(0.999f);
+    TS_ASSERT(MathUtil::isRectangleOverlap(rectA, rectB));
   }
 
 private:

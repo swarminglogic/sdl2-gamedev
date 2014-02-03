@@ -4,6 +4,7 @@
 #include <cassert>
 
 #include <math/Pointf.h>
+#include <math/Rectf.h>
 #include <math/Size.h>
 #include <math/Sizef.h>
 
@@ -102,3 +103,16 @@ Pointf MathUtil::nextPow2TexCoord(const Pointf& original,
                 nextPow2TexCoord(original.y(), dimension.h()));
 }
 
+
+bool MathUtil::isRectangleOverlap(const Rectf& a, const Rectf& b)
+{
+  const float ax2 = a.x() + a.w();
+  const float ay2 = a.y() + a.h();
+  const float bx2 = b.x() + b.w();
+  const float by2 = b.y() + b.h();
+
+  return (a.x() < bx2   &&
+          ax2   > b.x() &&
+          a.y() < by2   &&
+          ay2   > b.y());
+}

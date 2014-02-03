@@ -1,6 +1,7 @@
 #ifndef MATH_MATHUTIL_H
 #define MATH_MATHUTIL_H
 
+class Rectf;
 class Pointf;
 class Size;
 
@@ -94,6 +95,8 @@ public:
 
   static Pointf nextPow2TexCoord(const Pointf& original,
                                  const Size& dimension);
+
+  static bool isRectangleOverlap(const Rectf& a, const Rectf& b);
 
 private:
   MathUtil();
