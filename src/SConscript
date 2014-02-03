@@ -10,14 +10,25 @@ cppFilesPrune = Glob('main.cpp') + Glob('Test*.cpp') + Glob('*/Test*.cpp') + Glo
 testFiles     = Glob('Test*.h')   + Glob('*/Test*.h')   + Glob('*/*/Test*.h')
 sourceFiles = list(set(cppFiles) - set(cppFilesPrune))
 
-pathBoost = os.environ["BOOSTDIR"];
-pathQt    = os.environ["QTDIR"];
-pathEigen = os.environ["EIGENDIR"];
-pathSdl  = os.environ["SDL2DIR"];
-pathGlm   = os.environ["GLMDIR"];
+pathBoost  = os.environ["BOOSTDIR"];
+pathQt     = os.environ["QTDIR"];
+pathEigen  = os.environ["EIGENDIR"];
+pathSdl    = os.environ["SDL2DIR"];
+pathGlm    = os.environ["GLMDIR"];
 pathAngel  = os.environ["ANGELSCRIPTDIR"];
+pathBullet = os.environ["BULLETDIR"];
 
 libs = ['SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
+        'BulletCollision',
+        'BulletDynamics',
+        # 'BulletFileLoader',
+        # 'BulletSoftBody',
+        # 'BulletWorldImporter',
+        # 'BulletXmlWorldImporter',
+        # 'ConvexDecomposition',
+        # 'GIMPACTUtils',
+        # 'HACD',
+        'LinearMath',
         'angelscript', 'boost_system', 'boost_filesystem',
         'GL', 'GLU', 'm', 'dl', 'rt']
 
@@ -29,21 +40,24 @@ libpaths = [
    pathBoost + "/lib",
    #    pathQt + "/lib",
    pathAngel + '/lib',
-   pathSdl + '/lib']
+   pathSdl + '/lib',
+   pathBullet + '/lib']
 
 sourcepaths = [
-    base,
-    pathBoost + '/include',
-    pathGlm,
-    pathAngel + '/include',
- #   os.environ["CXXTESTDIR"],
-    #    pathQt + "/include",
-    #    pathEigen
-    pathSdl + "/include/"]
+   base,
+   pathBoost + '/include',
+   pathGlm,
+   pathAngel + '/include',
+   pathBullet + '/include/bullet/',
+   #   os.environ["CXXTESTDIR"],
+   #    pathQt + "/include",
+   #    pathEigen
+   pathSdl + "/include/"]
 
 
 cppflags = ['-O0', '-g', '-gdwarf-2', '-fno-strict-aliasing',
-            '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED']
+            '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED',
+            '-DGLM_FORCE_RADIANS']
 #cppflags = ['-O3', '-DGL_GLEXT_PROTOTYPES', '-D_REENTRANT']
 
 
@@ -61,6 +75,7 @@ for macro in macroDefinitions:
 cppflags.extend(['-isystem', pathBoost + '/include',
                  '-isystem', pathSdl + '/include/',
                  '-isystem', pathGlm,
+                 '-isystem', pathBullet + '/include/bullet',
                  '-isystem', pathAngel + '/include',
                  '-isystem', pathAngel + '/include/angelscript'
               ])

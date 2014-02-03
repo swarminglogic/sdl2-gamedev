@@ -1,5 +1,4 @@
-import os, re, imp
-
+import os, re, imp, hashlib, base64
 Import('env')
 
 base ='#/src'
@@ -12,7 +11,8 @@ sourceFiles = list(set(cppFiles) - set(cppFilesPrune))
 
 # # Macros definitions
 cppflags = ['-O0', '-g', '-std=c++11', '-fno-strict-aliasing',
-            '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED']
+            '-D_REENTRANT', '-DBOOST_FILESYSTEM_NO_DEPRECATED',
+            '-DLOG2STREAM_DISABLED']
 
 macroDefinitions = [
 #   'SLOW_TESTS',  # ENABLES SLOW TESTS
@@ -23,6 +23,7 @@ for macro in macroDefinitions:
 pathBoost = os.environ['BOOSTDIR'];
 pathSdl  = os.environ['SDL2DIR'];
 pathAngel  = os.environ["ANGELSCRIPTDIR"];
+pathBullet = os.environ["BULLETDIR"];
 pathCxxTest = os.environ['CXXTESTDIR'];
 pathCxxTestBuilder = pathCxxTest + '/build_tools/SCons/'
 
@@ -38,14 +39,54 @@ env_test.Replace(CXXTEST_OPTS = '--have-eh')
 
 sourcepaths = [pathBoost + "/include/", pathSdl + '/include/', pathAngel + '/include']
 libs = ['main', 'angeladdon', 'SDL2', 'SDL2_image', 'SDL2_ttf', 'SDL2_mixer',
+        'BulletCollision', 'BulletDynamics', 'LinearMath',
         'angelscript', 'boost_system', 'boost_filesystem',
         'GL', 'GLU']
-libpaths = [pathBoost + '/lib', pathSdl + '/lib', pathAngel + '/lib', '#/lib']
+libpaths = [pathBoost + '/lib', pathSdl + '/lib', pathAngel + '/lib', '#/lib',
+            pathBullet + '/lib']
 env_test.Replace(CPPPATH=sourcepaths)
 env_test.Replace(LIBS=libs)
 env_test.Replace(LIBPATH=libpaths)
 env_test.Replace(CXX=env['CXX'])
-for tf in testFiles:
+
+# TODO, only rebuild if TestFILE.h is modified from last compilation.
+# load table of md5sum table
+def hashfile(afile, hasher, blocksize=65536):
+   buf = afile.read(blocksize)
+   while len(buf) > 0:
+      hasher.update(buf)
+      buf = afile.read(blocksize)
+   return hasher.digest()
+
+def loadHashTable(hashTableFilename):
+   table={}
+   if os.path.isfile(hashTableFilename):
+      hashTableFile=open(hashTableFilename, 'r')
+      for line in hashTableFile.readlines():
+         v = line.strip().split(' ')
+         table[v[1]] = v[0]
+   return table
+
+def checkHash(table, hashvalue):
+   if hashvalue in table:
+      return table[hashvalue]
+   else:
+      return ''
+
+hashTable = loadHashTable('hashTable')
+hashTableFile=open('hashTable', 'w')
+
+for tf in testFiles: #and also in the table with different md5sum
+   filepath='../src/'+str(tf)
+   if os.path.isfile(filepath):
+      testfile = open(filepath, 'rb')
+      testfileMd5 = hashfile(testfile, hashlib.md5())
+      base64hash = base64.b64encode(testfileMd5)
+      hashTableFile.write(base64hash+" "+str(tf) + '\n')
+      if (checkHash(hashTable, str(tf)) == base64hash):
+         continue
+
+   # update md5sum table
    test = env_test.CxxTest('#/bin/tests/Test' + re.search('.*Test(.+?)\.h',
                                                           str(tf)).group(1), tf)
    Clean(test, '#/build')

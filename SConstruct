@@ -24,4 +24,3 @@ VariantDir('build', 'src')
 Export('env')
 SConscript('build/SConscript')
 SConscript('build/SConscript_tests')
-
