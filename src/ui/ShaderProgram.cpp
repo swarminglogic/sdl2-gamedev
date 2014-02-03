@@ -5,7 +5,14 @@
 #include <util/File.h>
 
 
+
 ShaderProgram::ShaderProgram()
+  : ShaderProgram(std::map<ShaderType, AssetShader>{})
+{
+}
+
+
+ShaderProgram::ShaderProgram(const std::map<ShaderType, AssetShader>& shaders)
   : log_("ShaderProgram"),
     shaders_(),
     isShaderInformationModified_(true),
@@ -15,6 +22,7 @@ ShaderProgram::ShaderProgram()
                                       this),
                             1000)
 {
+  setShader(shaders);
 }
 
 
@@ -44,6 +52,13 @@ void ShaderProgram::setShader(ShaderType type, const AssetShader& shaderfile)
   isShaderInformationModified_ = true;
 }
 
+void ShaderProgram::setShader(const std::map<ShaderType, AssetShader>& shaders)
+{
+  for (auto& shader : shaders)
+    setShader(shader.first, shader.second);
+}
+
+
 
 void ShaderProgram::removeShader(ShaderType type)
 {
@@ -71,10 +86,15 @@ void ShaderProgram::guard_isShaderModified()
 }
 
 
-void ShaderProgram::compile()
+bool ShaderProgram::compile()
 {
-  GLuint newProgramId = glCreateProgram();
   log_.i("Creating shader program from shader files.");
+  for (auto& shader : shaders_) {
+    if (!shader.second.exists())
+      return false;
+  }
+
+  GLuint newProgramId = glCreateProgram();
 
   // Compile shaders.
   std::vector<GLuint> shaderIds;
@@ -96,7 +116,7 @@ void ShaderProgram::compile()
       // Delete all shaders compiled up until this point.
       for (auto id : shaderIds)
         glDeleteShader(id);
-      return;
+      return false;
     }
   }
 
@@ -109,9 +129,8 @@ void ShaderProgram::compile()
     for (auto id : shaderIds)
       glDeleteShader(id);
     glDeleteProgram(newProgramId);
-    return;
+    return false;
   }
-
 
   // CLEANUP
   deleteProgram();
@@ -122,6 +141,7 @@ void ShaderProgram::compile()
   }
 
   isShaderInformationModified_ = false;
+  return true;
 }
 
 

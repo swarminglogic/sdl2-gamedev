@@ -33,12 +33,15 @@ public:
   };
 
   ShaderProgram();
+  ShaderProgram(const std::map<ShaderType, AssetShader>& shaders);
+
   virtual ~ShaderProgram();
 
   GLuint get() const;
 
   void clear();
   void setShader(ShaderType type, const AssetShader& shaderfile);
+  void setShader(const std::map<ShaderType, AssetShader>& shaders);
 
   /**
    * Deletes the registered
@@ -56,8 +59,9 @@ public:
 
   /**
    * Destroys existing program, reads files, and compiles shaders.
+   * Returns true if compilation successful, false otherwise.
    */
-  void compile();
+  bool compile();
 
 private:
   void deleteProgram();
@@ -84,4 +88,5 @@ private:
   ShaderProgram& operator=(const ShaderProgram& c);
 };
 
+typedef std::shared_ptr<ShaderProgram> ShaderProgramShPtr;
 #endif
