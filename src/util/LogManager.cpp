@@ -67,7 +67,8 @@ void LogManager::log(LogLevel level,
     else
       log2Stream(formatted);
   }
-
+#else
+  (void)level; (void)loggerName; (void)message;
 #endif
 }
 
@@ -76,6 +77,8 @@ void LogManager::log2Stream(const std::string& formatted) const
 {
 #ifndef LOG2STREAM_DISABLED
   std::cout << formatted;
+#else
+  (void)formatted;
 #endif
 }
 
@@ -86,6 +89,8 @@ void LogManager::log2File(const std::string& formatted) const
   if (logfilePath_.empty())
     return;
   FileUtil::append(logfilePath_, formatted);
+#else
+  (void)formatted;
 #endif
 }
 

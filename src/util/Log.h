@@ -6,6 +6,8 @@
 #include <sstream>
 #include <string>
 
+#include <math/Pointf.h>
+#include <math/Rectf.h>
 #include <util/Exception.h>
 #include <util/LogManager.h>
 
@@ -77,6 +79,11 @@ public:
   { lhs.streamLog_ << f; return lhs; }
   friend const Log& operator<<(const Log& lhs, const double d)
   { lhs.streamLog_ << d; return lhs; }
+  friend const Log& operator<<(const Log& lhs, const Pointf& p)
+  { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ") [Pointf]"; return lhs; }
+  friend const Log& operator<<(const Log& lhs, const Rectf& p)
+  { lhs.streamLog_ << "(" << p.x() << ", " << p.y() << ", "
+                   << p.w() << ", " << p.h() << ") [Rectf]"; return lhs; }
 
 
 private:
