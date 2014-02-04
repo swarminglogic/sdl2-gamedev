@@ -31,7 +31,7 @@ MainManager::MainManager()
     runtime_(nullptr),
     basicRender_(nullptr),
     physics_(nullptr),
-    // fpsRender_(),
+    resourceManager_(new ResourceManager),
     textRenderer_(),
     font_(nullptr),
     fontColor_{180u, 190u, 200u, 255u},
@@ -144,14 +144,22 @@ float MainManager::getCurrentTimeDelta() const
 
 PhysicsWorld& MainManager::getPhysicsWorld()
 {
+  assert(physics_);
   return *physics_.get();
 }
 
 ResourceManager& MainManager::getResourceManager()
 {
-  return *resouceManager_;
+  assert(resourceManager_);
+  return *resourceManager_;
 
 }
+
+ResourceManager& MainManager::resources()
+{
+  return instance().getResourceManager();
+}
+
 
 
 

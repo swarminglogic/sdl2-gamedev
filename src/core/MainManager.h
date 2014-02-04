@@ -53,8 +53,10 @@ public:
   float getCurrentTimeDelta() const;
 
   PhysicsWorld& getPhysicsWorld();
-
   ResourceManager& getResourceManager();
+
+  // Short-hand method
+  static ResourceManager& resources();
 
 private:
   MainManager();
@@ -76,7 +78,7 @@ private:
   std::unique_ptr<Timer> runtime_;
   std::unique_ptr<BasicRender> basicRender_;
   std::unique_ptr<PhysicsWorld> physics_;
-  std::unique_ptr<ResourceManager> resouceManager_;
+  std::unique_ptr<ResourceManager> resourceManager_;
 
   // ImageRender fpsRender_;
   TextBoxTextRender textRenderer_;
