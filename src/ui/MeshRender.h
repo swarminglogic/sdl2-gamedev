@@ -17,7 +17,7 @@
 class MeshRender : public BasicRender
 {
 public:
-  MeshRender(const AssetMesh& meshfile);
+  MeshRender(MeshShPtr mesh);
 
   virtual ~MeshRender();
   virtual void render(float currentTime) override;
@@ -25,7 +25,7 @@ public:
   void refresh();
 
 private:
-  Mesh mesh_;
+  MeshShPtr mesh_;
 
   // NonCopyable
   MeshRender(const MeshRender& c);

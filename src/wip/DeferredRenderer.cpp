@@ -1,6 +1,8 @@
 #include <wip/DeferredRenderer.h>
 
+#include <core/MainManager.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <io/ResourceManager.h>
 #include <ui/BaseCamera.h>
 #include <ui/CameraFpv.h>
 #include <ui/CameraSpherical.h>
@@ -16,13 +18,9 @@ DeferredRenderer::DeferredRenderer()
     projectionMat_(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)),
     viewport_(),
     texture_(),
-    mesh_(AssetMesh("sss.cobj")),
-    // mesh2_(new MeshRender(AssetMesh("teapot.cobj"))),
-    // mesh3_(new MeshRender(AssetMesh("head.cobj"))),
-    // mesh4_(new MeshRender(AssetMesh("dragon.cobj"))),
-    // mesh5_(new MeshRender(AssetMesh("buddah.cobj"))),
+    mesh_(MainManager::resources().loadMesh("sss.cobj")),
     sceneBoxTexture_(),
-    sceneBox_(AssetMesh("scenebox.cobj")),
+    sceneBox_(MainManager::resources().loadMesh("scenebox.cobj")),
     shader_(),
     mvpID_(-1),
     modelViewMatID_(-1),
@@ -167,10 +165,6 @@ void DeferredRenderer::render(float time)
     updateShader();
 
   mesh_.refresh();
-  if (mesh2_) mesh2_->refresh();
-  if (mesh3_) mesh3_->refresh();
-  if (mesh4_) mesh4_->refresh();
-  if (mesh5_) mesh5_->refresh();
   sceneBox_.refresh();
   camera_->update();
   updateViewMatrix();
@@ -207,10 +201,6 @@ void DeferredRenderer::render(float time)
       glUniform1f(textureRepeatID_, 1.0f);
   }
   mesh_.render(0.0f);
-  if (mesh2_) mesh2_->render(0.0f);
-  if (mesh3_) mesh3_->render(0.0f);
-  if (mesh4_) mesh4_->render(0.0f);
-  if (mesh5_) mesh5_->render(0.0f);
 
   if (textureId_ >= 0) {
     sceneBoxTexture_.glBind();

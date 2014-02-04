@@ -5,7 +5,6 @@
 #include <memory>
 
 #include <glm/glm.hpp>
-#include <memory>
 #include <math/Size.h>
 #include <ui/BasicRender.h>
 #include <ui/DeferredQuadRender.h>
@@ -55,10 +54,6 @@ private:
   // Regular render members
   Surface texture_;
   MeshRender mesh_;
-  std::unique_ptr<MeshRender> mesh2_;
-  std::unique_ptr<MeshRender> mesh3_;
-  std::unique_ptr<MeshRender> mesh4_;
-  std::unique_ptr<MeshRender> mesh5_;
   Surface sceneBoxTexture_;
   MeshRender sceneBox_;
   ShaderProgram shader_;
