@@ -23,6 +23,13 @@ Surface::Surface()
 }
 
 
+Surface::Surface(const AssetImage& imagefile)
+  : Surface(nullptr)
+{
+  loadImage(imagefile);
+}
+
+
 Surface::~Surface()
 {
   releaseResources();

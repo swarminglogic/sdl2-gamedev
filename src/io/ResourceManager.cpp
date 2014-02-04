@@ -23,10 +23,10 @@ ResourceManager::~ResourceManager()
 SurfaceShPtr
 ResourceManager::load(const AssetImage& image)
 {
+  log_.d() << "Trying to load image: " << image.path() << Log::end;
   SurfaceShPtr resource = loadedImages_[image];
   if (!resource) {
-    resource.reset(new Surface);
-    resource->loadImage(image);
+    resource.reset(new Surface(image));
 
     // Check that load went ok, and store in table if so
     if (resource->getSurface())
@@ -72,6 +72,15 @@ ShaderProgramShPtr ResourceManager::load(const ShaderKey& shaders)
 }
 
 
+ShaderProgramShPtr ResourceManager::loadShader(const ShaderfileKey& shaders)
+{
+  (void)shaders;
+  ShaderKey key;
+  for (auto& shader : shaders)
+    key[shader.first] = AssetShader(shader.second);
+  return load(key);
+}
+
 
 SurfaceShPtr ResourceManager::loadImage(const std::string&  imagefile)
 {
@@ -82,4 +91,5 @@ MeshShPtr ResourceManager::loadMesh(const std::string&  meshfile)
 {
   return load(AssetMesh(meshfile));
 }
+
 

@@ -20,6 +20,7 @@ class Surface
 {
 public:
   Surface();
+  Surface(const AssetImage& imagefile);
 
   /**
    * Create based on SDL_Surface.

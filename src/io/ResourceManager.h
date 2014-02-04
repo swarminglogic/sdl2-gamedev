@@ -39,6 +39,7 @@ public:
   typedef std::shared_ptr<Surface> SurfaceShPtr;
   typedef std::shared_ptr<Mesh> MeshShPtr;
   typedef std::map<ShaderProgram::ShaderType, AssetShader> ShaderKey;
+  typedef std::map<ShaderProgram::ShaderType, std::string> ShaderfileKey;
 
   ResourceManager();
   virtual ~ResourceManager();
@@ -54,6 +55,8 @@ public:
   MeshShPtr loadMesh(const std::string&  meshfile);
 
   ShaderProgramShPtr load(const ShaderKey& shaders);
+  ShaderProgramShPtr loadShader(const ShaderfileKey& shaders);
+
 
 private:
   Log log_;
