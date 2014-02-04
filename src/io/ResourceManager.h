@@ -48,14 +48,18 @@ public:
    * If the image isn't found, it returns a nullptr.
    */
   SurfaceShPtr load(const AssetImage& image);
+  SurfaceShPtr loadImage(const std::string&  imagefile);
+
   MeshShPtr load(const AssetMesh& mesh);
+  MeshShPtr loadMesh(const std::string&  meshfile);
+
   ShaderProgramShPtr load(const ShaderKey& shaders);
 
 private:
   Log log_;
 
-  std::map<AssetImage, SurfaceShPtr> loadedImages_;
-  std::map<AssetMesh, MeshShPtr> loadedMeshes_;
+  std::map<AssetImage, SurfaceShPtr>      loadedImages_;
+  std::map<AssetMesh, MeshShPtr>          loadedMeshes_;
   std::map<ShaderKey, ShaderProgramShPtr> loadedShaders_;
 
   // NonCopyable

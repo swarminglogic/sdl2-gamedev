@@ -7,7 +7,10 @@
 
 
 ResourceManager::ResourceManager()
-  : log_("ResouceManager")
+  : log_("ResouceManager"),
+    loadedImages_(),
+    loadedMeshes_(),
+    loadedShaders_()
 {
 }
 
@@ -37,17 +40,14 @@ ResourceManager::load(const AssetImage& image)
 
 MeshShPtr ResourceManager::load(const AssetMesh& mesh)
 {
+  log_.d() << "Trying to load mesh: " << mesh.path() << Log::end;
   MeshShPtr resource = loadedMeshes_[mesh];
   if (!resource) {
-    try {
-      resource.reset(new Mesh(mesh));
-      resource->load();
-      if (!resource->isEmpty())
-        loadedMeshes_[mesh] = resource;
-      else
-        resource.reset();
-    } catch (const Exception& e) {
+    if (!FileUtil::exists(mesh.path())) {
       resource.reset();
+    } else {
+      resource.reset(new Mesh(mesh));
+      loadedMeshes_[mesh] = resource;
     }
   }
   return resource;
@@ -70,3 +70,16 @@ ShaderProgramShPtr ResourceManager::load(const ShaderKey& shaders)
   }
   return resource;
 }
+
+
+
+SurfaceShPtr ResourceManager::loadImage(const std::string&  imagefile)
+{
+  return load(AssetImage(imagefile));
+}
+
+MeshShPtr ResourceManager::loadMesh(const std::string&  meshfile)
+{
+  return load(AssetMesh(meshfile));
+}
+

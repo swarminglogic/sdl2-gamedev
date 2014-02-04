@@ -84,6 +84,25 @@ public:
     TS_ASSERT_EQUALS(ptr2, ptr3);
   }
 
+
+  void testShortHand() {
+    ResourceManager rm;
+    MeshShPtr ptr = rm.loadMesh("doesntexist.cobj");
+    TS_ASSERT(!ptr);
+
+    MeshShPtr ptr2 = rm.loadMesh("sss.cobj");
+    TS_ASSERT(ptr2);
+    MeshShPtr ptr3 = rm.loadMesh("sss.cobj");
+    TS_ASSERT_EQUALS(ptr2, ptr3);
+
+    MeshShPtr ptr4 = rm.loadMesh("scenebox.cobj");
+    MeshShPtr ptr5 = rm.loadMesh("scenebox.cobj");
+    TS_ASSERT_EQUALS(ptr4, ptr5);
+    TS_ASSERT_DIFFERS(ptr3, ptr4);
+    TS_ASSERT_DIFFERS(ptr3, ptr5);
+  }
+
+
 private:
 };
 
