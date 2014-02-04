@@ -21,10 +21,13 @@ public:
   };
 
   Asset();
+
   virtual ~Asset();
 
   Asset::Type type() const;
   std::string path() const;
+  std::string filename() const;
+
 
   static std::string getBasePath();
 
@@ -35,7 +38,8 @@ public:
 
 protected:
   Asset::Type type_;
-  std::string path_;
+  std::string subfolder_;
+  std::string filename_;
 
 private:
   static const std::string base_;
@@ -53,7 +57,9 @@ inline bool operator<(const Asset& lhs, const Asset& rhs) {
 
 
 inline bool operator==(const Asset& lhs, const Asset& rhs) {
-  return (lhs.type_ == rhs.type_) && (lhs.path_ == rhs.path_);
+  return ((lhs.type_ == rhs.type_) &&
+          (lhs.subfolder_ == rhs.subfolder_) &&
+          (lhs.filename_ == rhs.filename_));
 }
 inline bool operator!=(const Asset& lhs, const Asset& rhs) {
   return !(lhs == rhs);
@@ -64,6 +70,7 @@ inline bool operator!=(const Asset& lhs, const Asset& rhs) {
 class AssetShader : public Asset
 {
 public:
+  AssetShader();
   AssetShader(const std::string& resource);
   virtual ~AssetShader();
 };
@@ -71,6 +78,7 @@ public:
 class AssetImage : public Asset
 {
 public:
+  AssetImage();
   AssetImage(const std::string& resource);
   virtual ~AssetImage();
 };
@@ -78,6 +86,7 @@ public:
 class AssetFont : public Asset
 {
 public:
+  AssetFont();
   AssetFont(const std::string& resource);
   virtual ~AssetFont();
 };
@@ -85,6 +94,7 @@ public:
 class AssetMesh : public Asset
 {
 public:
+  AssetMesh();
   AssetMesh(const std::string& resource);
   virtual ~AssetMesh();
 };

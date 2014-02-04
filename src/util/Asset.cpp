@@ -5,7 +5,8 @@ const std::string Asset::base_("./assets/");
 
 Asset::Asset()
   : type_(INVALID_TYPE),
-    path_("")
+    subfolder_(""),
+    filename_("")
 {
 }
 
@@ -22,7 +23,12 @@ Asset::Type Asset::type() const
 
 std::string Asset::path() const
 {
-  return base_ + path_;
+  return base_ + subfolder_ + filename_;
+}
+
+std::string Asset::filename() const
+{
+  return filename_;
 }
 
 
@@ -33,36 +39,44 @@ std::string Asset::getBasePath()
 
 
 // Shader Asset
+AssetShader::AssetShader() : AssetShader("") {}
 AssetShader::AssetShader(const std::string& resource)
 {
   type_ = SHADER;
-  path_ = std::string("shaders/") + resource;
+  subfolder_ = std::string("shaders/");
+  filename_  = resource;
 }
 AssetShader::~AssetShader(){}
 
 
 // Image Asset
+AssetImage::AssetImage() : AssetImage("") {}
 AssetImage::AssetImage(const std::string& resource)
 {
   type_ = IMAGE;
-  path_ = std::string("images/") + resource;
+  subfolder_ = std::string("images/");
+  filename_  = resource;
 }
 AssetImage::~AssetImage(){}
 
 
 // Font Asset
+AssetFont::AssetFont() : AssetFont("") {}
 AssetFont::AssetFont(const std::string& resource)
 {
   type_ = FONT;
-  path_ = std::string("fonts/") + resource;
+  subfolder_ = std::string("fonts/");
+  filename_  = resource;
 }
 AssetFont::~AssetFont(){}
 
 
 // Mesh Asset
+AssetMesh::AssetMesh() : AssetMesh("") {}
 AssetMesh::AssetMesh(const std::string& resource)
 {
   type_ = MESH;
-  path_ = std::string("meshes/") + resource;
+  subfolder_ = std::string("meshes/");
+  filename_  = resource;
 }
 AssetMesh::~AssetMesh(){}
