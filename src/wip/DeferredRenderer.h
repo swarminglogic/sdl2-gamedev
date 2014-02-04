@@ -52,11 +52,12 @@ private:
   Size viewport_;
 
   // Regular render members
-  Surface texture_;
+  SurfaceShPtr texture_;
   MeshRender mesh_;
-  Surface sceneBoxTexture_;
+
+  SurfaceShPtr sceneBoxTexture_;
   MeshRender sceneBox_;
-  ShaderProgram shader_;
+  ShaderProgramShPtr shader_;
   GLint mvpID_;
   GLint modelViewMatID_;
   GLint projectionMatID_;

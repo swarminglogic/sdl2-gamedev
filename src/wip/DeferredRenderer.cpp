@@ -17,11 +17,11 @@ DeferredRenderer::DeferredRenderer()
     camera_(nullptr),
     projectionMat_(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)),
     viewport_(),
-    texture_(),
+    texture_(nullptr),
     mesh_(MainManager::resources().loadMesh("sss.cobj")),
-    sceneBoxTexture_(),
+    sceneBoxTexture_(nullptr),
     sceneBox_(MainManager::resources().loadMesh("scenebox.cobj")),
-    shader_(),
+    shader_(nullptr),
     mvpID_(-1),
     modelViewMatID_(-1),
     projectionMatID_(-1),
@@ -47,25 +47,26 @@ DeferredRenderer::~DeferredRenderer()
 
 void DeferredRenderer::initialize()
 {
+
+
   glGenVertexArrays(1, &vao_);
   glBindVertexArray(vao_);
   GlState::enable(GlState::DEPTH_TEST);
   GlState::enable(GlState::CULL_FACE);
   GlState::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  shader_.setShader(ShaderProgram::VERTEX,
-                    AssetShader("deferredobjrender.vert"));
-  shader_.setShader(ShaderProgram::FRAGMENT,
-                    AssetShader("deferredobjrender.frag"));
-  updateShader();
-  // texture_.loadImage("rungholt-RGBA.png");
-  texture_.loadImage(AssetImage("uv_colorgrid.png"));
-  texture_.setIsMaxFiltering(true);
-  texture_.prepareForGl();
+  shader_ = MainManager::resources().loadShader(
+    {{ShaderProgram::VERTEX,   "deferredobjrender.vert"},
+     {ShaderProgram::FRAGMENT, "deferredobjrender.frag"}});
 
-  sceneBoxTexture_.loadImage(AssetImage("uv_browngrid.png"));
-  sceneBoxTexture_.setIsMaxFiltering(true);
-  sceneBoxTexture_.prepareForGl();
+  updateShader();
+  texture_ = MainManager::resources().loadImage("uv_colorgrid.png");
+  texture_->setIsMaxFiltering(true);
+  texture_->prepareForGl();
+
+  sceneBoxTexture_ = MainManager::resources().loadImage("uv_browngrid.png");
+  sceneBoxTexture_->setIsMaxFiltering(true);
+  sceneBoxTexture_->prepareForGl();
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -161,7 +162,7 @@ void DeferredRenderer::updateToTextureRenderFBO()
 
 void DeferredRenderer::render(float time)
 {
-  if(shader_.isModified())
+  if(shader_->isModified())
     updateShader();
 
   mesh_.refresh();
@@ -177,7 +178,7 @@ void DeferredRenderer::render(float time)
 
   GlState::enable(GlState::DEPTH_TEST);
   GlState::disable(GlState::BLEND);
-  GlState::useProgram(shader_.get());
+  GlState::useProgram(shader_->get());
   GlState::enable(GlState::DEPTH_CLAMP);
   GlState::enable(GlState::CULL_FACE);
   // Only the geometry pass updates the depth buffer
@@ -195,7 +196,7 @@ void DeferredRenderer::render(float time)
   // Texture1
   if (textureId_ >= 0) {
     GlState::activeTexture(GL_TEXTURE0);
-    texture_.glBind();
+    texture_->glBind();
     glUniform1i(textureId_, 0);
     if (textureRepeatID_ >= 0)
       glUniform1f(textureRepeatID_, 1.0f);
@@ -203,7 +204,7 @@ void DeferredRenderer::render(float time)
   mesh_.render(0.0f);
 
   if (textureId_ >= 0) {
-    sceneBoxTexture_.glBind();
+    sceneBoxTexture_->glBind();
     if (textureRepeatID_ >= 0)
       glUniform1f(textureRepeatID_, 20.0f);
   }
@@ -277,13 +278,13 @@ void DeferredRenderer::updateViewMatrix()
 
 void DeferredRenderer::updateShader()
 {
-  shader_.compile();
-  mvpID_          = glGetUniformLocation(shader_.get(), "MVP");
-  modelViewMatID_ = glGetUniformLocation(shader_.get(), "ModelViewMat");
-  // projectionMatID_= glGetUniformLocation(shader_.get(), "ProjectionMat");
-  normalMatID_    = glGetUniformLocation(shader_.get(), "NormalMat");
-  textureId_      = glGetUniformLocation(shader_.get(), "Texture1");
-  textureRepeatID_= glGetUniformLocation(shader_.get(), "TextureRepeat");
+  shader_->compile();
+  mvpID_          = glGetUniformLocation(shader_->get(), "MVP");
+  modelViewMatID_ = glGetUniformLocation(shader_->get(), "ModelViewMat");
+  // projectionMatID_= glGetUniformLocation(shader_->get(), "ProjectionMat");
+  normalMatID_    = glGetUniformLocation(shader_->get(), "NormalMat");
+  textureId_      = glGetUniformLocation(shader_->get(), "Texture1");
+  textureRepeatID_= glGetUniformLocation(shader_->get(), "TextureRepeat");
 
   if(mvpID_          < 0) log_.w("MVP uniform not found");
   if(modelViewMatID_ < 0) log_.w("ModelViewMat uniform not found");
