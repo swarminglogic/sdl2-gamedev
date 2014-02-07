@@ -1,6 +1,7 @@
 #include <core/MainManager.h>
 
 #include <cassert>
+#include <sstream>
 
 #include <io/Keyboard.h>
 #include <io/TextBoxText.h>
@@ -243,30 +244,47 @@ void MainManager::initSDL()
   if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
     throw log_.exception("Failed to initialize SDL", SDL_GetError);
   atexit(SDL_Quit);
+
+  // Write version information to log
+  SDL_version compiled;
+  SDL_version linked;
+  SDL_VERSION(&compiled);
+  SDL_GetVersion(&linked);
+  logSDLVersion("SDL", compiled, linked, SDL_GetRevision());
 }
 
 void MainManager::initSDLimg()
 {
-  log_.d("Initializing SDL_img");
+  log_.i("Initializing SDL_img");
   int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
   int imgFlagsInit = IMG_Init(imgFlags);
   if ((imgFlagsInit & imgFlags) != imgFlags)
     throw log_.exception("Failed to initialize SDL_img", SDL_GetError);
   atexit(IMG_Quit);
+
+  // Write version information to log
+  SDL_version compiled;
+  SDL_IMAGE_VERSION(&compiled);
+  logSDLVersion("SDL_image", compiled, *IMG_Linked_Version());
 }
 
 void MainManager::initSDLttf()
 {
-  log_.d("Initializing SDL_ttf");
+  log_.i("Initializing SDL_ttf");
   if ( TTF_Init() != 0)
     throw log_.exception("Failed to initialize SDL_ttf", SDL_GetError);
   atexit(TTF_Quit);
+
+  // Write version information to log
+  SDL_version compiled;
+  SDL_TTF_VERSION(&compiled);
+  logSDLVersion("SDL_ttf", compiled, *TTF_Linked_Version());
 }
 
 void MainManager::initSDLmixer()
 {
 
-  log_.d("Initializing SDL_mixer");
+  log_.i("Initializing SDL_mixer");
   int mixFlags = MIX_INIT_FLAC;
   int mixFlagsInit = Mix_Init(mixFlags);
   if ((mixFlagsInit & mixFlags) != mixFlags)
@@ -274,7 +292,34 @@ void MainManager::initSDLmixer()
   if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 1024 ) == -1 )
     throw log_.exception("Failed to aquire sound device", Mix_GetError);
   atexit(Mix_CloseAudio);
+
+
+  // Write version information to log
+  SDL_version compiled;
+  SDL_MIXER_VERSION(&compiled);
+  logSDLVersion("SDL_mixer", compiled, *Mix_Linked_Version());
 }
+
+
+void MainManager::logSDLVersion(const std::string& what,
+                                const SDL_version& compiled,
+                                const SDL_version& linked,
+                                std::string revision)
+{
+  std::stringstream ss;
+  ss << what << " Version (Compiled): "
+     << (int)compiled.major << "."
+     << (int)compiled.minor << "."
+     << (int)compiled.patch;
+  if (!revision.empty())
+    ss << " (" << revision << ")";
+  log_.d(ss.str());
+
+  log_.d() << what << " Version (Runtime):  "
+           << linked.major << "." << linked.minor << "." << linked.patch
+           << Log::end;
+}
+
 
 void MainManager::updateFpsText(double fps)
 {

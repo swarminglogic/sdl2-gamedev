@@ -69,6 +69,10 @@ private:
   void initSDLimg();
   void initSDLttf();
   void initSDLmixer();
+  void logSDLVersion(const std::string& what,
+                     const SDL_version& compiled,
+                     const SDL_version& linked,
+                     std::string revision = std::string(""));
 
   void updateFpsText(double fps);
 
