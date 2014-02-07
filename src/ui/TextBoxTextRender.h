@@ -32,7 +32,9 @@ public:
 
   virtual void initialize() override;
   void postConfigureInitialize();
-  virtual void render(float currentTime) override;
+  virtual void render(float currentTime) const override;
+  virtual void refresh() override;
+
   virtual void handleResize(int width, int height) override;
 
   // Required initializations

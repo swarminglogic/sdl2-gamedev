@@ -24,7 +24,8 @@ public:
   virtual ~TexturedQuadRender();
 
   virtual void initialize() override;
-  virtual void render(float currentTime) override;
+  virtual void render(float currentTime) const override;
+  virtual void refresh() override;
   virtual void handleResize(int width, int height) override;
 
   // Three ways to set up image data:

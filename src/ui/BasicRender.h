@@ -7,6 +7,7 @@
 #include <util/SDL_Event_fwd.h>
 
 
+
 /**
  * BasicRender class.
  *
@@ -19,7 +20,8 @@ public:
   virtual ~BasicRender(){}
 
   virtual void initialize() {};
-  virtual void render(float currentTime) = 0;
+  virtual void render(float currentTime) const = 0;
+  virtual void refresh() = 0;
   virtual void finalize() {};
 
   virtual bool handleEvent(const SDL_Event&) { return false; }
@@ -28,6 +30,7 @@ public:
   }
 
   virtual bool prefersMouseGrab() const { return false; }
+
 
 private:
   // NonCopyable

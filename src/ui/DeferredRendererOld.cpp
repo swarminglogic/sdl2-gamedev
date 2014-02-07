@@ -1,4 +1,4 @@
-#include <wip/DeferredRenderer.h>
+#include <ui/DeferredRendererOld.h>
 
 #include <core/MainManager.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,8 +10,8 @@
 #include <util/Asset.h>
 
 
-DeferredRenderer::DeferredRenderer()
-  : log_("DeferredRenderer"),
+DeferredRendererOld::DeferredRendererOld()
+  : log_("DeferredRendererOld"),
     vao_(0),
     frameBuffer_(0),
     camera_(nullptr),
@@ -35,17 +35,16 @@ DeferredRenderer::DeferredRenderer()
     cameraMotion_{8, 8, 8, 8, 8, 8}
 {
   camera_.reset(new CameraFpv(glm::vec3(3.3f), glm::vec3(0.0f)));
-  // camera_.reset(new CameraSpherical(3.3f, Pointf(0.47f, 0.45f)));
   quadRender_.setProjectionMat(projectionMat_);
   updateViewMatrix();
 }
 
 
-DeferredRenderer::~DeferredRenderer()
+DeferredRendererOld::~DeferredRendererOld()
 {
 }
 
-void DeferredRenderer::initialize()
+void DeferredRendererOld::initialize()
 {
 
 
@@ -79,7 +78,7 @@ void DeferredRenderer::initialize()
 }
 
 
-void DeferredRenderer::updateToTextureRenderFBO()
+void DeferredRendererOld::updateToTextureRenderFBO()
 {
   if (viewport_.w() == 0 || viewport_.h() == 0)
     return;
@@ -159,8 +158,7 @@ void DeferredRenderer::updateToTextureRenderFBO()
     glDeleteRenderbuffers(1, &prevDepthBuffer_);
 }
 
-
-void DeferredRenderer::render(float time)
+void DeferredRendererOld::refresh()
 {
   if(shader_->isModified())
     updateShader();
@@ -168,7 +166,13 @@ void DeferredRenderer::render(float time)
   mesh_.refresh();
   sceneBox_.refresh();
   camera_->update();
+  quadRender_.refresh();
   updateViewMatrix();
+}
+
+
+void DeferredRendererOld::render(float time) const
+{
 
   // Set viewport matching to-texture render.
   GlState::bindFramebuffer(GL_DRAW_FRAMEBUFFER, fboHandle_);
@@ -184,8 +188,8 @@ void DeferredRenderer::render(float time)
   // Only the geometry pass updates the depth buffer
 
   // MVP
-  mvpMat_ = projectionMat_ * viewMat_;
-  glUniformMatrix4fv(mvpID_, 1, GL_FALSE, &mvpMat_[0][0]);
+  glm::mat4 mvpMat = projectionMat_ * viewMat_;
+  glUniformMatrix4fv(mvpID_, 1, GL_FALSE, &mvpMat[0][0]);
 
   if (modelViewMatID_ >= 0)
     glUniformMatrix4fv(modelViewMatID_, 1, GL_FALSE, &viewMat_[0][0]);
@@ -222,14 +226,14 @@ void DeferredRenderer::render(float time)
   quadRender_.render(time);
 }
 
-bool DeferredRenderer::handleEvent(const SDL_Event& event)
+bool DeferredRendererOld::handleEvent(const SDL_Event& event)
 {
   const bool cameraChanged = camera_->handleEvent(event);
   return cameraChanged;
 }
 
 
-void DeferredRenderer::handleResize(int width, int height)
+void DeferredRendererOld::handleResize(int width, int height)
 {
   BasicRender::handleResize(width, height);
   float aspect = static_cast<float>(width) / static_cast<float>(height);
@@ -241,13 +245,13 @@ void DeferredRenderer::handleResize(int width, int height)
 }
 
 
-bool DeferredRenderer::prefersMouseGrab() const
+bool DeferredRendererOld::prefersMouseGrab() const
 {
   return camera_->prefersMouseGrab();
 }
 
 
-void DeferredRenderer::updateViewMatrix()
+void DeferredRendererOld::updateViewMatrix()
 {
   // Smooth out motion?
   const glm::vec3& pos    = camera_->getPosition();
@@ -276,7 +280,7 @@ void DeferredRenderer::updateViewMatrix()
 }
 
 
-void DeferredRenderer::updateShader()
+void DeferredRendererOld::updateShader()
 {
   shader_->compile();
   mvpID_          = glGetUniformLocation(shader_->get(), "MVP");
@@ -294,7 +298,7 @@ void DeferredRenderer::updateShader()
   if(textureRepeatID_< 0) log_.w("TextureRepeat uniform not found");
 }
 
-void DeferredRenderer::setTextureInterp()
+void DeferredRendererOld::setTextureInterp()
 {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

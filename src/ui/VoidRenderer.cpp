@@ -1,5 +1,7 @@
 #include <ui/VoidRenderer.h>
 
+#include <cassert>
+
 #include <ui/GlState.h>
 #include <ui/SDL_opengl.h>
 
@@ -23,13 +25,21 @@ void VoidRenderer::initialize()
   GlState::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void VoidRenderer::render(float)
+void VoidRenderer::render(float) const
 {
   const GLfloat color[] = { 0.1f, 0.2f, 0.3f, 1.0f };
   glClearBufferfv(GL_COLOR, 0, color);
   glClear(GL_DEPTH_BUFFER_BIT);
 }
 
+
+
 void VoidRenderer::finalize()
 {
+}
+
+[[noreturn]]
+void VoidRenderer::refresh()
+{
+  assert(false && "Not implemented");
 }

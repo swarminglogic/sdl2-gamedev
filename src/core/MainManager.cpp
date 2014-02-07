@@ -3,15 +3,16 @@
 #include <cassert>
 
 #include <io/Keyboard.h>
-#include <io/ResourceManager.h>
 #include <io/TextBoxText.h>
 #include <model/PhysicsWorld.h>
-#include <ui/BasicRender.h>
+#include <ui/DeferredRenderer.h>
+#include <ui/DeferredRendererOld.h>
 #include <ui/SDL.h>
 #include <ui/SDL_image.h>
 #include <ui/SDL_mixer.h>
 #include <ui/SDL_opengl.h>
 #include <ui/SDL_ttf.h>
+#include <ui/SceneBasic.h>
 #include <ui/ShaderUtil.h>
 #include <ui/VoidRenderer.h>
 #include <util/Asset.h>
@@ -19,10 +20,6 @@
 #include <util/Exception.h>
 #include <util/Log.h>
 #include <util/Timer.h>
-#include <wip/DeferredRenderer.h>
-#include <wip/InstancedCubeRenderer.h>
-#include <wip/ObjRenderer.h>
-#include <wip/ToTextureRenderer.h>
 
 
 MainManager::MainManager()
@@ -65,25 +62,20 @@ void MainManager::initialize()
   graphics_.reset(new GraphicsManager);
   runtime_.reset(new Timer);
   runtime_->start();
-
-  // TODO swarminglogic, 2013-09-15: Add a renderer, possibly refarctor to Game
-  // class, which manages the renderer?
-  // basicRender_.reset(new DeferredRenderer);
   basicRender_.reset(new DeferredRenderer);
+
+  if (dynamic_cast<DeferredRenderer*>(basicRender_.get())) {
+    scene_.reset(new SceneBasic);
+    dynamic_cast<DeferredRenderer*>(basicRender_.get())->setScene(scene_);
+  }
+
   physics_.reset(new PhysicsWorld),
 
   log_.i("Inititalizing resources.");
+
   basicRender_->initialize();
   basicRender_->handleResize(graphics_->getScreenSize().w(),
                              graphics_->getScreenSize().h());
-
-  // TODO swarminglogic, 2013-10-02: Keeping fpsRender usage commented.
-  // fpsRender_.initialize();
-  // updateFpsText(0.0);
-  // fpsRender_.setPosition(20, 20);
-  // fpsRender_.handleResize(graphics_->getScreenSize().w(),
-  //                         graphics_->getScreenSize().h());
-  // fpsRender_.setZoomFactor(2);
 
 
   // Set mouse grab based on main renderer preference.
@@ -122,7 +114,6 @@ void MainManager::finalize()
 {
   log_.i("Cleaning up resources.");
   basicRender_->finalize();
-  // fpsRender_.finalize();
 }
 
 
@@ -168,7 +159,6 @@ void MainManager::run() {
 
   SDL_Event event;
 
-  bool isDirty = true;
   uint frameNumber = 0;
   float previousTime = runtime_->getSeconds();
 
@@ -183,10 +173,16 @@ void MainManager::run() {
 
     while (SDL_PollEvent(&event)) {
       handleEvent(event);
-      isDirty |= basicRender_->handleEvent(event);
+      basicRender_->handleEvent(event);
+      if (scene_) scene_->handleEvent(event);
     }
 
     ++frameNumber;
+
+    if (scene_) scene_->refresh();
+
+    basicRender_->refresh();
+    textRenderer_.refresh();
 
     currentTimeDelta_ = runtime_->getSeconds() - previousTime;
     previousTime = runtime_->getSeconds();
@@ -194,7 +190,6 @@ void MainManager::run() {
 
     basicRender_->render(runtime_->getSeconds());
     textRenderer_.render(0);
-    // fpsRender_.render(0);
     graphics_->swapBuffers();
 
     fpsCounter_.tic();
@@ -213,7 +208,6 @@ void MainManager::handleEvent(const SDL_Event& event)
       const int height = event.window.data2;
       log_.i() << "Window resized to " << width << " x " << height << Log::end;
       basicRender_->handleResize(width, height);
-      // fpsRender_.handleResize(width, height);
       textRenderer_.handleResize(width, height);
       graphics_->setScreenSize(Size(width, height));
     }

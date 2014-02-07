@@ -25,7 +25,7 @@ public:
   // void setGlTextureId(GLuint textureId, Size size);
   void setId(GLuint textureId);
 
-  GLuint glBind();
+  GLuint glBind() const;
   void prepareForGl();
 
   GLuint getTextureId() const;

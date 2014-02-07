@@ -13,7 +13,8 @@ Surface::Surface(SDL_Surface* surface)
     surface_(surface),
     textureId_(0),
     imageRect_(0, 0, 0, 0),
-    isMaxFiltering_(true)
+    isMaxFiltering_(true),
+    repeatFactor_(1.0f)
 {
 }
 
@@ -163,10 +164,9 @@ void Surface::prepareForGl()
 }
 
 
-GLuint Surface::glBind()
+GLuint Surface::glBind() const
 {
-  if (textureId_ == 0)
-    prepareForGl();
+  assert(textureId_ != 0);
 
   assert(textureId_ && "OpenGL texture id not set!");
 
@@ -188,4 +188,15 @@ bool Surface::isMaxFiltering() const
 void Surface::setIsMaxFiltering(bool isMaxFilteringSet)
 {
   isMaxFiltering_ = isMaxFilteringSet;
+}
+
+
+float Surface::getRepeatFactorHint() const
+{
+  return repeatFactor_;
+}
+
+void Surface::setRepeatFactorHint(float repeatFactor)
+{
+  repeatFactor_ = repeatFactor;
 }

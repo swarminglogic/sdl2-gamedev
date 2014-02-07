@@ -58,11 +58,10 @@ void TextBoxTextRender::postConfigureInitialize()
 }
 
 
-void TextBoxTextRender::render(float )
+void TextBoxTextRender::render(float) const
 {
   assert(charmap_ && surface_ && textBoxText_);
   assert(!vertices_.empty() && "Forget postConfigureInitialize() ?");
-  if(program_.isModified()) updateShader();
   GlState::useProgram(program_.get());
 
   // Uniform Tex1
@@ -77,9 +76,6 @@ void TextBoxTextRender::render(float )
   glEnableVertexAttribArray(0);
   GlState::bindBuffer(GlState::ARRAY_BUFFER, vertexBuffer_);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  if (isDirty_)
-    prepareTextData();
 
   glUniform2fv(paramId_charBoxDimensions_, 1, charTextDim_.getData());
 
@@ -102,6 +98,16 @@ void TextBoxTextRender::render(float )
   assert(rendered == (int)textData_.size());
   glDisableVertexAttribArray(0);
 }
+
+void TextBoxTextRender::refresh()
+{
+  if(program_.isModified())
+    updateShader();
+  if (isDirty_)
+    prepareTextData();
+}
+
+
 
 void TextBoxTextRender::handleResize(int width, int height)
 {

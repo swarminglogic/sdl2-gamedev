@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include <io/ResourceManager.h>
 #include <ui/GraphicsManager.h>
 #include <ui/ImageRender.h>
 #include <ui/SDL_opengl.h>
@@ -12,9 +13,11 @@
 
 
 class BasicRender;
+class DeferredRenderer;
 class Log;
 class PhysicsWorld;
 class ResourceManager;
+class SceneBasic;
 class Timer;
 
 /**
@@ -79,6 +82,7 @@ private:
   std::unique_ptr<BasicRender> basicRender_;
   std::unique_ptr<PhysicsWorld> physics_;
   std::unique_ptr<ResourceManager> resourceManager_;
+  std::shared_ptr<SceneBasic> scene_;
 
   // ImageRender fpsRender_;
   TextBoxTextRender textRenderer_;

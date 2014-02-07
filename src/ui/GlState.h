@@ -3,6 +3,7 @@
 
 #include <array>
 
+#include <util/Log.h>
 #include <math/Rect.h>
 #include <ui/SDL_opengl.h>
 
@@ -142,6 +143,8 @@ private:
   GLenum f_getActiveTexture() const;
   GLuint f_getProgram() const;
 
+
+  Log log_;
 
   std::array<bool, N_GLCAP> capStates_;
   std::array<GLuint, N_BUFFER> bufferBindings_;

@@ -44,7 +44,7 @@ public:
 
   void setGlTextureId(GLuint textureId, Size size);
 
-  GLuint glBind();
+  GLuint glBind() const;
   void prepareForGl();
 
   GLuint getTextureId() const;
@@ -74,6 +74,13 @@ public:
   void setIsMaxFiltering(bool isMaxFiltering);
   bool isMaxFiltering() const;
 
+
+  /**
+   * Sets texture repeat factor hint. Defaults to 1.0f
+   */
+  float getRepeatFactorHint() const;
+  void setRepeatFactorHint(float repeatFactor);
+
 private:
   void releaseResources();
 
@@ -82,6 +89,7 @@ private:
   GLuint textureId_;
   Rect imageRect_;
   bool isMaxFiltering_;
+  float repeatFactor_;
 
   // NonCopyable
   Surface(const Surface& c);

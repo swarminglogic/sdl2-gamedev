@@ -37,7 +37,7 @@ void GlTexture::setId(GLuint textureId)
 }
 
 
-GLuint GlTexture::glBind()
+GLuint GlTexture::glBind() const
 {
   assert(textureId_ && "OpenGL texture id not set!");
   GlState::bindTexture(GL_TEXTURE_2D, textureId_);

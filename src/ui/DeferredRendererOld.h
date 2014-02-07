@@ -1,5 +1,5 @@
-#ifndef WIP_TOTEXTURERENDERER_H
-#define WIP_TOTEXTURERENDERER_H
+#ifndef UI_DEFERREDRENDEREROLD_H
+#define UI_DEFERREDRENDEREROLD_H
 
 #include <array>
 #include <memory>
@@ -7,11 +7,11 @@
 #include <glm/glm.hpp>
 #include <math/Size.h>
 #include <ui/BasicRender.h>
-#include <ui/Mesh.h>
+#include <ui/DeferredQuadRender.h>
+#include <ui/MeshRender.h>
 #include <ui/SDL_opengl.h>
 #include <ui/ShaderProgram.h>
 #include <ui/Surface.h>
-#include <ui/TexturedQuadRender.h>
 #include <util/Averager.h>
 #include <util/Log.h>
 
@@ -19,26 +19,30 @@
 class BaseCamera;
 
 /**
- * ToTextureRenderer class.
+ * DeferredRendererOld class.
  *
  * @author SwarmingLogic (Roald Fernandez)
  */
-class ToTextureRenderer : public BasicRender
+class DeferredRendererOld : public BasicRender
 {
 public:
-  ToTextureRenderer();
-  virtual ~ToTextureRenderer();
+  DeferredRendererOld();
+  virtual ~DeferredRendererOld();
 
   virtual void initialize() override;
-  virtual void render(float currentTime) override;
+  virtual void render(float currentTime) const override;
+  //  virtual void render(float currentTime) override;
   virtual bool handleEvent(const SDL_Event& event) override;
   virtual void handleResize(int width, int height) override;
   virtual bool prefersMouseGrab() const override;
+
+  virtual void refresh() override;
+
 private:
   void updateShader();
-  void updateModel();
   void updateViewMatrix();
   void updateToTextureRenderFBO();
+  void setTextureInterp();
 
   Log log_;
   GLuint vao_;
@@ -52,26 +56,33 @@ private:
   Size viewport_;
 
   // Regular render members
-  Surface texture_;
-  Mesh mesh_;
-  ShaderProgram shader_;
+  SurfaceShPtr texture_;
+  MeshRender mesh_;
+
+  SurfaceShPtr sceneBoxTexture_;
+  MeshRender sceneBox_;
+  ShaderProgramShPtr shader_;
   GLint mvpID_;
   GLint modelViewMatID_;
+  GLint projectionMatID_;
   GLint normalMatID_;
   GLint textureId_;
+  GLint textureRepeatID_;
 
   // To texture members
   GLuint fboHandle_;
-  GLuint renderTexture_;
+  GLuint positionTexture_;
+  GLuint normalTexture_;
+  GLuint colorTexture_;
   GLuint depthBuffer_;
-  TexturedQuadRender quadRender_;
+  DeferredQuadRender quadRender_;
 
   // Camera motion smoother
   std::array<Averager, 6> cameraMotion_;
 
   // NonCopyable
-  ToTextureRenderer(const ToTextureRenderer& c);
-  ToTextureRenderer& operator=(const ToTextureRenderer& c);
+  DeferredRendererOld(const DeferredRendererOld& c);
+  DeferredRendererOld& operator=(const DeferredRendererOld& c);
 };
 
 #endif

@@ -80,9 +80,8 @@ void DeferredQuadRender::initialize()
 
 
 
-void DeferredQuadRender::render(float time)
+void DeferredQuadRender::render(float time) const
 {
-  if(program_.isModified()) updateShader();
   GlState::enable(GlState::BLEND);
   GlState::enable(GlState::DEPTH_TEST);
 
@@ -137,6 +136,12 @@ void DeferredQuadRender::render(float time)
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   glDisableVertexAttribArray(0);
 }
+
+void DeferredQuadRender::refresh()
+{
+  if(program_.isModified()) updateShader();
+}
+
 
 
 void DeferredQuadRender::handleResize(int width, int height)

@@ -45,9 +45,8 @@ void TexturedQuadRender::initialize()
 
 
 
-void TexturedQuadRender::render(float time)
+void TexturedQuadRender::render(float time) const
 {
-  if(program_.isModified()) updateShader();
   GlState::enable(GlState::BLEND);
   GlState::enable(GlState::DEPTH_TEST);
 
@@ -70,6 +69,11 @@ void TexturedQuadRender::render(float time)
 
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   glDisableVertexAttribArray(0);
+}
+
+void TexturedQuadRender::refresh()
+{
+  if(program_.isModified()) updateShader();
 }
 
 

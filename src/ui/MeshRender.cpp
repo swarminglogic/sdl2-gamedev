@@ -14,7 +14,7 @@ MeshRender::~MeshRender()
 }
 
 
-void MeshRender::render(float)
+void MeshRender::render(float) const
 {
   const size_t shapeCount = mesh_->getShapeCount();
   for (size_t i = 0 ; i < shapeCount ; ++i) {

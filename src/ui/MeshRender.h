@@ -1,6 +1,8 @@
 #ifndef UI_MESHRENDER_H
 #define UI_MESHRENDER_H
 
+#include <memory>
+
 #include <ui/BasicRender.h>
 #include <ui/Mesh.h>
 #include <util/Asset.h>
@@ -20,7 +22,7 @@ public:
   MeshRender(MeshShPtr mesh);
 
   virtual ~MeshRender();
-  virtual void render(float currentTime) override;
+  virtual void render(float currentTime) const override;
 
   void refresh();
 
@@ -31,5 +33,7 @@ private:
   MeshRender(const MeshRender& c);
   MeshRender& operator=(const MeshRender& c);
 };
+
+typedef std::shared_ptr<MeshRender> MeshRenderShPtr;
 
 #endif

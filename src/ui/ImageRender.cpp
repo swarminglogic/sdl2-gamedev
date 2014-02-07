@@ -43,9 +43,8 @@ void ImageRender::initialize()
 }
 
 
-void ImageRender::render(float)
+void ImageRender::render(float) const
 {
-  if(program_.isModified()) updateShader();
   GlState::enable(GlState::BLEND);
   GlState::enable(GlState::DEPTH_TEST);
 
@@ -72,6 +71,12 @@ void ImageRender::render(float)
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
 }
+
+void ImageRender::refresh()
+{
+  if(program_.isModified()) updateShader();
+}
+
 
 
 void ImageRender::handleResize(int width, int height)

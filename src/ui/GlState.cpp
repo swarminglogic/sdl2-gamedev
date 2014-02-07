@@ -9,7 +9,8 @@ const std::array<GLenum, GlState::N_BUFFER> GlState::bufferEnumToGL_
 {GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER};
 
 GlState::GlState()
-  : capStates_(),
+  : log_("GlState"),
+    capStates_(),
     bufferBindings_{0},
     viewport_(Rect(0,0, 0,0)),
     activeTexture_(GL_TEXTURE0),
@@ -70,6 +71,7 @@ GLuint GlState::getProgram()
 
 void GlState::f_syncronize()
 {
+  // log_.d() << "f_syncronize()" << Log::end;
   GLint vp[4] {0};
   glGetIntegerv(GL_VIEWPORT, vp);
   viewport_ = Rect(vp[0], vp[1], vp[2], vp[3]);
@@ -147,6 +149,11 @@ bool GlState::f_blendFunc(GLenum sfactor, GLenum dfactor)
 
 bool GlState::f_bindBuffer(BufferTarget target, GLuint buffer)
 {
+  // log_.d() << "f_bindBuffer: "
+  //          << (int)target
+  //          << ", "
+  //          << (int)buffer
+  //          << Log::end;
   const bool change = bufferBindings_[target] != buffer;
   if (change) {
     glBindBuffer(bufferEnumToGL_[target], buffer);

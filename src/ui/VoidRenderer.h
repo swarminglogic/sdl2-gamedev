@@ -18,8 +18,9 @@ public:
   virtual ~VoidRenderer();
 
   virtual void initialize() override;
-  virtual void render(float currentTime) override;
+  virtual void render(float currentTime) const override;
   virtual void finalize() override;
+  virtual void refresh() override;
 
 private:
   GLuint vao_;
