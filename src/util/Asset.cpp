@@ -80,3 +80,26 @@ AssetMesh::AssetMesh(const std::string& resource)
   filename_  = resource;
 }
 AssetMesh::~AssetMesh(){}
+
+
+
+// Sound Asset
+AssetSound::AssetSound() : AssetSound("") {}
+AssetSound::AssetSound(const std::string& resource)
+{
+  type_ = SOUND;
+  subfolder_ = std::string("sounds/");
+  filename_  = resource;
+}
+AssetSound::~AssetSound(){}
+
+
+// Music Asset
+AssetMusic::AssetMusic() : AssetMusic("") {}
+AssetMusic::AssetMusic(const std::string& resource)
+{
+  type_ = MUSIC;
+  subfolder_ = std::string("music/");
+  filename_  = resource;
+}
+AssetMusic::~AssetMusic(){}

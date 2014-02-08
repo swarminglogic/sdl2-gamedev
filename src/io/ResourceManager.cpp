@@ -1,5 +1,6 @@
 #include <io/ResourceManager.h>
 
+#include <audio/MusicTrack.h>
 #include <ui/Mesh.h>
 #include <ui/Surface.h>
 #include <util/Asset.h>
@@ -72,9 +73,29 @@ ShaderProgramShPtr ResourceManager::load(const ShaderKey& shaders)
 }
 
 
+MusicTrackShPtr ResourceManager::load(const AssetMusic& music)
+{
+  MusicTrackShPtr resource = loadedMusic_[music];
+  if (!resource) {
+    if (!FileUtil::exists(music.path())) {
+      resource.reset();
+    } else {
+      resource.reset(new MusicTrack(music));
+      loadedMusic_[music] = resource;
+    }
+  }
+  return resource;
+}
+
+
+MusicTrackShPtr ResourceManager::loadMusic(const std::string&  musicfile)
+{
+  return load(AssetMusic(musicfile));
+}
+
+
 ShaderProgramShPtr ResourceManager::loadShader(const ShaderfileKey& shaders)
 {
-  (void)shaders;
   ShaderKey key;
   for (auto& shader : shaders)
     key[shader.first] = AssetShader(shader.second);
@@ -87,9 +108,8 @@ SurfaceShPtr ResourceManager::loadImage(const std::string&  imagefile)
   return load(AssetImage(imagefile));
 }
 
+
 MeshShPtr ResourceManager::loadMesh(const std::string&  meshfile)
 {
   return load(AssetMesh(meshfile));
 }
-
-

@@ -3,6 +3,8 @@
 #include <cassert>
 #include <sstream>
 
+#include <audio/AudioPlayback.h>
+#include <audio/SDL_mixer.h>
 #include <io/Keyboard.h>
 #include <io/TextBoxText.h>
 #include <model/PhysicsWorld.h>
@@ -10,7 +12,6 @@
 #include <ui/DeferredRendererOld.h>
 #include <ui/SDL.h>
 #include <ui/SDL_image.h>
-#include <ui/SDL_mixer.h>
 #include <ui/SDL_opengl.h>
 #include <ui/SDL_ttf.h>
 #include <ui/SceneBasic.h>
@@ -172,6 +173,7 @@ void MainManager::run() {
 #endif
     SDL_ClearError();
 
+
     while (SDL_PollEvent(&event)) {
       handleEvent(event);
       basicRender_->handleEvent(event);
@@ -292,12 +294,43 @@ void MainManager::initSDLmixer()
   if( Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 1024 ) == -1 )
     throw log_.exception("Failed to aquire sound device", Mix_GetError);
   atexit(Mix_CloseAudio);
-
+  atexit(Mix_Quit);
 
   // Write version information to log
   SDL_version compiled;
   SDL_MIXER_VERSION(&compiled);
   logSDLVersion("SDL_mixer", compiled, *Mix_Linked_Version());
+
+  // Write music decoder information to log
+  const int nMusicDecoders = Mix_GetNumMusicDecoders();
+  std::stringstream ss;
+  if (nMusicDecoders > 0)
+    ss << Mix_GetMusicDecoder(0);
+  for (int i = 1 ; i < nMusicDecoders ; ++i) {
+    ss << ", " << Mix_GetMusicDecoder(i) << Log::end;
+  }
+  log_.d() << "Music decoders (" << nMusicDecoders << "): "
+           << ss.str() << Log::end;
+
+
+  // Write audio decoder information to log
+  const int nChunkDecoders =  Mix_GetNumChunkDecoders();
+  ss.str(std::string(""));
+  if (nChunkDecoders > 0)
+    ss << Mix_GetChunkDecoder(0);
+  for (int i = 1 ; i < nChunkDecoders ; ++i) {
+    ss << ", " << Mix_GetChunkDecoder(i) << Log::end;
+  }
+  log_.d() << "Audio decoders (" << nChunkDecoders << "): "
+           << ss.str() << Log::end;
+
+  (void)Mix_VolumeMusic(MIX_MAX_VOLUME);
+
+  (void)Mix_Volume(-1, MIX_MAX_VOLUME);
+  // (void)Mix_VolumeMusic(MIX_MAX_VOLUME);
+  log_.d() << "Music Volume level: "
+           << 100.0f * (float)Mix_VolumeMusic(-1) / MIX_MAX_VOLUME << "%"
+           << Log::end;
 }
 
 

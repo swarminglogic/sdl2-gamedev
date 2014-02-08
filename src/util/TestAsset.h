@@ -52,6 +52,22 @@ public:
     TS_ASSERT_EQUALS(shader.type(), Asset::SHADER);
   }
 
+  void testAssetSound()
+  {
+    AssetSound shader("test.flac");
+    TS_ASSERT_EQUALS(shader.path(), "./assets/sounds/test.flac");
+    TS_ASSERT_EQUALS(shader.filename(), "test.flac");
+    TS_ASSERT_EQUALS(shader.type(), Asset::SOUND);
+  }
+
+  void testAssetMusic()
+  {
+    AssetMusic shader("test.flac");
+    TS_ASSERT_EQUALS(shader.path(), "./assets/music/test.flac");
+    TS_ASSERT_EQUALS(shader.filename(), "test.flac");
+    TS_ASSERT_EQUALS(shader.type(), Asset::MUSIC);
+  }
+
   void testVirtual() {
     std::unique_ptr<Asset> asset(new AssetShader("test.frag"));
     TS_ASSERT_EQUALS(asset->path(), "./assets/shaders/test.frag");

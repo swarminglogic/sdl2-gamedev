@@ -17,6 +17,8 @@ public:
     IMAGE,
     FONT,
     MESH,
+    SOUND,
+    MUSIC,
     INVALID_TYPE
   };
 
@@ -99,6 +101,24 @@ public:
   virtual ~AssetMesh();
 };
 
+
+class AssetSound : public Asset
+{
+public:
+  AssetSound();
+  AssetSound(const std::string& resource);
+  virtual ~AssetSound();
+};
+
+
+
+class AssetMusic : public Asset
+{
+public:
+  AssetMusic();
+  AssetMusic(const std::string& resource);
+  virtual ~AssetMusic();
+};
 
 
 
