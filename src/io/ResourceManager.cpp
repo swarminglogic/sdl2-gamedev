@@ -1,6 +1,7 @@
 #include <io/ResourceManager.h>
 
 #include <audio/MusicTrack.h>
+#include <audio/SoundChunk.h>
 #include <ui/Mesh.h>
 #include <ui/Surface.h>
 #include <util/Asset.h>
@@ -85,6 +86,28 @@ MusicTrackShPtr ResourceManager::load(const AssetMusic& music)
     }
   }
   return resource;
+}
+
+
+SoundChunkShPtr ResourceManager::load(const AssetSound& sound)
+{
+  log_.d() << "Trying to load sound: " << sound.path() << Log::end;
+  SoundChunkShPtr resource = loadedSounds_[sound];
+  if (!resource) {
+    if (!FileUtil::exists(sound.path())) {
+      resource.reset();
+    } else {
+      resource.reset(new SoundChunk(sound));
+      loadedSounds_[sound] = resource;
+    }
+  }
+  return resource;
+}
+
+
+SoundChunkShPtr ResourceManager::loadSound(const std::string& soundfile)
+{
+  return load(AssetSound(soundfile));
 }
 
 

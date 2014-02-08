@@ -13,8 +13,9 @@
 
 
 class Mesh;
-class Surface;
 class MusicTrack;
+class SoundChunk;
+class Surface;
 
 /**
  * ResourceManager class.
@@ -43,6 +44,7 @@ public:
   typedef std::shared_ptr<Surface> SurfaceShPtr;
   typedef std::shared_ptr<Mesh> MeshShPtr;
   typedef std::shared_ptr<MusicTrack> MusicTrackShPtr;
+  typedef std::shared_ptr<SoundChunk> SoundChunkShPtr;
   typedef std::map<ShaderProgram::ShaderType, AssetShader> ShaderKey;
   typedef std::map<ShaderProgram::ShaderType, std::string> ShaderfileKey;
 
@@ -62,16 +64,20 @@ public:
   MusicTrackShPtr load(const AssetMusic& music);
   MusicTrackShPtr loadMusic(const std::string&  musicfile);
 
+  SoundChunkShPtr load(const AssetSound& sound);
+  SoundChunkShPtr loadSound(const std::string&  soundfile);
+
   ShaderProgramShPtr load(const ShaderKey& shaders);
   ShaderProgramShPtr loadShader(const ShaderfileKey& shaders);
 
 private:
   Log log_;
 
-  std::map<AssetImage, SurfaceShPtr>      loadedImages_;
-  std::map<AssetMesh, MeshShPtr>          loadedMeshes_;
-  std::map<AssetMusic, MusicTrackShPtr>   loadedMusic_;
-  std::map<ShaderKey, ShaderProgramShPtr> loadedShaders_;
+  std::map<AssetImage, SurfaceShPtr>       loadedImages_;
+  std::map<AssetMesh,  MeshShPtr>          loadedMeshes_;
+  std::map<ShaderKey,  ShaderProgramShPtr> loadedShaders_;
+  std::map<AssetMusic, MusicTrackShPtr>    loadedMusic_;
+  std::map<AssetSound, SoundChunkShPtr>    loadedSounds_;
 
   // NonCopyable
   ResourceManager(const ResourceManager& c);

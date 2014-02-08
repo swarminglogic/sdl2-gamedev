@@ -33,6 +33,25 @@ float MathUtil::clamp(float value)
 }
 
 
+uint8_t MathUtil::mapToU8(float value)
+{
+  assert(value >= 0.0f);
+  assert(value <= 1.0f);
+  static const float offset = 1.0f / 255.0f;
+  return static_cast<uint8_t>(255u * value + offset);
+}
+
+
+uint8_t MathUtil::mapToU8special(float value)
+{
+  assert(value >= -1.0f);
+  assert(value <= 1.0f);
+  static const float red = 254.0f / 255.0f;
+  return mapToU8(red *0.5f * (value + 1.0f));
+}
+
+
+
 unsigned int MathUtil::nextPow2(unsigned int v)
 {
   v--;

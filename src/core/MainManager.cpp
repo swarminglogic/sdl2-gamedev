@@ -3,7 +3,6 @@
 #include <cassert>
 #include <sstream>
 
-#include <audio/AudioPlayback.h>
 #include <audio/SDL_mixer.h>
 #include <io/Keyboard.h>
 #include <io/TextBoxText.h>
@@ -331,6 +330,10 @@ void MainManager::initSDLmixer()
   log_.d() << "Music Volume level: "
            << 100.0f * (float)Mix_VolumeMusic(-1) / MIX_MAX_VOLUME << "%"
            << Log::end;
+
+  // TODO swarminglogic, 2014-02-08: Move to audio configuration setting.
+  // Setting 64 channels to be played simulatenously
+  Mix_AllocateChannels(64);
 }
 
 

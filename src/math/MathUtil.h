@@ -1,6 +1,9 @@
 #ifndef MATH_MATHUTIL_H
 #define MATH_MATHUTIL_H
 
+#include <cstdint>
+
+
 class Rectf;
 class Pointf;
 class Size;
@@ -32,6 +35,16 @@ public:
    * Clamps value to [0, 1]
    */
   static float clamp(float value);
+
+  /**
+   * Linear map of [0, 1] (asserted) range to [0, 255].
+   */
+  static uint8_t mapToU8(float value);
+
+  /**
+   * Linear map of [-1, 1] (asserted) range to [0, 254]
+   */
+  static uint8_t mapToU8special(float value);
 
 
   /**

@@ -208,6 +208,22 @@ public:
     TS_ASSERT(MathUtil::isRectangleOverlap(rectA, rectB));
   }
 
+  void testMapU8Specials() {
+    // [0, 1] -> [0, 255], using mapToU8
+    TS_ASSERT_EQUALS(MathUtil::mapToU8(0.0f)     , 0u);
+    TS_ASSERT_EQUALS(MathUtil::mapToU8(0.0001f)  , 0u);
+    TS_ASSERT_EQUALS(MathUtil::mapToU8(1.0f)     , 255u);
+    TS_ASSERT_EQUALS(MathUtil::mapToU8(0.99999f) , 255u);
+    TS_ASSERT_EQUALS(MathUtil::mapToU8(0.5f)     , 127u);
+
+
+    // [-1, 1] -> [0, 254], using mapToU8
+    TS_ASSERT_EQUALS(MathUtil::mapToU8special(-1.0f)       , 0u);
+    TS_ASSERT_EQUALS(MathUtil::mapToU8special(0.0f)        , 127u);
+    TS_ASSERT_EQUALS(MathUtil::mapToU8special(1.0f)        , 254u);
+    TS_ASSERT_EQUALS(254u - MathUtil::mapToU8special(0.0f) , 127u);
+  }
+
 private:
 };
 

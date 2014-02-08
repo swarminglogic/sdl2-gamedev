@@ -21,3 +21,11 @@ MusicPlayer& AudioPlayback::music() {
   static MusicPlayer instance;
   return instance;
 }
+
+
+SoundPlayer& AudioPlayback::sound()
+{
+  static SoundPlayer instance;
+  return instance;
+}
+

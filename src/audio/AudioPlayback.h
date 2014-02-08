@@ -2,6 +2,7 @@
 #define AUDIO_AUDIOPLAYBACK_H
 
 #include <audio/MusicPlayer.h>
+#include <audio/SoundPlayer.h>
 #include <util/Log.h>
 
 
@@ -14,9 +15,7 @@ class AudioPlayback
 {
 public:
   static MusicPlayer& music();
-
-  // TODO swarminglogic, 2014-02-08:
-  // static SoundManager& sound();
+  static SoundPlayer& sound();
 
 private:
   AudioPlayback();
